@@ -39,11 +39,12 @@ action_type = st.selectbox(
     list(DATA.keys())
 )
 
-# =========================
-# UI – ATTACK TYPE (ONLY FOR ÚTOK)
-# =========================
-
 attack_type = None
+skill_name = None
+
+# =========================
+# ÚTOK → ATTACK TYPE
+# =========================
 
 if action_type == "Útok":
     attack_type = st.radio(
@@ -51,8 +52,23 @@ if action_type == "Útok":
         list(DATA["Útok"].keys()),
         horizontal=True
     )
-
     severities = list(DATA["Útok"][attack_type].keys())
+
+# =========================
+# SKILL → SKILL NAME
+# =========================
+
+elif action_type == "Skill":
+    skill_name = st.selectbox(
+        "Skill",
+        list(DATA["Skill"].keys())
+    )
+    severities = list(DATA["Skill"][skill_name].keys())
+
+# =========================
+# OSTATNÍ (Obrana, Kouzlo…)
+# =========================
+
 else:
     severities = list(DATA[action_type].keys())
 
@@ -70,8 +86,12 @@ severity = st.selectbox(
 # =========================
 
 if st.button("🎲 Generuj Crit Fail"):
+
+    # vyber správného poolu
     if action_type == "Útok":
         pool = DATA["Útok"][attack_type].get(severity, [])
+    elif action_type == "Skill":
+        pool = DATA["Skill"][skill_name].get(severity, [])
     else:
         pool = DATA[action_type].get(severity, [])
 
@@ -87,8 +107,10 @@ if st.button("🎲 Generuj Crit Fail"):
         st.markdown("---")
         st.markdown("## 📜 Výsledek")
 
-        if attack_type:
+        if action_type == "Útok":
             st.markdown(f"**Akce:** {action_type} ({attack_type})")
+        elif action_type == "Skill":
+            st.markdown(f"**Akce:** {action_type} ({skill_name})")
         else:
             st.markdown(f"**Akce:** {action_type}")
 
@@ -108,4 +130,4 @@ if st.button("🎲 Generuj Crit Fail"):
 # =========================
 
 st.markdown("---")
-st.caption("Data se načítají automaticky z Excelu přes GitHub Actions.")
+st.caption("Obsah se generuje automaticky z Excelu přes GitHub Actions.")
