@@ -2,104 +2,89 @@ import streamlit as st
 import json
 import random
 
-# ==================================================
+# =========================
 # LOAD DATA
-# ==================================================
+# =========================
 
 with open("crit_fails.json", "r", encoding="utf-8") as f:
     DATA = json.load(f)
 
-# ==================================================
-# STREAMLIT CONFIG
-# ==================================================
+# =========================
+# PAGE CONFIG
+# =========================
 
 st.set_page_config(
     page_title="D&D Crit Fail Generator",
+    page_icon="🎲",
     layout="centered"
 )
 
 st.title("🎲 D&D Crit Fail Generator")
-st.caption("JSON-driven • D&D 2024 • DM tool")
+st.caption("Excel → JSON → Streamlit | D&D 2024")
 
-# ==================================================
-# SESSION STATE
-# ==================================================
+# =========================
+# HELPERS
+# =========================
 
-if "log" not in st.session_state:
-    st.session_state.log = []
+def weighted_random(items):
+    weights = [item.get("weight", 1) for item in items]
+    return random.choices(items, weights=weights, k=1)[0]
 
-# ==================================================
-# UI – STEP 1: ACTION TYPE
-# ==================================================
+# =========================
+# UI – ACTION TYPE
+# =========================
 
 action_type = st.selectbox(
-    "Typ akce:",
-    list(DATA.keys())  # Útok, Obrana, Kouzlo, Skill
+    "Typ akce",
+    list(DATA.keys())
 )
 
-# ==================================================
-# UI – STEP 2: ATTACK TYPE (ONLY FOR ÚTOK)
-# ==================================================
+# =========================
+# UI – ATTACK TYPE (ONLY FOR ÚTOK)
+# =========================
 
 attack_type = None
-severity = None
 
 if action_type == "Útok":
     attack_type = st.radio(
-        "Typ útoku:",
-        list(DATA["Útok"].keys()),  # Melee / Ranged
+        "Typ útoku",
+        list(DATA["Útok"].keys()),
         horizontal=True
     )
 
-    severity = st.selectbox(
-        "Závažnost:",
-        list(DATA["Útok"][attack_type].keys())  # Lehký / Střední / Těžký
-    )
+    severities = list(DATA["Útok"][attack_type].keys())
 else:
-    severity = st.selectbox(
-        "Závažnost:",
-        list(DATA[action_type].keys())
-    )
+    severities = list(DATA[action_type].keys())
 
-# ==================================================
-# RANDOM PICK (WEIGHTED)
-# ==================================================
+# =========================
+# UI – SEVERITY
+# =========================
 
-def pick_random(pool):
-    weights = [item.get("weight", 1) for item in pool]
-    return random.choices(pool, weights=weights, k=1)[0]
+severity = st.selectbox(
+    "Závažnost",
+    severities
+)
 
-# ==================================================
+# =========================
 # BUTTON
-# ==================================================
+# =========================
 
-if st.button("🎲 CRIT FAIL"):
+if st.button("🎲 Generuj Crit Fail"):
     if action_type == "Útok":
-        pool = DATA["Útok"][attack_type][severity]
+        pool = DATA["Útok"][attack_type].get(severity, [])
     else:
-        pool = DATA[action_type][severity]
+        pool = DATA[action_type].get(severity, [])
 
     if not pool:
-        st.warning("Pro tuto kombinaci zatím nejsou žádná data.")
+        st.warning("Pro tuto kombinaci nejsou žádná data.")
     else:
-        result = pick_random(pool)
+        result = weighted_random(pool)
 
-        # Save to log
-        st.session_state.log.insert(0, {
-            "action": action_type,
-            "attack_type": attack_type,
-            "severity": severity,
-            "effect": result["effect"],
-            "roleplay": result["roleplay"]
-        })
+        # =========================
+        # OUTPUT
+        # =========================
 
-        # Keep last 5
-        st.session_state.log = st.session_state.log[:5]
-
-        # ==============================
-        # DISPLAY RESULT
-        # ==============================
-
+        st.markdown("---")
         st.markdown("## 📜 Výsledek")
 
         if attack_type:
@@ -109,28 +94,18 @@ if st.button("🎲 CRIT FAIL"):
 
         st.markdown(f"**Závažnost:** {severity}")
         st.markdown("")
-        st.markdown(f"**Herní efekt:**  \n{result['effect']}")
+
+        st.markdown("### 🎯 Herní efekt")
+        st.markdown(result["effect"])
+
         st.markdown("")
-        st.markdown("**Popis (roleplay):**")
+        st.markdown("### 🎭 Popis (DM → hráč)")
         st.markdown(f"- {result['roleplay'][0]}")
         st.markdown(f"- {result['roleplay'][1]}")
 
-# ==================================================
-# LOG
-# ==================================================
+# =========================
+# FOOTER
+# =========================
 
-if st.session_state.log:
-    st.markdown("---")
-    st.markdown("## 🧾 Poslední crit faily")
-
-    for i, entry in enumerate(st.session_state.log):
-        label = entry["action"]
-        if entry["attack_type"]:
-            label += f" ({entry['attack_type']})"
-
-        with st.expander(f"{i+1}. {label} | {entry['severity']}"):
-            st.markdown(f"**Herní efekt:**  \n{entry['effect']}")
-            st.markdown("")
-            st.markdown("**Popis (roleplay):**")
-            st.markdown(f"- {entry['roleplay'][0]}")
-            st.markdown(f"- {entry['roleplay'][1]}")
+st.markdown("---")
+st.caption("Data se načítají automaticky z Excelu přes GitHub Actions.")
