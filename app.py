@@ -13,63 +13,74 @@ with open("crit_fails.json", "r", encoding="utf-8") as f:
 # STREAMLIT CONFIG
 # ==================================================
 
-st.set_page_config(page_title="D&D Crit Fail Generator", layout="centered")
-st.title("🎲 D&D Crit Fail Generator (Offline)")
+st.set_page_config(
+    page_title="D&D Crit Fail Generator",
+    layout="centered"
+)
+
+st.title("🎲 D&D Crit Fail Generator")
+st.caption("Offline • D&D 2024 compatible • DM tool")
 
 # ==================================================
-# SESSION LOG
+# SESSION STATE
 # ==================================================
 
 if "log" not in st.session_state:
     st.session_state.log = []
 
 # ==================================================
-# UI
+# UI – SELECTION
 # ==================================================
 
-typ_akce = st.selectbox(
-    "Typ akce:",
+attack_type = st.selectbox(
+    "Typ útoku:",
     list(CRIT_FAILS.keys())
 )
 
-zavaznost = st.selectbox(
+severity = st.selectbox(
     "Závažnost:",
-    list(CRIT_FAILS[typ_akce].keys())
+    list(CRIT_FAILS[attack_type].keys())
 )
 
 # ==================================================
-# RANDOM VÝBĚR S VÁHAMI
+# RANDOM SELECTION (WEIGHTED)
 # ==================================================
 
-def nahodny_crit_fail(typ, zavaznost):
-    moznosti = CRIT_FAILS[typ][zavaznost]
-    vahy = [m.get("weight", 1) for m in moznosti]
-    return random.choices(moznosti, weights=vahy, k=1)[0]
+def get_random_crit_fail(data):
+    weights = [item.get("weight", 1) for item in data]
+    return random.choices(data, weights=weights, k=1)[0]
 
 # ==================================================
 # BUTTON
 # ==================================================
 
 if st.button("🎲 CRIT FAIL"):
-    vysledek = nahodny_crit_fail(typ_akce, zavaznost)
+    pool = CRIT_FAILS[attack_type][severity]
 
-    st.session_state.log.insert(0, {
-        "typ": typ_akce,
-        "zavaznost": zavaznost,
-        "popis": vysledek["effect"],
-        "efekt": vysledek["roleplay"]
-    })
+    if not pool:
+        st.warning("Pro tuto kombinaci zatím nejsou žádná data.")
+    else:
+        result = get_random_crit_fail(pool)
 
-    st.session_state.log = st.session_state.log[:5]
+        # Save to log
+        st.session_state.log.insert(0, {
+            "attack_type": attack_type,
+            "severity": severity,
+            "effect": result["effect"],
+            "roleplay": result["roleplay"]
+        })
 
-    st.markdown("### 📜 Výsledek")
-    st.markdown(f"""
-**Popis:**  
-{vysledek["popis"]}
+        # Keep last 5
+        st.session_state.log = st.session_state.log[:5]
 
-**Herní efekt:**  
-{vysledek["efekt"]}
-""")
+        # Display result
+        st.markdown("## 📜 Výsledek")
+
+        st.markdown(f"**Herní efekt:**  \n{result['effect']}")
+        st.markdown("")
+        st.markdown("**Popis (roleplay):**")
+        st.markdown(f"- {result['roleplay'][0]}")
+        st.markdown(f"- {result['roleplay'][1]}")
 
 # ==================================================
 # LOG
@@ -77,15 +88,12 @@ if st.button("🎲 CRIT FAIL"):
 
 if st.session_state.log:
     st.markdown("---")
-    st.markdown("### 🧾 Poslední crit faily")
+    st.markdown("## 🧾 Poslední crit faily")
 
-    for i, z in enumerate(st.session_state.log):
-        with st.expander(f"{i+1}. {z['typ']} | {z['zavaznost']}"):
-            st.markdown(f"""
-**Popis:**  
-{z["popis"]}
-
-**Herní efekt:**  
-{z["efekt"]}
-""")
-
+    for i, entry in enumerate(st.session_state.log):
+        with st.expander(f"{i+1}. {entry['attack_type']} | {entry['severity']}"):
+            st.markdown(f"**Herní efekt:**  \n{entry['effect']}")
+            st.markdown("")
+            st.markdown("**Popis (roleplay):**")
+            st.markdown(f"- {entry['roleplay'][0]}")
+            st.markdown(f"- {entry['roleplay'][1]}")
