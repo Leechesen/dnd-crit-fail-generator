@@ -56,8 +56,8 @@ if st.button("🎲 CRIT FAIL"):
     st.session_state.log.insert(0, {
         "typ": typ_akce,
         "zavaznost": zavaznost,
-        "popis": vysledek["popis"],
-        "efekt": vysledek["efekt"]
+        "popis": vysledek["effect"],
+        "efekt": vysledek["roleplay"]
     })
 
     st.session_state.log = st.session_state.log[:5]
@@ -88,3 +88,4 @@ if st.session_state.log:
 **Herní efekt:**  
 {z["efekt"]}
 """)
+
