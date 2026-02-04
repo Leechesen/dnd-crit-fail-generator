@@ -1,60 +1,206 @@
 {
   "Útok": {
     "Lehký": [
-      { "popis": "Při výpadu uklouzneš na nerovném terénu a útok mine.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Tvůj švih je příliš opatrný a postrádá razanci.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Ztratíš na okamžik rovnováhu při kroku vpřed.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Útok je špatně načasovaný a soupeř ho snadno přečte.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Zakopneš o výstupek v zemi a musíš se rychle srovnat.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-      { "popis": "Tvůj výpad je příliš široký a zbytečně tě otevře.", "efekt": "Soupeř má výhodu na svůj další útok proti tobě.", "weight": 1 },
-      { "popis": "Zbraň ti na chvíli sjede v ruce.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Zaváháš kvůli hluku a ztratíš rytmus boje.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-      { "popis": "Tvůj pohyb je neohrabaný a nutí tě změnit postoj.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Útok je příliš uspěchaný a postrádá přesnost.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-
-      { "popis": "Soupeř tě vyvede z míry drobným manévrem.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Tvůj výpad tě donutí přehodnotit pozici.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Zbraň narazí do překážky a útok se rozpadne.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-      { "popis": "Útok tě stojí víc energie, než jsi čekal.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Špatně odhadneš vzdálenost cíle.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Tvůj krok vpřed tě vyvede z ideální pozice.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Útok mine kvůli špatnému úhlu.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-      { "popis": "Ztratíš krátce přehled o soupeřově pohybu.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Tvůj postoj je nestabilní.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Útok je snadno čitelný.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-
-      { "popis": "Tvůj švih je přerušen nečekaným pohybem soupeře.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-      { "popis": "Zbraň mine cíl o vlásek.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Krok stranou tě vyvede z ideální linie.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Tvůj útok postrádá potřebnou jistotu.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Zaváháš při změně tempa.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-      { "popis": "Tvůj výpad tě na okamžik otevře.", "efekt": "Soupeř má výhodu na svůj další útok proti tobě.", "weight": 1 },
-      { "popis": "Ztratíš pevný postoj.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Útok je příliš předvídatelný.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Tvůj švih tě nutí ustoupit.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Zbraň narazí do štítu jinak, než jsi čekal.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-
-      { "popis": "Tvůj útok je přerušen nečekaným manévrem.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Ztratíš na okamžik rovnováhu.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Útok mine kvůli špatnému odhadu.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Tvůj pohyb tě vyvede z rytmu boje.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-      { "popis": "Zaváháš při výpadu.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Tvůj krok je příliš dlouhý.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Útok je slabý a nepřesvědčivý.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Ztratíš krátce ideální pozici.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Tvůj švih je špatně načasovaný.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Útok skončí neškodně mimo cíl.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-
-      { "popis": "Tvůj výpad je přerušen změnou tempa.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Ztratíš pevný kontakt se zemí.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Útok tě donutí lehce ustoupit.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Tvůj švih je nepřesný.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Zaváháš při změně směru.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-      { "popis": "Útok je snadno odražen.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Tvůj krok tě vyvede z ideální pozice.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
-      { "popis": "Útok postrádá správné načasování.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
-      { "popis": "Ztratíš krátce kontrolu nad pohybem.", "efekt": "Čistě narativní selhání.", "weight": 1 },
-      { "popis": "Tvůj výpad mine kvůli špatnému úhlu.", "efekt": "Nevýhoda na další útok.", "weight": 1 }
+      {
+    "effect": "Nevýhoda na další útok.",
+    "roleplay": [
+      "Tvůj švih mine o vlásek, když soupeř instinktivně ucukne.",
+      "Musíš znovu srovnat postoj, než se odvážíš k dalšímu úderu."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Ztratíš reakci do začátku dalšího kola.",
+    "roleplay": [
+      "Útok tě vyvede z rytmu a nestačíš reagovat na pohyb soupeře.",
+      "Na okamžik jsi plně soustředěný jen na návrat do rovnováhy."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Cíl má výhodu na první útok proti tobě.",
+    "roleplay": [
+      "Tvůj otevřený postoj dává soupeři jasnou příležitost.",
+      "Vidíš v jeho očích, že přesně ví, kdy zaútočit."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Nemůžeš provádět příležitostné útoky do začátku dalšího kola.",
+    "roleplay": [
+      "Tvůj pohyb je příliš rozhozený na to, abys kontroloval okolí.",
+      "Soupeři kolem tebe mají větší volnost v manévrování."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Tvůj pohyb je snížen o 3 m do konce příštího kola.",
+    "roleplay": [
+      "Špatné došlápnutí tě zpomalí.",
+      "Každý další krok vyžaduje větší opatrnost."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Nemůžeš použít bonusovou akci do konce kola.",
+    "roleplay": [
+      "Musíš se plně soustředit na dokončení útoku.",
+      "Na další manévry ti v tuto chvíli nezbývá prostor."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Tvůj další útok nemůže mít výhodu.",
+    "roleplay": [
+      "Tvůj rytmus boje je narušen.",
+      "I při dobré příležitosti se nedokážeš opřít o převahu."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Máš -2 k AC do začátku dalšího kola.",
+    "roleplay": [
+      "Tvůj postoj je otevřený a obrana oslabená.",
+      "Soupeř si toho okamžitě všimne."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Nemůžeš použít Weapon Mastery při dalším útoku.",
+    "roleplay": [
+      "Zbraň se ti v ruce nechová tak, jak bys chtěl.",
+      "Na precizní techniky si budeš muset počkat."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Tvůj další útok nemůže kriticky zasáhnout.",
+    "roleplay": [
+      "Tvůj švih postrádá potřebnou přesnost.",
+      "I dobře mířený úder postrádá rozhodující moment."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Máš nevýhodu na Athletics do konce příštího kola.",
+    "roleplay": [
+      "Svaly nejsou v ideálním napětí.",
+      "Silové manévry ti nyní půjdou hůř."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Máš nevýhodu na Acrobatics do konce příštího kola.",
+    "roleplay": [
+      "Tvůj pohyb je nejistý a neohrabaný.",
+      "Rychlé obraty jsou teď riskantní."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Nemůžeš použít Disengage do konce příštího kola.",
+    "roleplay": [
+      "Tvůj soupeř tě má pevně pod tlakem.",
+      "Jakýkoli pokus o ústup je nebezpečný."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Nemůžeš použít Dodge do konce příštího kola.",
+    "roleplay": [
+      "Tvá pozornost je stále u předchozího útoku.",
+      "Na čistou obranu se teď nedokážeš soustředit."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Tvůj další útok má snížený dosah o 1,5 m.",
+    "roleplay": [
+      "Tvůj krok vpřed není dostatečně jistý.",
+      "Musíš se přiblížit víc, než jsi plánoval."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Nemůžeš použít Ready akci do konce příštího kola.",
+    "roleplay": [
+      "Tvůj bojový rytmus je narušen.",
+      "Reakční příprava ti nyní dělá potíže."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Tvůj další útok nemůže využít flanking.",
+    "roleplay": [
+      "Špatné načasování tě vyřadí z ideální pozice.",
+      "Souhra se spojenci na chvíli selhává."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Tvůj pohyb vyvolá příležitostný útok, pokud se pohneš.",
+    "roleplay": [
+      "Tvůj postoj je příliš otevřený.",
+      "Jakýkoli krok může dát soupeři šanci zaútočit."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Tvůj další útok nemůže využít magical bonus zbraně.",
+    "roleplay": [
+      "Magie zbraně na okamžik zhasne.",
+      "Musíš se spolehnout jen na vlastní sílu."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Nemůžeš použít reroll mechaniky při dalším útoku.",
+    "roleplay": [
+      "Štěstí se od tebe na chvíli odvrací.",
+      "Musíš přijmout výsledek takový, jaký je."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Tvůj další útok automaticky mine při hodu 1–2.",
+    "roleplay": [
+      "Tvůj pohyb je stále nejistý.",
+      "Malá chyba stačí k úplnému selhání útoku."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Nemůžeš použít Extra Attack při dalším útoku.",
+    "roleplay": [
+      "Tvůj předchozí výpad tě zcela vyčerpal.",
+      "Na rychlou kombinaci teď nemáš prostor."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Tvůj další útok má minimální možné poškození.",
+    "roleplay": [
+      "Úder sice zasáhne, ale bez potřebné síly.",
+      "Soupeř jej téměř ignoruje."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Nemůžeš použít class feature při dalším útoku.",
+    "roleplay": [
+      "Tvá technika selhává v klíčový moment.",
+      "Musíš se spolehnout na základní instinkt."
+    ],
+    "weight": 1
+  },
+  {
+    "effect": "Tvůj pohyb je považován za obtížný terén do konce kola.",
+    "roleplay": [
+      "Každý krok je těžší, než by měl být.",
+      "Bojiště ti klade odpor."
+    ],
+    "weight": 1
+  }
     ],
 
     "Střední": [
@@ -134,4 +280,5 @@
     "Těžký": []
   }
 }
+
 
