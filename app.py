@@ -29,17 +29,34 @@ if "log" not in st.session_state:
     st.session_state.log = []
 
 # ==================================================
-# UI – SELECTION
+# UI – STEP 1: TYPE OF ACTION
 # ==================================================
 
-attack_type = st.selectbox(
-    "Typ útoku:",
-    list(CRIT_FAILS.keys())
+action_type = st.selectbox(
+    "Typ akce:",
+    ["Útok"]
 )
+
+# ==================================================
+# UI – STEP 2: ATTACK TYPE (ONLY IF ATTACK)
+# ==================================================
+
+attack_type = None
+
+if action_type == "Útok":
+    attack_type = st.radio(
+        "Typ útoku:",
+        ["melee", "ranged"],
+        horizontal=True
+    )
+
+# ==================================================
+# UI – STEP 3: SEVERITY
+# ==================================================
 
 severity = st.selectbox(
     "Závažnost:",
-    list(CRIT_FAILS[attack_type].keys())
+    ["light", "medium", "heavy"]
 )
 
 # ==================================================
@@ -55,32 +72,36 @@ def get_random_crit_fail(data):
 # ==================================================
 
 if st.button("🎲 CRIT FAIL"):
-    pool = CRIT_FAILS[attack_type][severity]
-
-    if not pool:
-        st.warning("Pro tuto kombinaci zatím nejsou žádná data.")
+    if not attack_type:
+        st.warning("Vyber typ útoku.")
     else:
-        result = get_random_crit_fail(pool)
+        pool = CRIT_FAILS[attack_type][severity]
 
-        # Save to log
-        st.session_state.log.insert(0, {
-            "attack_type": attack_type,
-            "severity": severity,
-            "effect": result["effect"],
-            "roleplay": result["roleplay"]
-        })
+        if not pool:
+            st.warning("Pro tuto kombinaci zatím nejsou žádná data.")
+        else:
+            result = get_random_crit_fail(pool)
 
-        # Keep last 5
-        st.session_state.log = st.session_state.log[:5]
+            # Save to log
+            st.session_state.log.insert(0, {
+                "action": action_type,
+                "attack_type": attack_type,
+                "severity": severity,
+                "effect": result["effect"],
+                "roleplay": result["roleplay"]
+            })
 
-        # Display result
-        st.markdown("## 📜 Výsledek")
+            # Keep last 5
+            st.session_state.log = st.session_state.log[:5]
 
-        st.markdown(f"**Herní efekt:**  \n{result['effect']}")
-        st.markdown("")
-        st.markdown("**Popis (roleplay):**")
-        st.markdown(f"- {result['roleplay'][0]}")
-        st.markdown(f"- {result['roleplay'][1]}")
+            # Display result
+            st.markdown("## 📜 Výsledek")
+
+            st.markdown(f"**Herní efekt:**  \n{result['effect']}")
+            st.markdown("")
+            st.markdown("**Popis (roleplay):**")
+            st.markdown(f"- {result['roleplay'][0]}")
+            st.markdown(f"- {result['roleplay'][1]}")
 
 # ==================================================
 # LOG
@@ -91,7 +112,9 @@ if st.session_state.log:
     st.markdown("## 🧾 Poslední crit faily")
 
     for i, entry in enumerate(st.session_state.log):
-        with st.expander(f"{i+1}. {entry['attack_type']} | {entry['severity']}"):
+        with st.expander(
+            f"{i+1}. {entry['action']} | {entry['attack_type']} | {entry['severity']}"
+        ):
             st.markdown(f"**Herní efekt:**  \n{entry['effect']}")
             st.markdown("")
             st.markdown("**Popis (roleplay):**")
