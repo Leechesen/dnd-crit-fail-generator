@@ -428,5 +428,217 @@
         "weight": 1
       }
     ]
+  },
+  "Útok (2)": {
+    "Lehký": [
+      {
+        "effect": "Nevýhoda na další útok.",
+        "roleplay": [
+          "Tvůj švih mine o vlásek, soupeř v poslední chvíli ucukne.",
+          "Musíš znovu srovnat postoj, než se odvážíš k dalšímu úderu."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš reakci do začátku dalšího kola.",
+        "roleplay": [
+          "Tvůj útok tě vyvede z rytmu a nestíháš reagovat na pohyb soupeře.",
+          "Na okamžik se soustředíš jen na to, abys znovu nabyl rovnováhu."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Cíl má výhodu na první útok proti tobě.",
+        "roleplay": [
+          "Tvůj postoj zůstane otevřený a dáváš soupeři příležitost.",
+          "Vidíš, že přesně ví, kdy proti tobě zaútočit."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Nemůžeš provádět příležitostné útoky do začátku dalšího kola.",
+        "roleplay": [
+          "Tvůj pohyb je rozházený a nestíháš hlídat okolí.",
+          "Soupeři kolem tebe mají větší prostor k manévrování."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Tvůj pohyb je snížen o 3 m do konce příštího kola.",
+        "roleplay": [
+          "Špatně došlápneš a noha tě na okamžik neposlouchá.",
+          "Každý další krok vyžaduje větší opatrnost."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Nemůžeš použít bonusovou akci do konce kola.",
+        "roleplay": [
+          "Musíš vložit všechnu pozornost do dokončení útoku.",
+          "Na další manévry ti v tuto chvíli nezbývá prostor."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Tvůj další útok nemůže mít výhodu.",
+        "roleplay": [
+          "Tvůj rytmus boje je narušený.",
+          "Ani při dobré příležitosti se nedokážeš opřít o převahu."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Máš -2 k AC do začátku dalšího kola.",
+        "roleplay": [
+          "Tvůj postoj je otevřený a obrana oslabená.",
+          "Soupeř si tvé chyby okamžitě všimne."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Nemůžeš použít Weapon Mastery při dalším útoku.",
+        "roleplay": [
+          "Zbraň se ti v ruce nechová tak, jak bys chtěl.",
+          "Na precizní techniky si budeš muset počkat."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Tvůj další útok nemůže kriticky zasáhnout.",
+        "roleplay": [
+          "Tvůj úder postrádá přesnost i načasování.",
+          "I dobře mířený zásah nemá rozhodující sílu."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Máš nevýhodu na Athletics do konce příštího kola.",
+        "roleplay": [
+          "Svaly nemáš ve správném napětí.",
+          "Silové manévry ti teď půjdou hůř než obvykle."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Máš nevýhodu na Acrobatics do konce příštího kola.",
+        "roleplay": [
+          "Tvůj pohyb je nejistý a neohrabaný.",
+          "Rychlé obraty jsou teď nebezpečné."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Nemůžeš použít Disengage do konce příštího kola.",
+        "roleplay": [
+          "Soupeř tě drží pod tlakem a nedává ti prostor ustoupit.",
+          "Jakýkoli pokus o únik by byl riskantní."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Nemůžeš použít Dodge do konce příštího kola.",
+        "roleplay": [
+          "Stále jsi soustředěný na předchozí útok.",
+          "Na čistou obranu se teď nedokážeš plně zaměřit."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Tvůj další útok má snížený dosah o 1,5 m.",
+        "roleplay": [
+          "Tvůj krok vpřed není dostatečně jistý.",
+          "Musíš se k cíli přiblížit víc, než jsi plánoval."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Nemůžeš použít Ready akci do konce příštího kola.",
+        "roleplay": [
+          "Tvůj bojový rytmus je narušený.",
+          "Nestíháš se připravit na reakční útok."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Tvůj další útok nemůže využít flanking.",
+        "roleplay": [
+          "Špatné načasování tě vyvede z ideální pozice.",
+          "Se spojenci se na chvíli nedokážeš sladit."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Tvůj pohyb vyvolá příležitostný útok, pokud se pohneš.",
+        "roleplay": [
+          "Tvůj postoj je příliš otevřený.",
+          "Jakýkoli krok může dát soupeři šanci zaútočit."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Tvůj další útok nemůže využít magický bonus zbraně.",
+        "roleplay": [
+          "Magie ve zbrani na okamžik pohasne.",
+          "Musíš se spolehnout jen na vlastní sílu."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Nemůžeš použít reroll mechaniky při dalším útoku.",
+        "roleplay": [
+          "Štěstí se od tebe na chvíli odvrací.",
+          "Musíš přijmout výsledek takový, jaký je."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Tvůj další útok automaticky mine při hodu 1–2.",
+        "roleplay": [
+          "Tvé pohyby jsou stále nejisté.",
+          "Stačí drobná chyba a útok zcela selže."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Nemůžeš použít Extra Attack při dalším útoku.",
+        "roleplay": [
+          "Předchozí výpad tě zcela vyčerpal.",
+          "Na rychlou kombinaci teď nemáš prostor."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Tvůj další útok má minimální možné poškození.",
+        "roleplay": [
+          "Úder sice zasáhne, ale bez potřebné síly.",
+          "Soupeř zásah téměř ignoruje."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Nemůžeš použít class feature při dalším útoku.",
+        "roleplay": [
+          "Tvá technika selhává v klíčový moment.",
+          "Musíš se spolehnout jen na základní instinkt."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Tvůj pohyb je považován za obtížný terén do konce kola.",
+        "roleplay": [
+          "Každý krok je těžší, než by měl být.",
+          "Bojiště ti klade odpor."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "bla",
+        "roleplay": [
+          "bla",
+          "smrdíš"
+        ],
+        "weight": 1
+      }
+    ]
   }
 }
