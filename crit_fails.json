@@ -1,0 +1,81 @@
+{
+  "Útok": {
+    "Lehký": [
+      { "popis": "Při výpadu uklouzneš na nerovném terénu a útok mine.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Tvůj švih je příliš opatrný a postrádá razanci.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Ztratíš na okamžik rovnováhu při kroku vpřed.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Útok je špatně načasovaný a soupeř ho snadno přečte.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Zakopneš o výstupek v zemi a musíš se rychle srovnat.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+      { "popis": "Tvůj výpad je příliš široký a zbytečně tě otevře.", "efekt": "Soupeř má výhodu na svůj další útok proti tobě.", "weight": 1 },
+      { "popis": "Zbraň ti na chvíli sjede v ruce.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Zaváháš kvůli hluku a ztratíš rytmus boje.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+      { "popis": "Tvůj pohyb je neohrabaný a nutí tě změnit postoj.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Útok je příliš uspěchaný a postrádá přesnost.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+
+      { "popis": "Soupeř tě vyvede z míry drobným manévrem.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Tvůj výpad tě donutí přehodnotit pozici.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Zbraň narazí do překážky a útok se rozpadne.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+      { "popis": "Útok tě stojí víc energie, než jsi čekal.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Špatně odhadneš vzdálenost cíle.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Tvůj krok vpřed tě vyvede z ideální pozice.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Útok mine kvůli špatnému úhlu.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+      { "popis": "Ztratíš krátce přehled o soupeřově pohybu.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Tvůj postoj je nestabilní.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Útok je snadno čitelný.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+
+      { "popis": "Tvůj švih je přerušen nečekaným pohybem soupeře.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+      { "popis": "Zbraň mine cíl o vlásek.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Krok stranou tě vyvede z ideální linie.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Tvůj útok postrádá potřebnou jistotu.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Zaváháš při změně tempa.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+      { "popis": "Tvůj výpad tě na okamžik otevře.", "efekt": "Soupeř má výhodu na svůj další útok proti tobě.", "weight": 1 },
+      { "popis": "Ztratíš pevný postoj.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Útok je příliš předvídatelný.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Tvůj švih tě nutí ustoupit.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Zbraň narazí do štítu jinak, než jsi čekal.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+
+      { "popis": "Tvůj útok je přerušen nečekaným manévrem.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Ztratíš na okamžik rovnováhu.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Útok mine kvůli špatnému odhadu.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Tvůj pohyb tě vyvede z rytmu boje.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+      { "popis": "Zaváháš při výpadu.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Tvůj krok je příliš dlouhý.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Útok je slabý a nepřesvědčivý.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Ztratíš krátce ideální pozici.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Tvůj švih je špatně načasovaný.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Útok skončí neškodně mimo cíl.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+
+      { "popis": "Tvůj výpad je přerušen změnou tempa.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Ztratíš pevný kontakt se zemí.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Útok tě donutí lehce ustoupit.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Tvůj švih je nepřesný.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Zaváháš při změně směru.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+      { "popis": "Útok je snadno odražen.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Tvůj krok tě vyvede z ideální pozice.", "efekt": "Posuneš se o 1,5 m.", "weight": 1 },
+      { "popis": "Útok postrádá správné načasování.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+      { "popis": "Ztratíš krátce kontrolu nad pohybem.", "efekt": "Čistě narativní selhání.", "weight": 1 },
+      { "popis": "Tvůj výpad mine kvůli špatnému úhlu.", "efekt": "Nevýhoda na další útok.", "weight": 1 }
+    ],
+
+    "Střední": [],
+    "Těžký": []
+  },
+
+  "Obrana": {
+    "Lehký": [],
+    "Střední": [],
+    "Těžký": []
+  },
+
+  "Kouzlo": {
+    "Lehký": [],
+    "Střední": [],
+    "Těžký": []
+  },
+
+  "Skill": {
+    "Lehký": [],
+    "Střední": [],
+    "Těžký": []
+  }
+}
