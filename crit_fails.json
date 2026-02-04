@@ -57,7 +57,62 @@
       { "popis": "Tvůj výpad mine kvůli špatnému úhlu.", "efekt": "Nevýhoda na další útok.", "weight": 1 }
     ],
 
-    "Střední": [],
+    "Střední": [
+  { "popis": "Přeceníš vzdálenost a narazíš do soupeře vlastním pohybem.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Tvůj výpad tě vyvede z rovnováhy a musíš se znovu srovnat.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Soupeř tě zachytí v pohybu a donutí tě ustoupit.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Útok tě nutí přejít do čistě obranného postoje.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Tvůj švih je příliš široký a ztrácíš kontrolu nad zbraní.", "efekt": "Ztrácíš bonusovou akci v příštím kole.", "weight": 1 },
+  { "popis": "Zbraň tě stáhne z ideální linie útoku.", "efekt": "Ztrácíš bonusovou akci v příštím kole.", "weight": 1 },
+  { "popis": "Souboj tě vyčerpá víc, než jsi čekal.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+  { "popis": "Tvůj útok je čitelný a snadno odražen.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+  { "popis": "Ztratíš rovnováhu při změně směru.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Tvůj pohyb tě na okamžik zcela otevře.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+
+  { "popis": "Útok tě donutí přehodnotit celé postavení.", "efekt": "Ztrácíš bonusovou akci v příštím kole.", "weight": 1 },
+  { "popis": "Soupeř tě srazí stranou tvého výpadu.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Tvůj švih tě vyvede z rytmu boje.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+  { "popis": "Ztratíš na okamžik kontrolu nad bojištěm.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Útok tě stojí víc energie, než sis plánoval.", "efekt": "Ztrácíš bonusovou akci v příštím kole.", "weight": 1 },
+  { "popis": "Tvůj výpad je zachycen a obrácen proti tobě.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Souboj tě donutí stáhnout se do obrany.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Tvůj útok tě vyvede z ideální pozice.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+  { "popis": "Zbraň se ti na okamžik vymkne kontrole.", "efekt": "Ztrácíš bonusovou akci v příštím kole.", "weight": 1 },
+  { "popis": "Tvůj pohyb tě donutí k nečekanému pádu.", "efekt": "Spadneš do prone.", "weight": 1 },
+
+  { "popis": "Soupeř tě přinutí reagovat místo útoku.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Tvůj švih je vychýlen a ztratíš tempo.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+  { "popis": "Útok tě vyvede z rytmu a musíš se znovu soustředit.", "efekt": "Ztrácíš bonusovou akci v příštím kole.", "weight": 1 },
+  { "popis": "Ztratíš stabilitu při prudkém výpadu.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Souboj tě donutí soustředit se čistě na obranu.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Tvůj útok tě zcela vyčerpá.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+  { "popis": "Zbraň tě stáhne mimo ideální pozici.", "efekt": "Ztrácíš bonusovou akci v příštím kole.", "weight": 1 },
+  { "popis": "Soupeř tě srazí při tvém výpadu.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Tvůj pohyb tě donutí reagovat místo útočení.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Útok tě vyvede z tempa boje.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+
+  { "popis": "Tvůj výpad je přerušen tvrdým protiúderem.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Soupeř tě donutí k obrannému manévru.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Útok tě stojí zbytečně mnoho sil.", "efekt": "Ztrácíš bonusovou akci v příštím kole.", "weight": 1 },
+  { "popis": "Tvůj švih je snadno odražen.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+  { "popis": "Ztratíš rovnováhu při agresivním výpadu.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Souboj tě donutí reagovat místo plánování.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Tvůj útok tě vyvede z koncentrace.", "efekt": "Concentration check DC 10.", "weight": 1 },
+  { "popis": "Ztratíš soustředění během útoku.", "efekt": "Concentration check DC 10.", "weight": 1 },
+  { "popis": "Tvůj výpad tě donutí znovu se soustředit.", "efekt": "Concentration check DC 10.", "weight": 1 },
+  { "popis": "Souboj naruší tvou koncentraci.", "efekt": "Concentration check DC 10.", "weight": 1 },
+
+  { "popis": "Tvůj útok tě vyvede z rovnováhy a otevře.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Soupeř tě zatlačí do defenzivy.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Tvůj švih tě zcela vyčerpá.", "efekt": "Ztrácíš bonusovou akci v příštím kole.", "weight": 1 },
+  { "popis": "Útok je odražen a ztratíš tempo.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+  { "popis": "Ztratíš stabilitu při prudké změně směru.", "efekt": "Spadneš do prone.", "weight": 1 },
+  { "popis": "Souboj tě donutí soustředit se na obranu.", "efekt": "Ztrácíš reakci do začátku dalšího kola.", "weight": 1 },
+  { "popis": "Tvůj útok naruší koncentraci.", "efekt": "Concentration check DC 10.", "weight": 1 },
+  { "popis": "Ztratíš kontrolu nad tempem boje.", "efekt": "Nevýhoda na další útok.", "weight": 1 },
+  { "popis": "Tvůj výpad tě donutí zpomalit.", "efekt": "Ztrácíš bonusovou akci v příštím kole.", "weight": 1 },
+  { "popis": "Soupeř tě zachytí v pohybu.", "efekt": "Spadneš do prone.", "weight": 1 }
+],
     "Těžký": []
   },
 
@@ -79,3 +134,4 @@
     "Těžký": []
   }
 }
+
