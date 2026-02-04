@@ -1,0 +1,36 @@
+name: Excel to JSON
+
+on:
+  push:
+    paths:
+      - "crit_fails.xlsx"
+      - "excel_to_json.py"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Convert Excel to JSON
+        run: |
+          python excel_to_json.py
+
+      - name: Commit generated JSON
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add crit_fails.json
+          git commit -m "Auto-update crit_fails.json from Excel" || echo "No changes"
+          git push
