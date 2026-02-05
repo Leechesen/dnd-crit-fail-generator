@@ -3968,6 +3968,88 @@
           ],
           "weight": 1
         }
+      ],
+      "Sranda": [
+        {
+          "effect": "Něco se pokazilo spíš trapně než nebezpečně.",
+          "roleplay": [
+            "Zabereš tak moc, že si natáhneš sval a musíš si ho promnout.",
+            "Vypadá to hrozivě, ale nejvíc tě bolí tvoje hrdost."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nepřítel síly je gravitace.",
+          "roleplay": [
+            "Zakřičíš bojový pokřik a uklouzneš na vlastní slině.",
+            "Dopad je tvrdý hlavně pro tvoje ego."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výstroj selhává.",
+          "roleplay": [
+            "Při zvedání praskne opasek a kalhoty začnou klouzat dolů.",
+            "Všichni si všimnou dřív než ty."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Síla bez kontroly.",
+          "roleplay": [
+            "Zabereš a v ruce ti zůstane jen kus toho, co jsi chtěl zvednout.",
+            "Zbytek zůstane na místě a vysmívá se ti."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Síla špatným směrem.",
+          "roleplay": [
+            "Zakopneš o něco, co jsi měl překonat silou.",
+            "Pád je rychlejší než rozběh."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zbraň má vlastní názor.",
+          "roleplay": [
+            "Uhodíš se vlastní zbraní do holeně.",
+            "Není to hrdinský moment."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tělo vydá zvuk.",
+          "roleplay": [
+            "Ozve se hlasité „křup“.",
+            "Naštěstí jen kloub… pravděpodobně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přepálený pohyb.",
+          "roleplay": [
+            "Zabereš tak, že si loktem dáš do žeber.",
+            "Na chvíli ztratíš dech i důstojnost."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Překážka byla níž, než sis myslel.",
+          "roleplay": [
+            "Narazíš hlavou do objektu, který jsi nečekal.",
+            "Síla tu nepomohla."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vítězství s následky.",
+          "roleplay": [
+            "Objekt se pohne… ty padáš.",
+            "Vyhrál jsi, ale za cenu pádu."
+          ],
+          "weight": 1
+        }
       ]
     },
     "Dexterity": {
@@ -4573,6 +4655,88 @@
           "roleplay": [
             "Tělo neodpovídá.",
             "Zůstaneš bezmocný."
+          ],
+          "weight": 1
+        }
+      ],
+      "Sranda": [
+        {
+          "effect": "Obratnost se urazila.",
+          "roleplay": [
+            "Uklouzneš na naprosto suché podlaze.",
+            "Nikdo nechápe jak, ale stalo se."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Stealth level: špatný.",
+          "roleplay": [
+            "Šlápneš na prdící polštářek.",
+            "Ticho je definitivně pryč."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pohyb s vedlejšími efekty.",
+          "roleplay": [
+            "Při kotoulu ti vypadne výbava po okolí.",
+            "Teď ví všichni, co nosíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tělo sabotuje samo sebe.",
+          "roleplay": [
+            "Zakopneš o vlastní nohu.",
+            "Nikdo to nedokáže vysvětlit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Směr byl správný.",
+          "roleplay": [
+            "Cíl už ne.",
+            "Hodíš předmět perfektně… ale úplně jinam."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Alergie na ticho.",
+          "roleplay": [
+            "Pokusíš se o tichý pohyb, ale kýchnutí to zkazí.",
+            "Elegance mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Plášť útočí.",
+          "roleplay": [
+            "Při dopadu se zamotáš do vlastního oblečení.",
+            "Gravitace vítězí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přesná otočka… do zdi.",
+          "roleplay": [
+            "Otočíš se elegantně a narazíš.",
+            "Elegance byla, cíl ne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Prsty mají kluzký den.",
+          "roleplay": [
+            "Předmět ti vystřelí z ruky.",
+            "Nikdo neví kam."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Styl ano, místo ne.",
+          "roleplay": [
+            "Dopadneš efektně, ale úplně špatně.",
+            "Aplaus nikde."
           ],
           "weight": 1
         }
@@ -5184,6 +5348,88 @@
           ],
           "weight": 1
         }
+      ],
+      "Sranda": [
+        {
+          "effect": "Tělo si stěžuje.",
+          "roleplay": [
+            "Dojde ti dech rychleji, než bys čekal.",
+            "Zní to hůř, než to je."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nečekaný rytmus.",
+          "roleplay": [
+            "Dostaneš škytavku v nejhorší chvíli.",
+            "Nedá se ignorovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Dýchací problém.",
+          "roleplay": [
+            "Polkneš špatně a začneš kašlat.",
+            "Vypadá to dramaticky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tělo protestuje.",
+          "roleplay": [
+            "Zabolí tě břicho tak, že se musíš narovnat.",
+            "Nic vážného, ale viditelné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Klasika.",
+          "roleplay": [
+            "Zapíchne tě v boku.",
+            "Tělo ti připomene, že existuje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Teplotní chaos.",
+          "roleplay": [
+            "Je ti horko, pak zima, pak obojí.",
+            "Tělo si nevybere."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pauza bez domluvy.",
+          "roleplay": [
+            "Musíš si na chvíli opřít ruce o kolena.",
+            "Dýchání je priorita."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zívací útok.",
+          "roleplay": [
+            "Zívneš tak silně, že si natáhneš čelist.",
+            "Nikdo to nečekal."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Organismus odmítá.",
+          "roleplay": [
+            "Tělo si prostě řekne „ne“.",
+            "Bez vysvětlení."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvuková signalizace.",
+          "roleplay": [
+            "Ozve se hlasité kručení žaludku.",
+            "Všichni slyší."
+          ],
+          "weight": 1
+        }
       ]
     },
     "Intelligence": {
@@ -5789,6 +6035,88 @@
           "roleplay": [
             "Myšlenky zmizí.",
             "Akce končí."
+          ],
+          "weight": 1
+        }
+      ],
+      "Sranda": [
+        {
+          "effect": "Logika funguje… špatně.",
+          "roleplay": [
+            "Vysvětlíš to skvěle, ale úplně blbě.",
+            "Dává to smysl jen tobě."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výpadek slovníku.",
+          "roleplay": [
+            "Zapomeneš slovo uprostřed věty.",
+            "Věta končí trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Geniální omyl.",
+          "roleplay": [
+            "Dojdeš k brilantnímu závěru z chybných dat.",
+            "Jsi na sebe hrdý… zatím."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Záměna pojmů.",
+          "roleplay": [
+            "Spleteš si dvě naprosto základní věci.",
+            "Nikdo neví, jestli vtipkuješ."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pozdní uvědomění.",
+          "roleplay": [
+            "Chybu si uvědomíš až poté, co to řekneš nahlas.",
+            "Ticho je výmluvné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Plán z jiného dne.",
+          "roleplay": [
+            "Vysvětlíš plán, který by fungoval… jindy.",
+            "Tady ne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Jména jsou nepřátelé.",
+          "roleplay": [
+            "Popleteš si jména, pojmy nebo směry.",
+            "Někdo se urazí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Falešné „aha“.",
+          "roleplay": [
+            "Řekneš „aha!“ bez toho, abys věděl proč.",
+            "Všichni čekají pokračování."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chaotický výklad.",
+          "roleplay": [
+            "Vysvětlování se ti úplně zamotá.",
+            "Nikdo neví, kde začalo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vlastní realita.",
+          "roleplay": [
+            "Logika dává smysl jen v tvojí hlavě.",
+            "Ostatní tápu."
           ],
           "weight": 1
         }
@@ -6400,6 +6728,88 @@
           ],
           "weight": 1
         }
+      ],
+      "Sranda": [
+        {
+          "effect": "Slepé místo.",
+          "roleplay": [
+            "Koukáš přímo na to… a stejně to nevidíš.",
+            "Všichni ostatní ano."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pohoda až moc.",
+          "roleplay": [
+            "Ignoruješ jasné varování.",
+            "„To je určitě v pohodě.“"
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Čtení místnosti selhalo.",
+          "roleplay": [
+            "Špatně odhadneš náladu úplně všech.",
+            "Ticho houstne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Opačná reakce.",
+          "roleplay": [
+            "Zareaguješ přesně opačně, než by bylo vhodné.",
+            "Okolí nechápe."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Jsi jediný.",
+          "roleplay": [
+            "Všichni vidí hrozbu, jen ty ne.",
+            "Ani teď."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pozdě.",
+          "roleplay": [
+            "Zareaguješ o jednu vteřinu pozdě.",
+            "Ale fakt jen o jednu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vnitřní hlas má dovolenou.",
+          "roleplay": [
+            "Intuice mlčí.",
+            "Rozhodnutí je náhodné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Panika z ničeho.",
+          "roleplay": [
+            "Zbytečně se vyděsíš maličkostí.",
+            "Reakce je přehnaná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Špatná důvěra.",
+          "roleplay": [
+            "Věříš přesně té nejhorší možnosti.",
+            "Ale upřímně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zpětné osvícení.",
+          "roleplay": [
+            "Až pozdě ti dojde, že to byl špatný nápad.",
+            "Hodně pozdě."
+          ],
+          "weight": 1
+        }
       ]
     },
     "Charisma": {
@@ -7005,6 +7415,88 @@
           "roleplay": [
             "Slova ztratí význam.",
             "Jsi bezmocný."
+          ],
+          "weight": 1
+        }
+      ],
+      "Sranda": [
+        {
+          "effect": "Forma zabije obsah.",
+          "roleplay": [
+            "Řekneš to správně, ale strašně trapně.",
+            "Dojem je nezvratný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vtip bez publika.",
+          "roleplay": [
+            "Vtip nedopadne.",
+            "Ticho bolí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Jazyková past.",
+          "roleplay": [
+            "Zakoktáš se v klíčové větě.",
+            "Autorita mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nepovedená slova.",
+          "roleplay": [
+            "Řekneš něco, co zní jako urážka.",
+            "Nechtěně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Snaha byla.",
+          "roleplay": [
+            "Snažíš se být cool.",
+            "Nejsi."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Titulární chyba.",
+          "roleplay": [
+            "Oslovíš špatnou osobu špatným titulem.",
+            "Oprava nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výpadek myšlenky.",
+          "roleplay": [
+            "Zapomeneš, co jsi chtěl říct.",
+            "Všichni čekají."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tón mimo.",
+          "roleplay": [
+            "Tón hlasu vyzní úplně jinak, než jsi chtěl.",
+            "Reakce je rozpačitá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Špatný úsměv.",
+          "roleplay": [
+            "Usměješ se v naprosto nevhodný moment.",
+            "Někdo si to zapamatuje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Záchrana selhala.",
+          "roleplay": [
+            "Pokusíš se zachránit situaci… a ještě ji zhoršíš.",
+            "Teď je to osobní."
           ],
           "weight": 1
         }
