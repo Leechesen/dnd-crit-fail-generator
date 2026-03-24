@@ -9,145 +9,78 @@ import random
 with open("crit_fails.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
-st.title("🎲 DnD Crit Fail Generátor")
+st.title("🎲 DnD Crit Fail Generator")
 
 # =========================
-# MÓD VÝBĚRU
+# TYPE OF ACTION
 # =========================
 
-mode = st.selectbox(
-    "Režim generování:",
-    ["Normální", "Sranda", "Mix"]
-)
-
-mix_ratio = 0
-
-if mode == "Mix":
-    mix_ratio = st.slider(
-        "Kolik % Sranda:",
-        0, 100, 20
-    )
+action = st.selectbox("Typ akce", list(data.keys()))
 
 # =========================
-# VÝBĚR TYP AKCE
+# ATTACK
 # =========================
 
-typ_akce = st.selectbox("Vyber typ akce:", list(data.keys()))
+if action == "Útok":
+    attack_type = st.selectbox("Typ útoku", list(data["Útok"].keys()))
+    severity = st.selectbox("Závažnost", list(data["Útok"][attack_type].keys()))
 
-moznosti_normal = []
-moznosti_sranda = []
-
-# =========================
-# ÚTOK
-# =========================
-
-if typ_akce == "Útok":
-
-    attack_type = st.selectbox(
-        "Typ útoku:",
-        list(data["Útok"].keys())
-    )
-
-    severity_list = list(data["Útok"][attack_type].keys())
-
-    if "Sranda" in severity_list:
-        moznosti_sranda = data["Útok"][attack_type]["Sranda"]
-
-    normal_severities = [s for s in severity_list if s != "Sranda"]
-
-    severity = st.selectbox(
-        "Závažnost:",
-        normal_severities
-    )
-
-    moznosti_normal = data["Útok"][attack_type][severity]
+    pool = data["Útok"][attack_type][severity]
 
 # =========================
 # SKILL
 # =========================
 
-elif typ_akce == "Skill":
+elif action == "Skill":
+    attribute = st.selectbox("Atribut", list(data["Skill"].keys()))
+    skill = st.selectbox("Skill", list(data["Skill"][attribute].keys()))
+    severity = st.selectbox("Závažnost", list(data["Skill"][attribute][skill].keys()))
 
-    skill = st.selectbox(
-        "Atribut:",
-        list(data["Skill"].keys())
-    )
-
-    category = st.selectbox(
-        "Skill:",
-        list(data["Skill"][skill].keys())
-    )
-
-    severity_list = list(data["Skill"][skill][category].keys())
-
-    if "Sranda" in severity_list:
-        moznosti_sranda = data["Skill"][skill][category]["Sranda"]
-
-    normal_severities = [s for s in severity_list if s != "Sranda"]
-
-    severity = st.selectbox(
-        "Závažnost:",
-        normal_severities
-    )
-
-    moznosti_normal = data["Skill"][skill][category][severity]
+    pool = data["Skill"][attribute][skill][severity]
 
 # =========================
-# OSTATNÍ
+# OTHER (Obrana, Kouzlo…)
 # =========================
 
 else:
-
-    severity_list = list(data[typ_akce].keys())
-
-    if "Sranda" in severity_list:
-        moznosti_sranda = data[typ_akce]["Sranda"]
-
-    normal_severities = [s for s in severity_list if s != "Sranda"]
-
-    severity = st.selectbox(
-        "Závažnost:",
-        normal_severities
-    )
-
-    moznosti_normal = data[typ_akce][severity]
+    severity = st.selectbox("Závažnost", list(data[action].keys()))
+    pool = data[action][severity]
 
 # =========================
-# GENEROVÁNÍ
+# SRANDA MIX TOGGLE
 # =========================
 
-if st.button("🎲 Generuj výsledek"):
+mix_sranda = st.checkbox("🎭 Mix se 'Sranda' efekty")
 
-    vysledek = None
-
-    if mode == "Normální":
-        vysledek = random.choice(moznosti_normal)
-
-    elif mode == "Sranda":
-        if moznosti_sranda:
-            vysledek = random.choice(moznosti_sranda)
+if mix_sranda:
+    try:
+        if action == "Útok":
+            sranda_pool = data["Útok"][attack_type].get("Sranda", [])
+        elif action == "Skill":
+            sranda_pool = data["Skill"][attribute][skill].get("Sranda", [])
         else:
-            st.warning("⚠️ Pro tuto kategorii nejsou žádné Sranda výsledky")
-            vysledek = random.choice(moznosti_normal)
+            sranda_pool = data[action].get("Sranda", [])
 
-    elif mode == "Mix":
+        pool = pool + sranda_pool
+    except:
+        pass
 
-        if moznosti_sranda and random.randint(1, 100) <= mix_ratio:
-            vysledek = random.choice(moznosti_sranda)
-        else:
-            vysledek = random.choice(moznosti_normal)
+# =========================
+# GENERATE BUTTON
+# =========================
 
-    # =========================
-    # VÝPIS
-    # =========================
+if st.button("🎲 GENERUJ CRIT FAIL"):
 
-    st.divider()
+    if not pool:
+        st.warning("⚠️ Žádná data pro tuto kombinaci")
+    else:
+        result = random.choice(pool)
 
-    st.subheader("📉 Herní efekt")
-    st.write(vysledek["effect"])
+        st.markdown("---")
 
-    st.write("")
+        st.subheader("💥 Herní efekt")
+        st.write(result["effect"])
 
-    st.subheader("🎭 Roleplay")
-    st.write(vysledek["roleplay"][0])
-    st.write(vysledek["roleplay"][1])
+        st.subheader("🎭 Roleplay (DM říká)")
+        st.write(result["roleplay"][0])
+        st.write(result["roleplay"][1])
