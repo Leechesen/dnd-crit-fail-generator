@@ -3,131 +3,151 @@ import json
 import random
 
 # =========================
-# LOAD DATA
+# LOAD JSON
 # =========================
 
 with open("crit_fails.json", "r", encoding="utf-8") as f:
-    DATA = json.load(f)
+    data = json.load(f)
+
+st.title("🎲 DnD Crit Fail Generátor")
 
 # =========================
-# PAGE CONFIG
+# MÓD VÝBĚRU
 # =========================
 
-st.set_page_config(
-    page_title="D&D Crit Fail Generator",
-    page_icon="🎲",
-    layout="centered"
+mode = st.selectbox(
+    "Režim generování:",
+    ["Normální", "Sranda", "Mix"]
 )
 
-st.title("🎲 D&D Crit Fail Generator")
-st.caption("Excel → JSON → Streamlit | D&D 2024")
+mix_ratio = 0
 
-# =========================
-# HELPERS
-# =========================
-
-def weighted_random(items):
-    weights = [item.get("weight", 1) for item in items]
-    return random.choices(items, weights=weights, k=1)[0]
-
-# =========================
-# UI – ACTION TYPE
-# =========================
-
-action_type = st.selectbox(
-    "Typ akce",
-    list(DATA.keys())
-)
-
-attack_type = None
-skill_name = None
-
-# =========================
-# ÚTOK → ATTACK TYPE
-# =========================
-
-if action_type == "Útok":
-    attack_type = st.radio(
-        "Typ útoku",
-        list(DATA["Útok"].keys()),
-        horizontal=True
+if mode == "Mix":
+    mix_ratio = st.slider(
+        "Kolik % Sranda:",
+        0, 100, 20
     )
-    severities = list(DATA["Útok"][attack_type].keys())
 
 # =========================
-# SKILL → SKILL NAME
+# VÝBĚR TYP AKCE
 # =========================
 
-elif action_type == "Skill":
-    skill_name = st.selectbox(
-        "Skill",
-        list(DATA["Skill"].keys())
+typ_akce = st.selectbox("Vyber typ akce:", list(data.keys()))
+
+moznosti_normal = []
+moznosti_sranda = []
+
+# =========================
+# ÚTOK
+# =========================
+
+if typ_akce == "Útok":
+
+    attack_type = st.selectbox(
+        "Typ útoku:",
+        list(data["Útok"].keys())
     )
-    severities = list(DATA["Skill"][skill_name].keys())
+
+    severity_list = list(data["Útok"][attack_type].keys())
+
+    if "Sranda" in severity_list:
+        moznosti_sranda = data["Útok"][attack_type]["Sranda"]
+
+    normal_severities = [s for s in severity_list if s != "Sranda"]
+
+    severity = st.selectbox(
+        "Závažnost:",
+        normal_severities
+    )
+
+    moznosti_normal = data["Útok"][attack_type][severity]
 
 # =========================
-# OSTATNÍ (Obrana, Kouzlo…)
+# SKILL
+# =========================
+
+elif typ_akce == "Skill":
+
+    skill = st.selectbox(
+        "Atribut:",
+        list(data["Skill"].keys())
+    )
+
+    category = st.selectbox(
+        "Skill:",
+        list(data["Skill"][skill].keys())
+    )
+
+    severity_list = list(data["Skill"][skill][category].keys())
+
+    if "Sranda" in severity_list:
+        moznosti_sranda = data["Skill"][skill][category]["Sranda"]
+
+    normal_severities = [s for s in severity_list if s != "Sranda"]
+
+    severity = st.selectbox(
+        "Závažnost:",
+        normal_severities
+    )
+
+    moznosti_normal = data["Skill"][skill][category][severity]
+
+# =========================
+# OSTATNÍ
 # =========================
 
 else:
-    severities = list(DATA[action_type].keys())
+
+    severity_list = list(data[typ_akce].keys())
+
+    if "Sranda" in severity_list:
+        moznosti_sranda = data[typ_akce]["Sranda"]
+
+    normal_severities = [s for s in severity_list if s != "Sranda"]
+
+    severity = st.selectbox(
+        "Závažnost:",
+        normal_severities
+    )
+
+    moznosti_normal = data[typ_akce][severity]
 
 # =========================
-# UI – SEVERITY
+# GENEROVÁNÍ
 # =========================
 
-severity = st.selectbox(
-    "Závažnost",
-    severities
-)
+if st.button("🎲 Generuj výsledek"):
 
-# =========================
-# BUTTON
-# =========================
+    vysledek = None
 
-if st.button("🎲 Generuj Crit Fail"):
+    if mode == "Normální":
+        vysledek = random.choice(moznosti_normal)
 
-    # vyber správného poolu
-    if action_type == "Útok":
-        pool = DATA["Útok"][attack_type].get(severity, [])
-    elif action_type == "Skill":
-        pool = DATA["Skill"][skill_name].get(severity, [])
-    else:
-        pool = DATA[action_type].get(severity, [])
-
-    if not pool:
-        st.warning("Pro tuto kombinaci nejsou žádná data.")
-    else:
-        result = weighted_random(pool)
-
-        # =========================
-        # OUTPUT
-        # =========================
-
-        st.markdown("---")
-        st.markdown("## 📜 Výsledek")
-
-        if action_type == "Útok":
-            st.markdown(f"**Akce:** {action_type} ({attack_type})")
-        elif action_type == "Skill":
-            st.markdown(f"**Akce:** {action_type} ({skill_name})")
+    elif mode == "Sranda":
+        if moznosti_sranda:
+            vysledek = random.choice(moznosti_sranda)
         else:
-            st.markdown(f"**Akce:** {action_type}")
+            st.warning("⚠️ Pro tuto kategorii nejsou žádné Sranda výsledky")
+            vysledek = random.choice(moznosti_normal)
 
-        st.markdown(f"**Závažnost:** {severity}")
-        st.markdown("")
+    elif mode == "Mix":
 
-        st.markdown("### 🎯 Herní efekt")
-        st.markdown(result["effect"])
+        if moznosti_sranda and random.randint(1, 100) <= mix_ratio:
+            vysledek = random.choice(moznosti_sranda)
+        else:
+            vysledek = random.choice(moznosti_normal)
 
-        st.markdown("")
-        st.markdown("### 🎭 Popis (DM → hráč)")
-        st.markdown(f"- {result['roleplay'][0]}")
-        st.markdown(f"- {result['roleplay'][1]}")
+    # =========================
+    # VÝPIS
+    # =========================
 
-# =========================
-# FOOTER
-# =========================
+    st.divider()
 
-st.markdown("---")
-st.caption("Obsah se generuje automaticky z Excelu přes GitHub Actions.")
+    st.subheader("📉 Herní efekt")
+    st.write(vysledek["effect"])
+
+    st.write("")
+
+    st.subheader("🎭 Roleplay")
+    st.write(vysledek["roleplay"][0])
+    st.write(vysledek["roleplay"][1])
