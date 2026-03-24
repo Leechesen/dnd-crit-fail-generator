@@ -9,7 +9,24 @@ import random
 with open("crit_fails.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
+st.set_page_config(page_title="DnD Crit Fail", page_icon="🎲")
 st.title("🎲 DnD Crit Fail Generator")
+
+# =========================
+# HELPER
+# =========================
+
+def safe_get_pool(d):
+    """Vrátí list i když je struktura rozbitá"""
+    if isinstance(d, list):
+        return d
+    elif isinstance(d, dict):
+        pool = []
+        for v in d.values():
+            if isinstance(v, list):
+                pool += v
+        return pool
+    return []
 
 # =========================
 # TYPE OF ACTION
@@ -17,22 +34,8 @@ st.title("🎲 DnD Crit Fail Generator")
 
 action = st.selectbox("Typ akce", list(data.keys()))
 
-# =========================
-# HELPER FUNCTION
-# =========================
-
-def get_pool_safe(d):
-    """Vrátí pool bezpečně i když je struktura rozbitá"""
-    if isinstance(d, list):
-        return d
-    elif isinstance(d, dict):
-        # vezmi všechny listy uvnitř dictu
-        pool = []
-        for v in d.values():
-            if isinstance(v, list):
-                pool += v
-        return pool
-    return []
+pool = []
+sranda_pool = []
 
 # =========================
 # ATTACK
@@ -46,8 +49,10 @@ if action == "Útok":
     if isinstance(attack_data, dict):
         severity = st.selectbox("Závažnost", list(attack_data.keys()))
         pool = attack_data[severity]
+
+        sranda_pool = attack_data.get("Sranda", [])
     else:
-        pool = get_pool_safe(attack_data)
+        pool = safe_get_pool(attack_data)
 
 # =========================
 # SKILL
@@ -59,12 +64,18 @@ elif action == "Skill":
 
     skill_data = data["Skill"][attribute][skill]
 
+    # pokud má správnou strukturu
     if isinstance(skill_data, dict):
         severity = st.selectbox("Závažnost", list(skill_data.keys()))
         pool = skill_data[severity]
+
+        sranda_pool = skill_data.get("Sranda", [])
+
+    # fallback pokud je to list
     else:
-        st.info("⚠️ Tento skill nemá rozdělení na obtížnosti")
-        pool = get_pool_safe(skill_data)
+        st.warning("⚠️ Tento skill nemá rozdělení na obtížnosti (auto-fix aktivní)")
+        severity = st.selectbox("Závažnost", ["Normální"])
+        pool = skill_data
 
 # =========================
 # OTHER (Obrana, Kouzlo…)
@@ -76,34 +87,19 @@ else:
     if isinstance(other_data, dict):
         severity = st.selectbox("Závažnost", list(other_data.keys()))
         pool = other_data[severity]
+
+        sranda_pool = other_data.get("Sranda", [])
     else:
-        pool = get_pool_safe(other_data)
+        pool = safe_get_pool(other_data)
 
 # =========================
 # SRANDA MIX
 # =========================
 
-mix_sranda = st.checkbox("🎭 Mix se 'Sranda' efekty")
+mix_sranda = st.checkbox("🎭 Přimíchat 'Sranda' efekty")
 
 if mix_sranda:
-    try:
-        sranda_pool = []
-
-        if action == "Útok":
-            sranda_pool = data["Útok"][attack_type].get("Sranda", [])
-
-        elif action == "Skill":
-            if isinstance(skill_data, dict):
-                sranda_pool = skill_data.get("Sranda", [])
-
-        else:
-            if isinstance(data[action], dict):
-                sranda_pool = data[action].get("Sranda", [])
-
-        pool = pool + sranda_pool
-
-    except:
-        pass
+    pool = pool + sranda_pool
 
 # =========================
 # GENERATE
@@ -112,7 +108,7 @@ if mix_sranda:
 if st.button("🎲 GENERUJ CRIT FAIL"):
 
     if not pool:
-        st.warning("⚠️ Žádná data pro tuto kombinaci")
+        st.error("❌ Žádná data pro tuto kombinaci")
     else:
         result = random.choice(pool)
 
