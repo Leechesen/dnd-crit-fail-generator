@@ -6743,6 +6743,246 @@
             "Chybí detail."
           ],
           "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Nature checku v tomto kole.",
+          "roleplay": [
+            "Přírodní detail uniká.",
+            "Výklad je nepřesný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš rostlinu nebo zvíře.",
+          "roleplay": [
+            "Podobnost tě zmátne.",
+            "Výsledek je slabý."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš drobný detail prostředí.",
+          "roleplay": [
+            "Stopa je tam.",
+            "Ale nevidíš ji."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přírodní znaky jsou nejasné.",
+          "roleplay": [
+            "Nedokážeš je správně číst.",
+            "Význam mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Pozorování kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci v přírodě.",
+          "roleplay": [
+            "Směr není jasný.",
+            "Musíš se znovu zorientovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pozornost kolísá.",
+          "roleplay": [
+            "Něco přehlédneš.",
+            "Detail mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc složitě.",
+          "roleplay": [
+            "Jednoduché vysvětlení uniká.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení při pozorování.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš nit pozorování.",
+          "roleplay": [
+            "Souvislosti nedrží.",
+            "Musíš začít znovu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš detaily.",
+          "roleplay": [
+            "Stopy se pletou.",
+            "Výsledek je nepřesný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Přestaneš sledovat.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Znak je jasný.",
+            "Ale nevidíš ho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš směr.",
+          "roleplay": [
+            "Pozoruješ špatně.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Interpretace je nepřesná.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí detail."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Religion checku v tomto kole.",
+          "roleplay": [
+            "Náboženský detail uniká.",
+            "Výklad je nepřesný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš drobný symbol víry.",
+          "roleplay": [
+            "Význam se plete.",
+            "Výklad kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš detail rituálu.",
+          "roleplay": [
+            "Je tam.",
+            "Ale nevšimneš si."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výklad je nepřesný.",
+          "roleplay": [
+            "Symboly nedávají smysl.",
+            "Musíš se vrátit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Víra je nejasná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš nit výkladu.",
+          "roleplay": [
+            "Teorie se rozpadá.",
+            "Musíš začít znovu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš význam symbolu.",
+          "roleplay": [
+            "Výklad je chybný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť kolísá.",
+          "roleplay": [
+            "Nemůžeš si vzpomenout.",
+            "Detail chybí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc složitě.",
+          "roleplay": [
+            "Jednoduché vysvětlení uniká.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci.",
+          "roleplay": [
+            "Výklad se rozpadá.",
+            "Musíš se vrátit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pozornost kolísá.",
+          "roleplay": [
+            "Něco přehlédneš.",
+            "Detail mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení při výkladu.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš božstvo.",
+          "roleplay": [
+            "Význam se plete.",
+            "Výklad je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Výklad selže.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Interpretace je nepřesná.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí detail."
+          ],
+          "weight": 1
         }
       ],
       "Střední": [
@@ -7217,6 +7457,246 @@
             "Výsledek slábne."
           ],
           "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Nature checky do konce kola.",
+          "roleplay": [
+            "Pozorování selhává.",
+            "Příroda tě mate."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš důležitý přírodní znak.",
+          "roleplay": [
+            "Výklad je chybný.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Nature checkům.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Vnímání kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš zásadní stopu.",
+          "roleplay": [
+            "Informace chybí.",
+            "Výsledek je chybný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check v tomto kole.",
+          "roleplay": [
+            "Mysl odmítá spolupracovat.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontext prostředí.",
+          "roleplay": [
+            "Stopy nedávají smysl.",
+            "Výklad selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš přírodní proces.",
+          "roleplay": [
+            "Logika selže.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Pozorování slábne.",
+            "Soustředění padá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít znalosti.",
+          "roleplay": [
+            "Paměť selže.",
+            "Výklad nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logickou návaznost.",
+          "roleplay": [
+            "Stopy nedrží.",
+            "Výklad se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Znak je jasný.",
+            "Ale nevidíš ho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Interpretace selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký mentální blok.",
+          "roleplay": [
+            "Nemůžeš pokračovat.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš význam stop.",
+          "roleplay": [
+            "Výklad je špatný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Religion checky do konce kola.",
+          "roleplay": [
+            "Výklad selhává.",
+            "Víra je nejasná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš důležitý náboženský význam.",
+          "roleplay": [
+            "Výklad je chybný.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Religion checkům.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Výklad kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš zásadní symbol.",
+          "roleplay": [
+            "Informace chybí.",
+            "Výsledek je chybný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check v tomto kole.",
+          "roleplay": [
+            "Mysl odmítá spolupracovat.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontext víry.",
+          "roleplay": [
+            "Symboly nedávají smysl.",
+            "Výklad selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš rituál.",
+          "roleplay": [
+            "Význam se plete.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Výklad slábne.",
+            "Soustředění padá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít znalosti.",
+          "roleplay": [
+            "Paměť selže.",
+            "Výklad nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logickou návaznost.",
+          "roleplay": [
+            "Výklad nedrží.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Symbol je jasný.",
+            "Ale nevidíš ho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Interpretace selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký mentální blok.",
+          "roleplay": [
+            "Nemůžeš pokračovat.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš význam víry.",
+          "roleplay": [
+            "Výklad je špatný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
         }
       ],
       "Těžký": [
@@ -7678,6 +8158,246 @@
         },
         {
           "effect": "Ztratíš orientaci v důkazech.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Výklad selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Mentální kolaps.",
+            "Nemůžeš přemýšlet."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provádět Nature checky do konce příštího kola.",
+          "roleplay": [
+            "Mysl selže.",
+            "Pozorování končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny mentální akce.",
+          "roleplay": [
+            "Logika se rozpadá.",
+            "Vnímání nefunguje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci úplně.",
+          "roleplay": [
+            "Mysl selže.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš realitu přírody.",
+          "roleplay": [
+            "Výklad je úplně špatný.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k Nature checkům.",
+          "roleplay": [
+            "Myšlení kolabuje.",
+            "Logika mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš si vybavit informace.",
+          "roleplay": [
+            "Paměť selže.",
+            "Jsi ztracený."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad myšlenkami.",
+          "roleplay": [
+            "Chaos v hlavě.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr tě zmate.",
+          "roleplay": [
+            "Logika selže.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš se soustředit.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost analyzovat.",
+          "roleplay": [
+            "Příroda nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš používat znalosti.",
+          "roleplay": [
+            "Vše mizí.",
+            "Paměť selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci v prostředí.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Výklad selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Mentální kolaps.",
+            "Nemůžeš přemýšlet."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provádět Religion checky do konce příštího kola.",
+          "roleplay": [
+            "Mysl selže.",
+            "Výklad končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny mentální akce.",
+          "roleplay": [
+            "Logika se rozpadá.",
+            "Výklad nefunguje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci úplně.",
+          "roleplay": [
+            "Mysl selže.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš realitu víry.",
+          "roleplay": [
+            "Výklad je úplně špatný.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k Religion checkům.",
+          "roleplay": [
+            "Myšlení kolabuje.",
+            "Výklad mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš si vybavit informace.",
+          "roleplay": [
+            "Paměť selže.",
+            "Jsi ztracený."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad myšlenkami.",
+          "roleplay": [
+            "Chaos v hlavě.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný výklad tě zmate.",
+          "roleplay": [
+            "Logika selže.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš se soustředit.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost analyzovat.",
+          "roleplay": [
+            "Víra nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš používat znalosti.",
+          "roleplay": [
+            "Vše mizí.",
+            "Paměť selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci v symbolech.",
           "roleplay": [
             "Data nedávají smysl.",
             "Chaos."
@@ -8179,6 +8899,6036 @@
           "roleplay": [
             "Ty ho pokazíš.",
             "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš strom za jiný strom.",
+          "roleplay": [
+            "A úplně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Myslíš si že víš co to je.",
+          "roleplay": [
+            "A nevíš.",
+            "A je to vidět."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš přírodu špatně.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A úplně mimo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš stopu.",
+          "roleplay": [
+            "A úplně.",
+            "Jinou."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řekneš nesmysl.",
+          "roleplay": [
+            "A věříš tomu.",
+            "Ostatní ne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš myšlenku.",
+          "roleplay": [
+            "Uprostřed vysvětlení.",
+            "A konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehnaná analýza.",
+          "roleplay": [
+            "Zamotá se to.",
+            "Nic nevyřešíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš základní věc.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš opak reality.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co řešíš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš blbost.",
+          "roleplay": [
+            "A vážně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš boha.",
+          "roleplay": [
+            "A úplně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš víru špatně.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A úplně mimo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vymyslíš si rituál.",
+          "roleplay": [
+            "Zní to dobře.",
+            "Ale není pravda."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš symboly.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řekneš nesmysl.",
+          "roleplay": [
+            "A věříš tomu.",
+            "Ostatní ne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš myšlenku.",
+          "roleplay": [
+            "Uprostřed vysvětlení.",
+            "A konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehnaná teorie.",
+          "roleplay": [
+            "Zamotá se to.",
+            "Nic nevyřešíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš základní věc.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš opak reality.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co řešíš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš blbost.",
+          "roleplay": [
+            "A vážně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    "Wisdom": {
+      "Lehký": [
+        {
+          "effect": "Máš -1 k dalšímu Wisdom checku v tomto kole.",
+          "roleplay": [
+            "Vnímání kolísá.",
+            "Detail uniká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš soustředění.",
+          "roleplay": [
+            "Pozornost se rozptýlí.",
+            "Musíš se vrátit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vnímání je slabší.",
+          "roleplay": [
+            "Něco přehlédneš.",
+            "Detail mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměříš se na špatný podnět.",
+          "roleplay": [
+            "Pozornost je mimo.",
+            "Výsledek je nepřesný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Vnímání kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš přehled o okolí.",
+          "roleplay": [
+            "Něco ti unikne.",
+            "Musíš se rozhlédnout znovu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pozornost kolísá.",
+          "roleplay": [
+            "Něco přehlédneš.",
+            "Význam mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc nad tím.",
+          "roleplay": [
+            "Instinkt selže.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení při reakci.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš intuici.",
+          "roleplay": [
+            "Pocit není jasný.",
+            "Rozhodnutí slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš signály.",
+          "roleplay": [
+            "Vnímání je nepřesné.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Ztratíš fokus.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Je to tam.",
+            "Ale nevidíš to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš směr vnímání.",
+          "roleplay": [
+            "Pozornost bloudí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Instinkt je nepřesný.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí jistota."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Animal Handling checku v tomto kole.",
+          "roleplay": [
+            "Zvíře nereaguje přesně.",
+            "Vnímá nejistotu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře zaváhá.",
+          "roleplay": [
+            "Nechápe tvůj pokyn.",
+            "Musíš to zopakovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontakt se zvířetem.",
+          "roleplay": [
+            "Pozornost se rozptýlí.",
+            "Reakce slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pokyn není jasný.",
+          "roleplay": [
+            "Zvíře reaguje pomalu.",
+            "Není si jisté."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Zvíře váhá.",
+            "Nedůvěra roste."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě ignoruje na chvíli.",
+          "roleplay": [
+            "Pozornost je jinde.",
+            "Musíš získat kontrolu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Komunikace je slabá.",
+          "roleplay": [
+            "Pokyn není přesný.",
+            "Zvíře reaguje špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rytmus.",
+          "roleplay": [
+            "Zvíře nereaguje.",
+            "Musíš se přizpůsobit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře je nervózní.",
+          "roleplay": [
+            "Cítí nejistotu.",
+            "Reaguje opatrně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš pozornost zvířete.",
+          "roleplay": [
+            "Otočí se jinam.",
+            "Reakce chybí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pokyn je opožděný.",
+          "roleplay": [
+            "Zvíře reaguje pozdě.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře reaguje nepřesně.",
+          "roleplay": [
+            "Nechápe směr.",
+            "Musíš to opravit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš jemnost.",
+          "roleplay": [
+            "Přístup je hrubý.",
+            "Zvíře váhá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě testuje.",
+          "roleplay": [
+            "Nereaguje hned.",
+            "Zkouší hranice."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Zvíře čeká.",
+            "Musíš jednat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Insight checku v tomto kole.",
+          "roleplay": [
+            "Špatně čteš emoce.",
+            "Výraz ti uniká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš signály.",
+          "roleplay": [
+            "Výraz je nejasný.",
+            "Výklad kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš drobný náznak.",
+          "roleplay": [
+            "Gesto unikne.",
+            "Význam mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Intuice je slabá.",
+          "roleplay": [
+            "Pocit není jistý.",
+            "Rozhodnutí kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Vnímání emocí kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš nit rozhovoru.",
+          "roleplay": [
+            "Emoce nedávají smysl.",
+            "Musíš se vrátit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš úmysl.",
+          "roleplay": [
+            "Signál je špatně pochopen.",
+            "Výsledek je nepřesný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pozornost kolísá.",
+          "roleplay": [
+            "Něco přehlédneš.",
+            "Detail mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc složitě.",
+          "roleplay": [
+            "Jednoduchý signál uniká.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení při reakci.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš intuici.",
+          "roleplay": [
+            "Pocit není jasný.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš emoce.",
+          "roleplay": [
+            "Výklad je nepřesný.",
+            "Důsledky kolísají."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Přestaneš vnímat.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Výraz je jasný.",
+            "Ale nevidíš ho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Intuice tě zradí.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí jistota."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Medicine checku v tomto kole.",
+          "roleplay": [
+            "Diagnóza je nepřesná.",
+            "Detail uniká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Špatně odhadneš stav.",
+          "roleplay": [
+            "Příznak unikne.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš drobný detail.",
+          "roleplay": [
+            "Je tam.",
+            "Ale nevšimneš si."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zákrok není přesný.",
+          "roleplay": [
+            "Ruka zaváhá.",
+            "Efekt slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Práce kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rytmus práce.",
+          "roleplay": [
+            "Zákrok váhá.",
+            "Musíš se vrátit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš detail.",
+          "roleplay": [
+            "Diagnóza je slabá.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pozornost kolísá.",
+          "roleplay": [
+            "Něco přehlédneš.",
+            "Detail mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc složitě.",
+          "roleplay": [
+            "Jednoduché řešení uniká.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení při zákroku.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš jistotu.",
+          "roleplay": [
+            "Ruka není pevná.",
+            "Efekt slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš postup.",
+          "roleplay": [
+            "Technika je nepřesná.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Přestaneš pracovat.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Problém je jasný.",
+            "Ale nevidíš ho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Diagnóza tě zradí.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí jistota."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Perception checku v tomto kole.",
+          "roleplay": [
+            "Přehlédneš detail.",
+            "Něco ti unikne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměříš se špatně.",
+          "roleplay": [
+            "Pozornost je mimo.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš drobnost.",
+          "roleplay": [
+            "Je tam.",
+            "Ale nevidíš ji."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zrak nebo sluch zaváhá.",
+          "roleplay": [
+            "Vjem je slabý.",
+            "Detail mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Vnímání kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš pozornost.",
+          "roleplay": [
+            "Něco ti unikne.",
+            "Musíš se vrátit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš vjem.",
+          "roleplay": [
+            "Špatně vyhodnotíš.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pozornost kolísá.",
+          "roleplay": [
+            "Něco přehlédneš.",
+            "Detail mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc složitě.",
+          "roleplay": [
+            "Jednoduchý vjem uniká.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení při reakci.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš fokus.",
+          "roleplay": [
+            "Vnímání není jasné.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš směr.",
+          "roleplay": [
+            "Vjem je nepřesný.",
+            "Důsledky kolísají."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Přestaneš vnímat.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Je to jasné.",
+            "Ale nevidíš to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vnímání tě zradí.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí jistota."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Survival checku v tomto kole.",
+          "roleplay": [
+            "Ztratíš stopu.",
+            "Směr není jasný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš směr.",
+          "roleplay": [
+            "Orientace kolísá.",
+            "Výsledek je slabý."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš stopu.",
+          "roleplay": [
+            "Je tam.",
+            "Ale nevidíš ji."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Špatně odhadneš prostředí.",
+          "roleplay": [
+            "Signály unikají.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Orientace kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš směr.",
+          "roleplay": [
+            "Bloudíš.",
+            "Musíš se vrátit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš stopu.",
+          "roleplay": [
+            "Sleduješ špatně.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pozornost kolísá.",
+          "roleplay": [
+            "Něco přehlédneš.",
+            "Detail mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc složitě.",
+          "roleplay": [
+            "Jednoduchý směr uniká.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení při pohybu.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš jistotu.",
+          "roleplay": [
+            "Krok není pevný.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš orientaci.",
+          "roleplay": [
+            "Směr je nepřesný.",
+            "Důsledky kolísají."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Zastavíš se.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Stopa je jasná.",
+            "Ale nevidíš ji."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Orientace tě zradí.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí jistota."
+          ],
+          "weight": 1
+        }
+      ],
+      "Střední": [
+        {
+          "effect": "Máš nevýhodu na všechny Wisdom checky do konce kola.",
+          "roleplay": [
+            "Vnímání selhává.",
+            "Intuice mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš důležitý signál.",
+          "roleplay": [
+            "Výklad je chybný.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Wisdom checkům.",
+          "roleplay": [
+            "Pozornost slábne.",
+            "Vnímání kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš zásadní detail.",
+          "roleplay": [
+            "Informace chybí.",
+            "Výsledek je chybný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check v tomto kole.",
+          "roleplay": [
+            "Mysl odmítá spolupracovat.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš přehled o situaci.",
+          "roleplay": [
+            "Vnímání nedává smysl.",
+            "Výklad selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš význam situace.",
+          "roleplay": [
+            "Intuice selže.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Vnímání slábne.",
+            "Soustředění padá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít instinkt.",
+          "roleplay": [
+            "Pocit selže.",
+            "Výsledek nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku vnímání.",
+          "roleplay": [
+            "Signály nedrží.",
+            "Výklad se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Znak je jasný.",
+            "Ale nevidíš ho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Intuice selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký mentální blok.",
+          "roleplay": [
+            "Nemůžeš reagovat.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš situaci.",
+          "roleplay": [
+            "Výklad je špatný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vnímání tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Animal Handling checky do konce kola.",
+          "roleplay": [
+            "Zvíře je zmatené.",
+            "Nedůvěra roste."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře neposlechne.",
+          "roleplay": [
+            "Pokyn ignoruje.",
+            "Reakce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k checkům.",
+          "roleplay": [
+            "Komunikace selhává.",
+            "Zvíře nechápe."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře se lekne.",
+          "roleplay": [
+            "Reaguje nečekaně.",
+            "Ztrácíš kontrolu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check v tomto kole.",
+          "roleplay": [
+            "Zvíře odmítá spolupracovat.",
+            "Musíš počkat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře se stáhne.",
+          "roleplay": [
+            "Nedůvěra je jasná.",
+            "Reakce chybí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu.",
+          "roleplay": [
+            "Zvíře jedná samo.",
+            "Ty jen sleduješ."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře reaguje opačně.",
+          "roleplay": [
+            "Pokyn je špatně pochopen.",
+            "Výsledek selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Zvíře to cítí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře se odvrátí.",
+          "roleplay": [
+            "Kontakt mizí.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš autoritu.",
+          "roleplay": [
+            "Zvíře neposlouchá.",
+            "Kontrola mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pokyn je špatný.",
+          "roleplay": [
+            "Zvíře reaguje jinak.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký blok.",
+          "roleplay": [
+            "Nejednáš.",
+            "Zvíře reaguje samo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře uteče z dosahu.",
+          "roleplay": [
+            "Ztratíš kontrolu.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě ignoruje úplně.",
+          "roleplay": [
+            "Není kontakt.",
+            "Výsledek je nulový."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Insight checky do konce kola.",
+          "roleplay": [
+            "Intuice selhává.",
+            "Výklad je slabý."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš úmysl úplně.",
+          "roleplay": [
+            "Výklad je chybný.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Insight checkům.",
+          "roleplay": [
+            "Vnímání slábne.",
+            "Intuice kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš zásadní signál.",
+          "roleplay": [
+            "Informace chybí.",
+            "Výsledek je chybný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check v tomto kole.",
+          "roleplay": [
+            "Mysl odmítá spolupracovat.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš přehled o emocích.",
+          "roleplay": [
+            "Signály nedávají smysl.",
+            "Výklad selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš význam situace.",
+          "roleplay": [
+            "Intuice selže.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Vnímání slábne.",
+            "Soustředění padá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít intuici.",
+          "roleplay": [
+            "Pocit selže.",
+            "Výsledek nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku vnímání.",
+          "roleplay": [
+            "Signály nedrží.",
+            "Výklad se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Znak je jasný.",
+            "Ale nevidíš ho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Intuice selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký mentální blok.",
+          "roleplay": [
+            "Nemůžeš reagovat.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš situaci.",
+          "roleplay": [
+            "Výklad je špatný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Intuice tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Medicine checky do konce kola.",
+          "roleplay": [
+            "Léčba selhává.",
+            "Diagnóza kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš vážný problém.",
+          "roleplay": [
+            "Léčba je chybná.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Medicine checkům.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Práce kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš zásadní detail.",
+          "roleplay": [
+            "Informace chybí.",
+            "Výsledek je chybný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check v tomto kole.",
+          "roleplay": [
+            "Mysl odmítá spolupracovat.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš přehled o stavu.",
+          "roleplay": [
+            "Diagnóza nedává smysl.",
+            "Výklad selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš postup.",
+          "roleplay": [
+            "Léčba selže.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Soustředění padá.",
+            "Práce slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít znalosti.",
+          "roleplay": [
+            "Paměť selže.",
+            "Léčba nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku práce.",
+          "roleplay": [
+            "Kroky nedrží.",
+            "Zákrok se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Problém je jasný.",
+            "Ale nevidíš ho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Léčba selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký mentální blok.",
+          "roleplay": [
+            "Nemůžeš pokračovat.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš diagnózu.",
+          "roleplay": [
+            "Výklad je špatný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Diagnóza tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Perception checky do konce kola.",
+          "roleplay": [
+            "Vnímání selhává.",
+            "Detail uniká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš důležitý vjem.",
+          "roleplay": [
+            "Výklad je chybný.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Perception checkům.",
+          "roleplay": [
+            "Pozornost slábne.",
+            "Vnímání kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš zásadní detail.",
+          "roleplay": [
+            "Informace chybí.",
+            "Výsledek je chybný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check v tomto kole.",
+          "roleplay": [
+            "Mysl odmítá spolupracovat.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš přehled o okolí.",
+          "roleplay": [
+            "Vjemy nedávají smysl.",
+            "Výklad selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš význam vjemu.",
+          "roleplay": [
+            "Vnímání selže.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Vnímání slábne.",
+            "Soustředění padá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít smysly správně.",
+          "roleplay": [
+            "Vjem selže.",
+            "Výsledek nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku vnímání.",
+          "roleplay": [
+            "Vjemy nedrží.",
+            "Výklad se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Znak je jasný.",
+            "Ale nevidíš ho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Vnímání selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký mentální blok.",
+          "roleplay": [
+            "Nemůžeš reagovat.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš situaci.",
+          "roleplay": [
+            "Výklad je špatný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vnímání tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Survival checky do konce kola.",
+          "roleplay": [
+            "Orientace selhává.",
+            "Směr není jasný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš důležitou stopu.",
+          "roleplay": [
+            "Výklad je chybný.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Survival checkům.",
+          "roleplay": [
+            "Pozornost slábne.",
+            "Orientace kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš zásadní stopu.",
+          "roleplay": [
+            "Informace chybí.",
+            "Výsledek je chybný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check v tomto kole.",
+          "roleplay": [
+            "Mysl odmítá spolupracovat.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš přehled o terénu.",
+          "roleplay": [
+            "Stopy nedávají smysl.",
+            "Výklad selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš směr úplně.",
+          "roleplay": [
+            "Orientace selže.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Soustředění padá.",
+            "Pohyb slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít instinkt.",
+          "roleplay": [
+            "Pocit selže.",
+            "Výsledek nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku orientace.",
+          "roleplay": [
+            "Směr nedrží.",
+            "Postup se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš očividné.",
+          "roleplay": [
+            "Stopa je jasná.",
+            "Ale nevidíš ji."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Orientace selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký mentální blok.",
+          "roleplay": [
+            "Nemůžeš pokračovat.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš situaci.",
+          "roleplay": [
+            "Výklad je špatný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Instinkt tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        }
+      ],
+      "Těžký": [
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Mentální kolaps.",
+            "Nemůžeš reagovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provádět Wisdom checky do konce příštího kola.",
+          "roleplay": [
+            "Vnímání selže.",
+            "Intuice mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny mentální akce.",
+          "roleplay": [
+            "Logika se rozpadá.",
+            "Vnímání nefunguje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci úplně.",
+          "roleplay": [
+            "Mysl selže.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš realitu situace.",
+          "roleplay": [
+            "Výklad je úplně špatný.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k Wisdom checkům.",
+          "roleplay": [
+            "Myšlení kolabuje.",
+            "Intuice mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš si vybavit situaci.",
+          "roleplay": [
+            "Paměť selže.",
+            "Jsi ztracený."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad vnímáním.",
+          "roleplay": [
+            "Chaos v hlavě.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr tě zmate.",
+          "roleplay": [
+            "Intuice selže.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš se soustředit.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost vnímat.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš používat instinkt.",
+          "roleplay": [
+            "Vše mizí.",
+            "Vnímání selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci v situaci.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Výklad selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Zvíře tě neposlouchá.",
+            "Kontrola je pryč."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře uteče.",
+          "roleplay": [
+            "Ztratíš ho.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře zaútočí nebo reaguje agresivně.",
+          "roleplay": [
+            "Je vyplašené.",
+            "Kontrola mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny pokusy.",
+          "roleplay": [
+            "Zvíře nedůvěřuje.",
+            "Reakce chybí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš používat Animal Handling.",
+          "roleplay": [
+            "Zvíře odmítá kontakt.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře se splaší.",
+          "roleplay": [
+            "Reaguje chaoticky.",
+            "Kontrola mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu úplně.",
+          "roleplay": [
+            "Zvíře jedná samo.",
+            "Ty nic nezmůžeš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě ignoruje.",
+          "roleplay": [
+            "Není kontakt.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře reaguje opačně.",
+          "roleplay": [
+            "Pokyn selže.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře uteče mimo scénu.",
+          "roleplay": [
+            "Ztratíš ho.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě shodí nebo odstrčí.",
+          "roleplay": [
+            "Reakce je silná.",
+            "Ztrácíš stabilitu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě neposlouchá vůbec.",
+          "roleplay": [
+            "Kontrola mizí.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře reaguje nebezpečně.",
+          "roleplay": [
+            "Situace se zhorší.",
+            "Ohrožení roste."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontakt.",
+          "roleplay": [
+            "Zvíře se vzdálí.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře se obrátí proti tobě.",
+          "roleplay": [
+            "Důvěra zmizí.",
+            "Problém vzniká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Mentální kolaps.",
+            "Nemůžeš reagovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provádět Insight checky do konce příštího kola.",
+          "roleplay": [
+            "Intuice selže.",
+            "Vnímání mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny mentální akce.",
+          "roleplay": [
+            "Logika se rozpadá.",
+            "Intuice nefunguje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci úplně.",
+          "roleplay": [
+            "Mysl selže.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš realitu situace.",
+          "roleplay": [
+            "Výklad je úplně špatný.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k Insight checkům.",
+          "roleplay": [
+            "Myšlení kolabuje.",
+            "Intuice mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš si vyhodnotit situaci.",
+          "roleplay": [
+            "Vnímání selže.",
+            "Jsi mimo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad vnímáním.",
+          "roleplay": [
+            "Chaos v hlavě.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr tě zmate.",
+          "roleplay": [
+            "Intuice selže.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš se soustředit.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost číst lidi.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš používat intuici.",
+          "roleplay": [
+            "Vše mizí.",
+            "Vnímání selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci v situaci.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Výklad selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Mentální kolaps.",
+            "Nemůžeš pracovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provádět Medicine checky do konce příštího kola.",
+          "roleplay": [
+            "Léčba selže.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny akce.",
+          "roleplay": [
+            "Soustředění mizí.",
+            "Práce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci úplně.",
+          "roleplay": [
+            "Mysl selže.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš realitu stavu.",
+          "roleplay": [
+            "Diagnóza je špatná.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k Medicine checkům.",
+          "roleplay": [
+            "Myšlení kolabuje.",
+            "Léčba mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš si vybavit postup.",
+          "roleplay": [
+            "Paměť selže.",
+            "Jsi ztracený."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu.",
+          "roleplay": [
+            "Ruka selže.",
+            "Práce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný zákrok.",
+          "roleplay": [
+            "Léčba selže.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš se soustředit.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost léčit.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš používat znalosti.",
+          "roleplay": [
+            "Vše mizí.",
+            "Paměť selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Výklad selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Mentální kolaps.",
+            "Nemůžeš reagovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provádět Perception checky do konce příštího kola.",
+          "roleplay": [
+            "Vnímání selže.",
+            "Smysly mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny mentální akce.",
+          "roleplay": [
+            "Logika se rozpadá.",
+            "Vnímání nefunguje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci úplně.",
+          "roleplay": [
+            "Mysl selže.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš realitu situace.",
+          "roleplay": [
+            "Výklad je úplně špatný.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k Perception checkům.",
+          "roleplay": [
+            "Myšlení kolabuje.",
+            "Vnímání mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš si vyhodnotit vjem.",
+          "roleplay": [
+            "Smysly selžou.",
+            "Jsi mimo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad vnímáním.",
+          "roleplay": [
+            "Chaos v hlavě.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr tě zmate.",
+          "roleplay": [
+            "Vnímání selže.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš se soustředit.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost vnímat.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš používat smysly.",
+          "roleplay": [
+            "Vše mizí.",
+            "Vnímání selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci v prostoru.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Výklad selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Mentální kolaps.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provádět Survival checky do konce příštího kola.",
+          "roleplay": [
+            "Orientace selže.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny akce.",
+          "roleplay": [
+            "Soustředění mizí.",
+            "Pohyb selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci úplně.",
+          "roleplay": [
+            "Mysl selže.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš realitu terénu.",
+          "roleplay": [
+            "Orientace je špatná.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k Survival checkům.",
+          "roleplay": [
+            "Myšlení kolabuje.",
+            "Směr mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš se orientovat.",
+          "roleplay": [
+            "Instinkt selže.",
+            "Jsi ztracený."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad pohybem.",
+          "roleplay": [
+            "Bloudíš.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný směr tě zmate.",
+          "roleplay": [
+            "Orientace selže.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš se soustředit.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost přežít.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš používat instinkt.",
+          "roleplay": [
+            "Vše mizí.",
+            "Orientace selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci úplně.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Výklad selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        }
+      ],
+      "Sranda": [
+        {
+          "effect": "Díváš se špatným směrem.",
+          "roleplay": [
+            "A úplně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Myslíš si že víš.",
+          "roleplay": [
+            "A nevíš.",
+            "A je to vidět."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vyhodnotíš situaci špatně.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A úplně mimo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš signály.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řekneš nesmysl.",
+          "roleplay": [
+            "A věříš tomu.",
+            "Ostatní ne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš myšlenku.",
+          "roleplay": [
+            "Uprostřed reakce.",
+            "A konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehnaná analýza.",
+          "roleplay": [
+            "Zamotá se to.",
+            "Nic nevyřešíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš základní věc.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš opak reality.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co řešíš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš blbost.",
+          "roleplay": [
+            "A vážně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě úplně ignoruje.",
+          "roleplay": [
+            "Dívá se jinam.",
+            "A ty mluvíš dál."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře udělá opak.",
+          "roleplay": [
+            "A přesně.",
+            "A schválně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Snažíš se… zvíře si lehne.",
+          "roleplay": [
+            "A nic nedělá.",
+            "A kouká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře odejde.",
+          "roleplay": [
+            "Prostě.",
+            "A bez vysvětlení."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě shodí.",
+          "roleplay": [
+            "A lehce.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mluvíš na něj.",
+          "roleplay": [
+            "A ono zívne.",
+            "A ignoruje tě."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře reaguje úplně jinak.",
+          "roleplay": [
+            "A nesmyslně.",
+            "A komicky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře se rozběhne jinam.",
+          "roleplay": [
+            "A ty jen koukáš.",
+            "A nestíháš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě očuchá.",
+          "roleplay": [
+            "A odejde.",
+            "A nic."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pokyn selže.",
+          "roleplay": [
+            "A zvíře si sedne.",
+            "A čeká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě neposlouchá.",
+          "roleplay": [
+            "A dívá se jinam.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě ignoruje dramaticky.",
+          "roleplay": [
+            "A nahlas.",
+            "A dlouho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře udělá scénu.",
+          "roleplay": [
+            "A zbytečně.",
+            "A hlasitě."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře si hraje.",
+          "roleplay": [
+            "A místo práce.",
+            "A ty čekáš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvíře tě přejde.",
+          "roleplay": [
+            "A doslova.",
+            "A bez zájmu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Myslíš si že lže.",
+          "roleplay": [
+            "A nelže.",
+            "A je to trapné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Věříš očividné lži.",
+          "roleplay": [
+            "A hned.",
+            "A bez váhání."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš emoce úplně.",
+          "roleplay": [
+            "A přesně opačně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řekneš nesmysl.",
+          "roleplay": [
+            "A sebevědomě.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš myšlenku.",
+          "roleplay": [
+            "Uprostřed reakce.",
+            "A konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehnaná analýza.",
+          "roleplay": [
+            "Zamotá se to.",
+            "Nic nevyřešíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš základní věc.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš opak reality.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co řešíš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš blbost.",
+          "roleplay": [
+            "A vážně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Věříš první věci.",
+          "roleplay": [
+            "A špatně.",
+            "A hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Léčíš špatně.",
+          "roleplay": [
+            "A úplně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš nástroj.",
+          "roleplay": [
+            "A použiješ špatný.",
+            "A je to vidět."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řekneš nesmysl.",
+          "roleplay": [
+            "A vážně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš myšlenku.",
+          "roleplay": [
+            "Uprostřed práce.",
+            "A konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehnaný postup.",
+          "roleplay": [
+            "Zamotá se to.",
+            "Nic nevyřešíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš základní věc.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš opak reality.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co děláš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš blbost.",
+          "roleplay": [
+            "A vážně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš pacienta.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Léčba vypadá divně.",
+          "roleplay": [
+            "A špatně.",
+            "A komicky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nevšimneš si úplně ničeho.",
+          "roleplay": [
+            "A vůbec.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Díváš se jinam.",
+          "roleplay": [
+            "A přesně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš obří věc.",
+          "roleplay": [
+            "A je před tebou.",
+            "A nic."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Slyšíš něco jiného.",
+          "roleplay": [
+            "A špatně.",
+            "A vtipně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš zvuk.",
+          "roleplay": [
+            "A úplně.",
+            "A nesmyslně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řekneš nesmysl.",
+          "roleplay": [
+            "A vážně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš myšlenku.",
+          "roleplay": [
+            "Uprostřed reakce.",
+            "A konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehnaná reakce.",
+          "roleplay": [
+            "Zamotá se to.",
+            "Nic nevyřešíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš základní věc.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš opak reality.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co řešíš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš se na místě.",
+          "roleplay": [
+            "A úplně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Jdeš opačně.",
+          "roleplay": [
+            "A přesně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Najdeš stopu… špatnou.",
+          "roleplay": [
+            "A sleduješ ji.",
+            "A dlouho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš směr.",
+          "roleplay": [
+            "A úplně.",
+            "A nesmyslně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řekneš že víš kam.",
+          "roleplay": [
+            "A nevíš.",
+            "A jdeš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš myšlenku.",
+          "roleplay": [
+            "Uprostřed cesty.",
+            "A konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehnaný plán.",
+          "roleplay": [
+            "Zamotá se to.",
+            "Nic nevyřešíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš základní věc.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš opak reality.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš kam jdeš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš se znovu.",
+          "roleplay": [
+            "A hned.",
+            "A zbytečně."
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    "Charisma": {
+      "Lehký": [
+        {
+          "effect": "Máš -1 k dalšímu Charisma checku v tomto kole.",
+          "roleplay": [
+            "Působíš nejistě.",
+            "Výraz kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaváháš při projevu.",
+          "roleplay": [
+            "Hlas není jistý.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rytmus řeči.",
+          "roleplay": [
+            "Slova váznou.",
+            "Posluchač váhá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vyjadřování není přesné.",
+          "roleplay": [
+            "Myšlenka uniká.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Sebevědomí slábne.",
+            "Projev kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš pozornost publika.",
+          "roleplay": [
+            "Někdo se odvrátí.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš slova.",
+          "roleplay": [
+            "Význam se plete.",
+            "Výsledek je nepřesný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš nervózně.",
+          "roleplay": [
+            "Tělo tě prozrazuje.",
+            "Dojem kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc složitě.",
+          "roleplay": [
+            "Jednoduchá věc uniká.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení při reakci.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš jistotu.",
+          "roleplay": [
+            "Hlas slábne.",
+            "Dojem mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš tón.",
+          "roleplay": [
+            "Působíš jinak než chceš.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Přestaneš mluvit.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeřekneš se.",
+          "roleplay": [
+            "Slova nedávají smysl.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Projev tě zradí.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí jistota."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Deception checku v tomto kole.",
+          "roleplay": [
+            "Lžeš nejistě.",
+            "Protějšek váhá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaváháš při lži.",
+          "roleplay": [
+            "Hlas kolísá.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš detail.",
+          "roleplay": [
+            "Příběh nesedí.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš nervózně.",
+          "roleplay": [
+            "Tělo tě prozrazuje.",
+            "Důvěra klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Sebevědomí slábne.",
+            "Lež není pevná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš nit příběhu.",
+          "roleplay": [
+            "Věty nedrží.",
+            "Musíš improvizovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš slova.",
+          "roleplay": [
+            "Význam se plete.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeháníš.",
+          "roleplay": [
+            "Působí to divně.",
+            "Důvěra klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc složitě.",
+          "roleplay": [
+            "Jednoduchá lež uniká.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení při odpovědi.",
+          "roleplay": [
+            "Váháš.",
+            "Podezření roste."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš jistotu.",
+          "roleplay": [
+            "Hlas slábne.",
+            "Dojem mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš tón.",
+          "roleplay": [
+            "Působíš podezřele.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Přestaneš mluvit.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeřekneš se.",
+          "roleplay": [
+            "Lež praskne částečně.",
+            "Důvěra slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Příběh tě zradí.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí jistota."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Intimidation checku v tomto kole.",
+          "roleplay": [
+            "Působíš méně hrozivě.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Hrozba není přesvědčivá.",
+          "roleplay": [
+            "Hlas kolísá.",
+            "Protějšek váhá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaváháš.",
+          "roleplay": [
+            "Intenzita klesá.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš nejistě.",
+          "roleplay": [
+            "Tělo tě prozrazuje.",
+            "Hrozba slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Sebevědomí slábne.",
+            "Tlak mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontakt.",
+          "roleplay": [
+            "Pohled uhne.",
+            "Dominance klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš tón.",
+          "roleplay": [
+            "Působíš slabě.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeháníš.",
+          "roleplay": [
+            "Působí to směšně.",
+            "Efekt mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc.",
+          "roleplay": [
+            "Intenzita mizí.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení.",
+          "roleplay": [
+            "Váháš.",
+            "Strach klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš jistotu.",
+          "roleplay": [
+            "Hlas slábne.",
+            "Dojem mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš výraz.",
+          "roleplay": [
+            "Působíš jinak.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Přestaneš tlačit.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš méně hrozivě.",
+          "roleplay": [
+            "Protějšek si všimne.",
+            "Efekt slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Dojem tě zradí.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí síla."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Performance checku v tomto kole.",
+          "roleplay": [
+            "Výkon kolísá.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rytmus.",
+          "roleplay": [
+            "Projev není plynulý.",
+            "Publikum váhá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaváháš.",
+          "roleplay": [
+            "Tempo se rozbije.",
+            "Dojem kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš nejistě.",
+          "roleplay": [
+            "Tělo tě prozrazuje.",
+            "Výkon slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Sebevědomí slábne.",
+            "Výkon kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš pozornost publika.",
+          "roleplay": [
+            "Někdo se odvrátí.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš krok nebo tón.",
+          "roleplay": [
+            "Výkon je nepřesný.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeháníš.",
+          "roleplay": [
+            "Působí to divně.",
+            "Dojem klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc.",
+          "roleplay": [
+            "Přirozenost mizí.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš jistotu.",
+          "roleplay": [
+            "Pohyb není pevný.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš výraz.",
+          "roleplay": [
+            "Působíš jinak.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Zastavíš se.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš moment.",
+          "roleplay": [
+            "Výkon uteče.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výkon tě zradí.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí jistota."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -1 k dalšímu Performance checku v tomto kole.",
+          "roleplay": [
+            "Výkon kolísá.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rytmus.",
+          "roleplay": [
+            "Projev není plynulý.",
+            "Publikum váhá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaváháš.",
+          "roleplay": [
+            "Tempo se rozbije.",
+            "Dojem kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš nejistě.",
+          "roleplay": [
+            "Tělo tě prozrazuje.",
+            "Výkon slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Sebevědomí slábne.",
+            "Výkon kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš pozornost publika.",
+          "roleplay": [
+            "Někdo se odvrátí.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš krok nebo tón.",
+          "roleplay": [
+            "Výkon je nepřesný.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeháníš.",
+          "roleplay": [
+            "Působí to divně.",
+            "Dojem klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přemýšlíš moc.",
+          "roleplay": [
+            "Přirozenost mizí.",
+            "Zamotá se to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš jistotu.",
+          "roleplay": [
+            "Pohyb není pevný.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš výraz.",
+          "roleplay": [
+            "Působíš jinak.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Zastavíš se.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehlédneš moment.",
+          "roleplay": [
+            "Výkon uteče.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výkon tě zradí.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí jistota."
+          ],
+          "weight": 1
+        }
+      ],
+      "Střední": [
+        {
+          "effect": "Máš nevýhodu na všechny Charisma checky do konce kola.",
+          "roleplay": [
+            "Projev selhává.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš význam sdělení.",
+          "roleplay": [
+            "Slova selžou.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Charisma checkům.",
+          "roleplay": [
+            "Sebevědomí slábne.",
+            "Projev kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš nedůvěryhodně.",
+          "roleplay": [
+            "Publikum váhá.",
+            "Výsledek je slabý."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check v tomto kole.",
+          "roleplay": [
+            "Mysl odmítá spolupracovat.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad projevem.",
+          "roleplay": [
+            "Slova nedávají smysl.",
+            "Výklad selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš tón úplně.",
+          "roleplay": [
+            "Působíš špatně.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Soustředění padá.",
+            "Projev slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít charisma.",
+          "roleplay": [
+            "Dojem selže.",
+            "Výsledek nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku projevu.",
+          "roleplay": [
+            "Věty nedrží.",
+            "Projev se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš trapně.",
+          "roleplay": [
+            "Publikum reaguje.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Projev selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký mentální blok.",
+          "roleplay": [
+            "Nemůžeš pokračovat.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš situaci.",
+          "roleplay": [
+            "Projev je špatný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Dojem tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Deception checky do konce kola.",
+          "roleplay": [
+            "Lži se rozpadají.",
+            "Důvěra mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš zásadní detail.",
+          "roleplay": [
+            "Příběh nedává smysl.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Deception checkům.",
+          "roleplay": [
+            "Sebevědomí slábne.",
+            "Lež kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš nedůvěryhodně.",
+          "roleplay": [
+            "Protějšek váhá.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check v tomto kole.",
+          "roleplay": [
+            "Mysl selže.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad příběhem.",
+          "roleplay": [
+            "Věty nedrží.",
+            "Lžeš špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš realitu.",
+          "roleplay": [
+            "Působíš zmateně.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Soustředění padá.",
+            "Lež slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš lhát efektivně.",
+          "roleplay": [
+            "Příběh selže.",
+            "Výsledek nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku lži.",
+          "roleplay": [
+            "Příběh nedrží.",
+            "Výsledek se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš trapně.",
+          "roleplay": [
+            "Protějšek si všímá.",
+            "Důvěra klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Lež selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký blok.",
+          "roleplay": [
+            "Nemůžeš mluvit.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš situaci.",
+          "roleplay": [
+            "Lež je špatná.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Důvěra tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Intimidation checky do konce kola.",
+          "roleplay": [
+            "Tlak mizí.",
+            "Strach klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš směšně.",
+          "roleplay": [
+            "Hrozba selže.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Intimidation checkům.",
+          "roleplay": [
+            "Sebevědomí slábne.",
+            "Dominance mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Protějšek se nebojí.",
+          "roleplay": [
+            "Reaguje opačně.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check.",
+          "roleplay": [
+            "Mysl selže.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu.",
+          "roleplay": [
+            "Tlak mizí.",
+            "Dojem se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš situaci.",
+          "roleplay": [
+            "Působíš špatně.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Soustředění padá.",
+            "Tlak slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš zastrašovat.",
+          "roleplay": [
+            "Efekt mizí.",
+            "Výsledek nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku.",
+          "roleplay": [
+            "Hrozba nedrží.",
+            "Výsledek se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš trapně.",
+          "roleplay": [
+            "Protějšek reaguje.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný efekt.",
+          "roleplay": [
+            "Zastrašení selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký blok.",
+          "roleplay": [
+            "Nemůžeš mluvit.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš přístup.",
+          "roleplay": [
+            "Hrozba selže.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Dominance mizí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Performance checky do konce kola.",
+          "roleplay": [
+            "Výkon selhává.",
+            "Publikum reaguje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš zásadní část.",
+          "roleplay": [
+            "Výkon se rozpadne.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Performance checkům.",
+          "roleplay": [
+            "Sebevědomí slábne.",
+            "Výkon kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš trapně.",
+          "roleplay": [
+            "Publikum si všímá.",
+            "Dojem klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check.",
+          "roleplay": [
+            "Mysl selže.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad výkonem.",
+          "roleplay": [
+            "Pohyb nedrží.",
+            "Projev selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš rytmus úplně.",
+          "roleplay": [
+            "Výkon je špatný.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Soustředění padá.",
+            "Výkon slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš podat výkon.",
+          "roleplay": [
+            "Efekt mizí.",
+            "Výsledek nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku výkonu.",
+          "roleplay": [
+            "Kroky nedrží.",
+            "Projev se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš směšně.",
+          "roleplay": [
+            "Publikum reaguje.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Výkon selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký blok.",
+          "roleplay": [
+            "Nemůžeš pokračovat.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš situaci.",
+          "roleplay": [
+            "Výkon je špatný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Dojem tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny Performance checky do konce kola.",
+          "roleplay": [
+            "Výkon selhává.",
+            "Publikum reaguje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš zásadní část.",
+          "roleplay": [
+            "Výkon se rozpadne.",
+            "Závěr je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Performance checkům.",
+          "roleplay": [
+            "Sebevědomí slábne.",
+            "Výkon kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš trapně.",
+          "roleplay": [
+            "Publikum si všímá.",
+            "Dojem klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check.",
+          "roleplay": [
+            "Mysl selže.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad výkonem.",
+          "roleplay": [
+            "Pohyb nedrží.",
+            "Projev selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš rytmus úplně.",
+          "roleplay": [
+            "Výkon je špatný.",
+            "Výsledek je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Soustředění padá.",
+            "Výkon slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš podat výkon.",
+          "roleplay": [
+            "Efekt mizí.",
+            "Výsledek nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku výkonu.",
+          "roleplay": [
+            "Kroky nedrží.",
+            "Projev se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš směšně.",
+          "roleplay": [
+            "Publikum reaguje.",
+            "Dojem slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný závěr.",
+          "roleplay": [
+            "Výkon selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký blok.",
+          "roleplay": [
+            "Nemůžeš pokračovat.",
+            "Myšlenky stojí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš situaci.",
+          "roleplay": [
+            "Výkon je špatný.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Dojem tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        }
+      ],
+      "Těžký": [
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Mentální kolaps.",
+            "Nemůžeš mluvit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provádět Charisma checky do konce příštího kola.",
+          "roleplay": [
+            "Projev selže.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny akce.",
+          "roleplay": [
+            "Sebevědomí mizí.",
+            "Projev selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci úplně.",
+          "roleplay": [
+            "Mysl selže.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš realitu situace.",
+          "roleplay": [
+            "Projev je úplně špatný.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k Charisma checkům.",
+          "roleplay": [
+            "Myšlení kolabuje.",
+            "Dojem mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš mluvit efektivně.",
+          "roleplay": [
+            "Hlas selže.",
+            "Jsi mimo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad projevem.",
+          "roleplay": [
+            "Chaos.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný projev tě zmate.",
+          "roleplay": [
+            "Dojem selže.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš se soustředit.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost komunikovat.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš používat charisma.",
+          "roleplay": [
+            "Vše mizí.",
+            "Projev selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci v konverzaci.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Projev selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Lež selže.",
+            "Jsi odhalen."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provádět Deception checky do konce příštího kola.",
+          "roleplay": [
+            "Důvěra je pryč.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny akce.",
+          "roleplay": [
+            "Protějšek ti nevěří.",
+            "Vše selhává."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci úplně.",
+          "roleplay": [
+            "Mysl selže.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Lež se rozpadne.",
+          "roleplay": [
+            "Všechno je špatně.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k Deception checkům.",
+          "roleplay": [
+            "Důvěra mizí.",
+            "Příběh selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Jsi plně odhalen.",
+          "roleplay": [
+            "Protějšek ví pravdu.",
+            "Problém vzniká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad situací.",
+          "roleplay": [
+            "Lež se obrátí proti tobě.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybná lež tě zničí.",
+          "roleplay": [
+            "Důvěra padá.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš lhát.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost klamat.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš používat charisma.",
+          "roleplay": [
+            "Vše mizí.",
+            "Lež selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci v příběhu.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Lež selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Zastrašení selže.",
+            "Protějšek reaguje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš zastrašovat.",
+          "roleplay": [
+            "Dojem je pryč.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny akce.",
+          "roleplay": [
+            "Působíš slabě.",
+            "Vše selhává."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu.",
+          "roleplay": [
+            "Tlak mizí.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Protějšek se otočí proti tobě.",
+          "roleplay": [
+            "Strach mizí.",
+            "Problém vzniká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k checkům.",
+          "roleplay": [
+            "Dominance mizí.",
+            "Efekt selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš autoritu.",
+          "roleplay": [
+            "Nikdo tě nebere vážně.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zastrašení se obrátí proti tobě.",
+          "roleplay": [
+            "Tlak mizí.",
+            "Situace se zhorší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný přístup tě zničí.",
+          "roleplay": [
+            "Dominance padá.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš působit.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost zastrašit.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít charisma.",
+          "roleplay": [
+            "Vše mizí.",
+            "Efekt selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Hrozba selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Výkon selže.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš vystupovat.",
+          "roleplay": [
+            "Dojem je pryč.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny akce.",
+          "roleplay": [
+            "Působíš špatně.",
+            "Vše selhává."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu.",
+          "roleplay": [
+            "Výkon mizí.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Publikum reaguje negativně.",
+          "roleplay": [
+            "Dojem padá.",
+            "Problém vzniká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k checkům.",
+          "roleplay": [
+            "Výkon mizí.",
+            "Efekt selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš pozornost publika úplně.",
+          "roleplay": [
+            "Nikdo nesleduje.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výkon se obrátí proti tobě.",
+          "roleplay": [
+            "Dojem padá.",
+            "Situace se zhorší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný výkon tě zničí.",
+          "roleplay": [
+            "Dojem padá.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš vystupovat.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost vystupovat.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít charisma.",
+          "roleplay": [
+            "Vše mizí.",
+            "Výkon selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Výkon selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Výkon selže.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš vystupovat.",
+          "roleplay": [
+            "Dojem je pryč.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny akce.",
+          "roleplay": [
+            "Působíš špatně.",
+            "Vše selhává."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu.",
+          "roleplay": [
+            "Výkon mizí.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Publikum reaguje negativně.",
+          "roleplay": [
+            "Dojem padá.",
+            "Problém vzniká."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k checkům.",
+          "roleplay": [
+            "Výkon mizí.",
+            "Efekt selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš pozornost publika úplně.",
+          "roleplay": [
+            "Nikdo nesleduje.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výkon se obrátí proti tobě.",
+          "roleplay": [
+            "Dojem padá.",
+            "Situace se zhorší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný výkon tě zničí.",
+          "roleplay": [
+            "Dojem padá.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální kolaps.",
+          "roleplay": [
+            "Nemůžeš vystupovat.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost vystupovat.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít charisma.",
+          "roleplay": [
+            "Vše mizí.",
+            "Výkon selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci.",
+          "roleplay": [
+            "Data nedávají smysl.",
+            "Chaos."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš logiku úplně.",
+          "roleplay": [
+            "Výkon selže.",
+            "Nic nedává smysl."
+          ],
+          "weight": 1
+        }
+      ],
+      "Sranda": [
+        {
+          "effect": "Řekneš blbost.",
+          "roleplay": [
+            "A vážně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamotá se ti jazyk.",
+          "roleplay": [
+            "A hodně.",
+            "A viditelně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řekneš opak.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš myšlenku.",
+          "roleplay": [
+            "Uprostřed věty.",
+            "A konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přehnaný projev.",
+          "roleplay": [
+            "Zamotá se to.",
+            "Nic nevyřešíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš jméno.",
+          "roleplay": [
+            "A úplně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlíš opak reality.",
+          "roleplay": [
+            "Sebevědomě.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co říkáš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mluvíš dlouho.",
+          "roleplay": [
+            "A zbytečně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeháníš.",
+          "roleplay": [
+            "A moc.",
+            "A divně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Všichni koukají.",
+          "roleplay": [
+            "A nechápou.",
+            "A ty mluvíš dál."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Lžeš úplně blbě.",
+          "roleplay": [
+            "A je to vidět.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamotá se ti příběh.",
+          "roleplay": [
+            "A hodně.",
+            "A divně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řekneš opak pravdy.",
+          "roleplay": [
+            "A špatně.",
+            "A jasně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš myšlenku.",
+          "roleplay": [
+            "Uprostřed lži.",
+            "A konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeháníš.",
+          "roleplay": [
+            "A moc.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš jména.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Všichni to vidí.",
+          "roleplay": [
+            "Že lžeš.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co říkáš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Lžeš zbytečně.",
+          "roleplay": [
+            "A špatně.",
+            "A dlouho."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamotá se to.",
+          "roleplay": [
+            "A úplně.",
+            "A komicky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Všechno je špatně.",
+          "roleplay": [
+            "A hned.",
+            "A viditelně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš směšně.",
+          "roleplay": [
+            "A úplně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Snažíš se zastrašit.",
+          "roleplay": [
+            "A nikdo to nebere.",
+            "A je to vidět."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvýšíš hlas.",
+          "roleplay": [
+            "A divně.",
+            "A zbytečně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš myšlenku.",
+          "roleplay": [
+            "Uprostřed hrozby.",
+            "A konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeháníš.",
+          "roleplay": [
+            "A moc.",
+            "A směšně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš slova.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nikdo se nebojí.",
+          "roleplay": [
+            "A vůbec.",
+            "A nikdy."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co říkáš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš roztomile.",
+          "roleplay": [
+            "Místo hrozivě.",
+            "A je to špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zasměješ se.",
+          "roleplay": [
+            "V nejhorší moment.",
+            "A je konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Všechno je špatně.",
+          "roleplay": [
+            "A hned.",
+            "A viditelně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zakopneš.",
+          "roleplay": [
+            "A viditelně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co děláš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výkon je špatný.",
+          "roleplay": [
+            "A hned.",
+            "A všichni to vidí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš směšně.",
+          "roleplay": [
+            "A úplně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rytmus.",
+          "roleplay": [
+            "A hodně.",
+            "A komicky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeháníš.",
+          "roleplay": [
+            "A moc.",
+            "A divně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš krok.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Všichni koukají.",
+          "roleplay": [
+            "A nechápou.",
+            "A ty pokračuješ."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výkon se rozpadne.",
+          "roleplay": [
+            "A hned.",
+            "A komicky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamotá se to.",
+          "roleplay": [
+            "A úplně.",
+            "A viditelně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Všechno je špatně.",
+          "roleplay": [
+            "A hned.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zakopneš.",
+          "roleplay": [
+            "A viditelně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš co děláš.",
+          "roleplay": [
+            "A proč.",
+            "A kde."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výkon je špatný.",
+          "roleplay": [
+            "A hned.",
+            "A všichni to vidí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš směšně.",
+          "roleplay": [
+            "A úplně.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rytmus.",
+          "roleplay": [
+            "A hodně.",
+            "A komicky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vysvětlení nedává smysl.",
+          "roleplay": [
+            "Ale pokračuješ.",
+            "A je to horší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeháníš.",
+          "roleplay": [
+            "A moc.",
+            "A divně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zaměníš krok.",
+          "roleplay": [
+            "A úplně.",
+            "A špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš jistě.",
+          "roleplay": [
+            "A jsi mimo.",
+            "A je to jasné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť selže dramaticky.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Všichni koukají.",
+          "roleplay": [
+            "A nechápou.",
+            "A ty pokračuješ."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výkon se rozpadne.",
+          "roleplay": [
+            "A hned.",
+            "A komicky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho pokazíš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamotá se to.",
+          "roleplay": [
+            "A úplně.",
+            "A viditelně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Všechno je špatně.",
+          "roleplay": [
+            "A hned.",
+            "A trapně."
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    "Constitution": {
+      "Lehký": [
+        {
+          "effect": "Máš -1 k dalšímu Constitution checku v tomto kole.",
+          "roleplay": [
+            "Tělo zaváhá.",
+            "Odolnost kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš dech.",
+          "roleplay": [
+            "Krátké oslabení.",
+            "Musíš se nadechnout."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Lehká bolest tě vyruší.",
+          "roleplay": [
+            "Soustředění slábne.",
+            "Výkon kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tělo reaguje pomaleji.",
+          "roleplay": [
+            "Reflex slábne.",
+            "Efekt je slabší."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na další check v tomto kole.",
+          "roleplay": [
+            "Tělo není v kondici.",
+            "Výdrž slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rytmus dechu.",
+          "roleplay": [
+            "Pohyb není plynulý.",
+            "Musíš se srovnat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Lehké motání hlavy.",
+          "roleplay": [
+            "Vnímání kolísá.",
+            "Tělo reaguje pomalu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Slabá únava.",
+          "roleplay": [
+            "Svaly protestují.",
+            "Výkon slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přetížíš se.",
+          "roleplay": [
+            "Tělo zaváhá.",
+            "Musíš zpomalit."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zdržení reakcí.",
+          "roleplay": [
+            "Váháš.",
+            "Tempo klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš stabilitu.",
+          "roleplay": [
+            "Krok není jistý.",
+            "Rovnováha kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tělo není synchronizované.",
+          "roleplay": [
+            "Pohyb drhne.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátké zaváhání.",
+          "roleplay": [
+            "Tělo nereaguje.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Pocit slabosti.",
+          "roleplay": [
+            "Krátký výpadek síly.",
+            "Efekt slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Výdrž tě zradí.",
+          "roleplay": [
+            "Závěr kolísá.",
+            "Chybí síla."
+          ],
+          "weight": 1
+        }
+      ],
+      "Střední": [
+        {
+          "effect": "Máš nevýhodu na všechny Constitution checky do konce kola.",
+          "roleplay": [
+            "Tělo slábne.",
+            "Výdrž klesá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci (DC 10).",
+          "roleplay": [
+            "Tělo selže.",
+            "Efekt mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -2 k Constitution checkům.",
+          "roleplay": [
+            "Svaly protestují.",
+            "Výdrž kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátká slabost.",
+          "roleplay": [
+            "Tělo vypovídá.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš provést další check.",
+          "roleplay": [
+            "Tělo odmítá spolupracovat.",
+            "Pauza je nutná."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš dech výrazně.",
+          "roleplay": [
+            "Tempo padá.",
+            "Pohyb slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamotá se ti hlava.",
+          "roleplay": [
+            "Rovnováha mizí.",
+            "Výsledek kolísá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální únava.",
+          "roleplay": [
+            "Tělo reaguje pomalu.",
+            "Výdrž padá."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš držet koncentraci.",
+          "roleplay": [
+            "Efekt selže.",
+            "Výsledek nepomůže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad tělem.",
+          "roleplay": [
+            "Pohyb nedrží.",
+            "Akce se rozpadne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Slabost tě zpomalí.",
+          "roleplay": [
+            "Krok je těžký.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Chybný odhad síly.",
+          "roleplay": [
+            "Tělo selže.",
+            "Výsledek je opačný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Krátký kolaps.",
+          "roleplay": [
+            "Zastavíš se.",
+            "Musíš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš stabilitu.",
+          "roleplay": [
+            "Rovnováha mizí.",
+            "Důsledky jsou jiné."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tělo tě zradí.",
+          "roleplay": [
+            "Detail chybí.",
+            "Výsledek slábne."
+          ],
+          "weight": 1
+        }
+      ],
+      "Těžký": [
+        {
+          "effect": "Ztratíš akci v příštím kole.",
+          "roleplay": [
+            "Tělo selže.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš udržet koncentraci.",
+          "roleplay": [
+            "Efekt končí.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš nevýhodu na všechny akce.",
+          "roleplay": [
+            "Tělo kolabuje.",
+            "Vše selhává."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu nad tělem.",
+          "roleplay": [
+            "Pohyb mizí.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Upadneš prone.",
+          "roleplay": [
+            "Rovnováha selže.",
+            "Spadneš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Máš -3 k checkům.",
+          "roleplay": [
+            "Tělo kolabuje.",
+            "Výdrž mizí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Těžká slabost.",
+          "roleplay": [
+            "Nemůžeš pokračovat.",
+            "Jsi vyčerpaný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rovnováhu.",
+          "roleplay": [
+            "Padneš.",
+            "Nemůžeš reagovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Kolaps.",
+          "roleplay": [
+            "Tělo vypoví službu.",
+            "Akce končí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální i fyzický kolaps.",
+          "roleplay": [
+            "Nemůžeš se soustředit.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš schopnost vydržet.",
+          "roleplay": [
+            "Situace nedává smysl.",
+            "Řešení není."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Nemůžeš použít tělo efektivně.",
+          "roleplay": [
+            "Vše mizí.",
+            "Akce selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci v těle.",
+          "roleplay": [
+            "Chaos.",
+            "Nemůžeš pokračovat."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mentální přetížení.",
+          "roleplay": [
+            "Myšlenky stojí.",
+            "Tělo nefunguje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš kontrolu úplně.",
+          "roleplay": [
+            "Nic nedává smysl.",
+            "Konec."
+          ],
+          "weight": 1
+        }
+      ],
+      "Sranda": [
+        {
+          "effect": "Dojde ti dech.",
+          "roleplay": [
+            "A dramaticky.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamotáš se.",
+          "roleplay": [
+            "A spadneš.",
+            "A hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tělo řekne „ne“.",
+          "roleplay": [
+            "A jasně.",
+            "A nahlas."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zakopneš.",
+          "roleplay": [
+            "A úplně.",
+            "A viditelně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rovnováhu.",
+          "roleplay": [
+            "A máváš rukama.",
+            "A nic."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zastavíš se.",
+          "roleplay": [
+            "A nevíš proč.",
+            "A stojíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Přeháníš.",
+          "roleplay": [
+            "A tělo to vzdá.",
+            "A hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Působíš unaveně.",
+          "roleplay": [
+            "A hodně.",
+            "A komicky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Dýcháš hlasitě.",
+          "roleplay": [
+            "A moc.",
+            "A divně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš sílu.",
+          "roleplay": [
+            "A okamžitě.",
+            "A trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vypadáš silně.",
+          "roleplay": [
+            "A nejsi.",
+            "A je to vidět."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zastavíš se.",
+          "roleplay": [
+            "A nic neděláš.",
+            "A čekáš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Paměť těla selže.",
+          "roleplay": [
+            "Všechno zmizí.",
+            "Teď hned."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Řešení je jasné.",
+          "roleplay": [
+            "Ty ho nezvládneš.",
+            "Dokonale."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Všechno bolí.",
+          "roleplay": [
+            "A zbytečně.",
+            "A moc."
           ],
           "weight": 1
         }
