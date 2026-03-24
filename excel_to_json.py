@@ -15,10 +15,6 @@ for sheet in xls.sheet_names:
 
     for _, row in df.iterrows():
 
-        # =========================
-        # NAČTENÍ (TVŮJ FORMÁT)
-        # =========================
-
         attribute = str(row.get("skill", "")).strip()
         skill = str(row.get("skill_category", "")).strip()
         attack_type = str(row.get("attack_type", "")).strip()
@@ -37,14 +33,10 @@ for sheet in xls.sheet_names:
             "weight": int(row.get("weight", 1)) if not pd.isna(row.get("weight")) else 1
         }
 
-        # =========================
         # ÚTOK
-        # =========================
         if action == "Útok":
-
             if not attack_type:
                 attack_type = "Obecný"
-
             if not severity:
                 severity = "Normální"
 
@@ -52,17 +44,12 @@ for sheet in xls.sheet_names:
             data[action][attack_type].setdefault(severity, [])
             data[action][attack_type][severity].append(entry)
 
-        # =========================
-        # SKILL (TVŮJ FORMÁT)
-        # =========================
+        # SKILL
         elif action == "Skill":
-
             if not attribute:
                 attribute = "Obecný"
-
             if not skill:
                 skill = "Obecný"
-
             if not severity:
                 severity = "Normální"
 
@@ -71,22 +58,15 @@ for sheet in xls.sheet_names:
             data[action][attribute][skill].setdefault(severity, [])
             data[action][attribute][skill][severity].append(entry)
 
-        # =========================
         # OSTATNÍ
-        # =========================
         else:
-
             if not severity:
                 severity = "Normální"
 
             data[action].setdefault(severity, [])
             data[action][severity].append(entry)
 
-# =========================
-# SAVE JSON
-# =========================
-
 with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 
-print("✅ JSON vygenerován správně")
+print("✅ JSON vygenerován")
