@@ -15,9 +15,12 @@ for sheet in xls.sheet_names:
 
     for _, row in df.iterrows():
 
-        # bezpečné načtení hodnot
-        attribute = str(row.get("attribute", "")).strip()
-        skill = str(row.get("skill", "")).strip()
+        # =========================
+        # NAČTENÍ (TVŮJ FORMÁT)
+        # =========================
+
+        attribute = str(row.get("skill", "")).strip()
+        skill = str(row.get("skill_category", "")).strip()
         attack_type = str(row.get("attack_type", "")).strip()
         severity = str(row.get("severity", "")).strip()
 
@@ -50,7 +53,7 @@ for sheet in xls.sheet_names:
             data[action][attack_type][severity].append(entry)
 
         # =========================
-        # SKILL
+        # SKILL (TVŮJ FORMÁT)
         # =========================
         elif action == "Skill":
 
@@ -69,7 +72,7 @@ for sheet in xls.sheet_names:
             data[action][attribute][skill][severity].append(entry)
 
         # =========================
-        # OSTATNÍ (Obrana, Kouzlo…)
+        # OSTATNÍ
         # =========================
         else:
 
@@ -86,4 +89,4 @@ for sheet in xls.sheet_names:
 with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 
-print("✅ JSON byl úspěšně vygenerován")
+print("✅ JSON vygenerován správně")
