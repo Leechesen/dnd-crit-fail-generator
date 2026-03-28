@@ -3,47 +3,10 @@ import json
 import random
 
 # =========================
-# CONFIG + STYLY
+# CONFIG
 # =========================
 
 st.set_page_config(page_title="DnD Crit Fail", page_icon="🎲", layout="wide")
-
-st.markdown("""
-<style>
-.block-container {padding-top: 1.2rem; padding-bottom: 1.2rem;}
-.card {
-    padding: 1rem 1.2rem;
-    border-radius: 14px;
-    border: 1px solid #2a2a2a;
-    background: #111;
-}
-.section-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 0.6rem;
-}
-.result {
-    padding: 1rem;
-    border-radius: 12px;
-    border: 1px solid #333;
-    background: #0d0d0d;
-}
-.badge {
-    display: inline-block;
-    padding: 0.25rem 0.6rem;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    margin-left: 0.5rem;
-}
-.green {background:#123b1a; color:#7CFF9B;}
-.orange {background:#3b2a12; color:#FFB86B;}
-.red {background:#3b1212; color:#FF6B6B;}
-.purple {background:#2a123b; color:#D18BFF;}
-button[kind="secondary"] {
-    border-radius: 10px;
-}
-</style>
-""", unsafe_allow_html=True)
 
 # =========================
 # LOAD DATA
@@ -52,18 +15,67 @@ button[kind="secondary"] {
 with open("crit_fails.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
-st.title("🎲 DnD Crit Fail – Combat Panel")
-
 # =========================
-# SEVERITY BAR
+# SESSION STATE
 # =========================
 
-sev_map = {
-    "Lehký": ("green", "🟢"),
-    "Střední": ("orange", "🟠"),
-    "Těžký": ("red", "🔴"),
-    "Sranda": ("purple", "🟣")
+if "result" not in st.session_state:
+    st.session_state.result = None
+
+if "severity" not in st.session_state:
+    st.session_state.severity = "Lehký"
+
+# =========================
+# STYLY
+# =========================
+
+st.markdown("""
+<style>
+.result-box {
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid #333;
+    background: #111;
 }
+.green {color:#7CFF9B;}
+.orange {color:#FFB86B;}
+.red {color:#FF6B6B;}
+.purple {color:#D18BFF;}
+</style>
+""", unsafe_allow_html=True)
+
+# =========================
+# TITLE
+# =========================
+
+st.title("🎲 DnD Crit Fail")
+
+# =========================
+# RESULT (NAHOŘE)
+# =========================
+
+if st.session_state.result:
+    r = st.session_state.result
+
+    st.markdown("<div class='result-box'>", unsafe_allow_html=True)
+
+    st.subheader("💥 Efekt")
+    st.write(r.get("effect", ""))
+
+    st.subheader("🎭 Roleplay")
+    rp = r.get("roleplay", [])
+    if len(rp) > 0:
+        st.write("• " + rp[0])
+    if len(rp) > 1:
+        st.write("• " + rp[1])
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+st.markdown("---")
+
+# =========================
+# SEVERITY
+# =========================
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -76,14 +88,7 @@ if col3.button("🔴 Těžký"):
 if col4.button("🟣 Sranda"):
     st.session_state.severity = "Sranda"
 
-severity = st.session_state.get("severity", "Lehký")
-
-color_class, icon = sev_map[severity]
-
-st.markdown(
-    f"**Závažnost:** <span class='badge {color_class}'>{icon} {severity}</span>",
-    unsafe_allow_html=True
-)
+st.write(f"Závažnost: **{st.session_state.severity}**")
 
 st.markdown("---")
 
@@ -93,72 +98,52 @@ st.markdown("---")
 
 def generate(pool):
     if not pool:
-        st.error("❌ Žádná data")
-        return
-
-    r = random.choice(pool)
-
-    st.markdown("<div class='result'>", unsafe_allow_html=True)
-    st.markdown("### 💥 Efekt")
-    st.write(r.get("effect", ""))
-
-    st.markdown("### 🎭 Roleplay")
-    rp = r.get("roleplay", [])
-    if len(rp) > 0:
-        st.write("• " + rp[0])
-    if len(rp) > 1:
-        st.write("• " + rp[1])
-    st.markdown("</div>", unsafe_allow_html=True)
+        st.session_state.result = {"effect": "❌ Žádná data", "roleplay": []}
+    else:
+        st.session_state.result = random.choice(pool)
 
 # =========================
-# LAYOUT – 3 SLoupce
+# LAYOUT
 # =========================
 
-colA, colB, colC = st.columns([1,1,1])
+colA, colB, colC = st.columns(3)
 
 # =========================
 # ÚTOK
 # =========================
 
 with colA:
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("<div class='section-title'>⚔️ Útok</div>", unsafe_allow_html=True)
+    st.subheader("⚔️ Útok")
 
     if st.button("⚔️ Melee"):
-        pool = data["Útok"].get("Melee", {}).get(severity, [])
+        pool = data["Útok"].get("Melee", {}).get(st.session_state.severity, [])
         generate(pool)
 
     if st.button("🏹 Ranged"):
-        pool = data["Útok"].get("Ranged", {}).get(severity, [])
+        pool = data["Útok"].get("Ranged", {}).get(st.session_state.severity, [])
         generate(pool)
-
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================
 # OBRANA / KOUZLO
 # =========================
 
 with colB:
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("<div class='section-title'>🛡️ Obrana / ✨ Kouzlo</div>", unsafe_allow_html=True)
+    st.subheader("🛡️ Obrana / ✨ Kouzlo")
 
     if st.button("🛡️ Obrana"):
-        pool = data.get("Obrana", {}).get(severity, [])
+        pool = data.get("Obrana", {}).get(st.session_state.severity, [])
         generate(pool)
 
     if st.button("✨ Kouzlo"):
-        pool = data.get("Kouzlo", {}).get(severity, [])
+        pool = data.get("Kouzlo", {}).get(st.session_state.severity, [])
         generate(pool)
-
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================
 # SKILLY
 # =========================
 
 with colC:
-    st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("<div class='section-title'>🎲 Skilly</div>", unsafe_allow_html=True)
+    st.subheader("🎲 Skilly")
 
     for attr, skills in data.get("Skill", {}).items():
         st.markdown(f"**{attr}**")
@@ -167,7 +152,5 @@ with colC:
 
         for i, skill in enumerate(skills):
             if cols[i % 2].button(skill):
-                pool = skills.get(skill, {}).get(severity, [])
+                pool = skills.get(skill, {}).get(st.session_state.severity, [])
                 generate(pool)
-
-    st.markdown("</div>", unsafe_allow_html=True)
