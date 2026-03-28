@@ -32,23 +32,48 @@ if "severity" not in st.session_state:
 st.markdown("""
 <style>
 .result-box {
-    padding: 1rem;
+    padding: 1.2rem;
     border-radius: 12px;
     border: 1px solid #333;
     background: #111;
 }
+
+.section {
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid #222;
+    background: #0d0d0d;
+}
+
 .green {color:#7CFF9B;}
 .orange {color:#FFB86B;}
 .red {color:#FF6B6B;}
 .purple {color:#D18BFF;}
+
+button {
+    border-radius: 10px !important;
+}
 </style>
 """, unsafe_allow_html=True)
+
+# =========================
+# ATTRIBUTE ICONS
+# =========================
+
+attr_icons = {
+    "Strength": "🔴",
+    "Dexterity": "🟢",
+    "Constitution": "🟠",
+    "Intelligence": "🔵",
+    "Wisdom": "🟣",
+    "Charisma": "🟡"
+}
 
 # =========================
 # TITLE
 # =========================
 
-st.title("🎲 DnD Crit Fail")
+st.title("🎲 DnD Crit Fail – Combat Panel")
 
 # =========================
 # RESULT (NAHOŘE)
@@ -113,6 +138,7 @@ colA, colB, colC = st.columns(3)
 # =========================
 
 with colA:
+    st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.subheader("⚔️ Útok")
 
     if st.button("⚔️ Melee"):
@@ -123,11 +149,14 @@ with colA:
         pool = data["Útok"].get("Ranged", {}).get(st.session_state.severity, [])
         generate(pool)
 
+    st.markdown("</div>", unsafe_allow_html=True)
+
 # =========================
 # OBRANA / KOUZLO
 # =========================
 
 with colB:
+    st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.subheader("🛡️ Obrana / ✨ Kouzlo")
 
     if st.button("🛡️ Obrana"):
@@ -138,19 +167,25 @@ with colB:
         pool = data.get("Kouzlo", {}).get(st.session_state.severity, [])
         generate(pool)
 
+    st.markdown("</div>", unsafe_allow_html=True)
+
 # =========================
 # SKILLY
 # =========================
 
 with colC:
+    st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.subheader("🎲 Skilly")
 
     for attr, skills in data.get("Skill", {}).items():
-        st.markdown(f"**{attr}**")
+        icon = attr_icons.get(attr, "")
+        st.markdown(f"### {icon} {attr}")
 
         cols = st.columns(2)
 
         for i, skill in enumerate(skills):
-            if cols[i % 2].button(skill):
+            if cols[i % 2].button(f"{icon} {skill}"):
                 pool = skills.get(skill, {}).get(st.session_state.severity, [])
                 generate(pool)
+
+    st.markdown("</div>", unsafe_allow_html=True)
