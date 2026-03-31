@@ -49,7 +49,9 @@ def build_json_from_excel():
                 "weight": int(row.get("weight", 1)) if not pd.isna(row.get("weight")) else 1
             }
 
+            # =========================
             # ÚTOK
+            # =========================
             if action == "Útok":
                 if not attack_type:
                     attack_type = "Melee"
@@ -58,7 +60,9 @@ def build_json_from_excel():
                 data[action][attack_type].setdefault(severity, [])
                 data[action][attack_type][severity].append(entry)
 
+            # =========================
             # SKILL
+            # =========================
             elif action == "Skill":
                 if not attribute or not skill:
                     continue
@@ -68,7 +72,9 @@ def build_json_from_excel():
                 data[action][attribute][skill].setdefault(severity, [])
                 data[action][attribute][skill][severity].append(entry)
 
-            # OSTATNÍ
+            # =========================
+            # OBRANA / KOUZLO / OSTATNÍ
+            # =========================
             else:
                 data[action].setdefault(severity, [])
                 data[action][severity].append(entry)
