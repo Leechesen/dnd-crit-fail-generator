@@ -154,38 +154,38 @@ with colB:
         generate(pool)
 
 # =========================
-# SKILLY (FINÁLNÍ FIX)
+# SKILLY (🔥 OPRAVENO SPRÁVNĚ)
 # =========================
 
 with colC:
     st.subheader("🎲 Skilly")
 
-    max_cols = 3  # 🔥 důležité (4 je často moc úzké)
+    max_cols = 3
 
-    for attr, skill_dict in data.get("Skill", {}).items():
+    for attr, skills in data.get("Skill", {}).items():
 
+        # 🔹 NADPIS ATRIBUTU
         color = attr_colors.get(attr, "#FFFFFF")
-
         st.markdown(
             f"<h3 style='color:{color}; margin-bottom: 5px;'>{attr}</h3>",
             unsafe_allow_html=True
         )
 
-        skills = list(skill_dict.items())
+        skill_items = list(skills.items())
 
-        for j in range(0, len(skills), max_cols):
-
-            row = skills[j:j+max_cols]
+        for j in range(0, len(skill_items), max_cols):
+            row = skill_items[j:j+max_cols]
             cols = st.columns(len(row))
 
             for i, (skill_name, skill_data) in enumerate(row):
 
+                pool = skill_data.get(st.session_state.severity, [])
+
                 if cols[i].button(
-                    skill_name,
+                    skill_name,  # ✔ správný název skillu
                     key=f"{attr}_{skill_name}",
-                    use_container_width=True  # 🔥 KLÍČOVÝ FIX
+                    use_container_width=True
                 ):
-                    pool = skill_data.get(st.session_state.severity, [])
                     generate(pool)
 
 # =========================
