@@ -36,25 +36,37 @@ if "severity" not in st.session_state:
     st.session_state.severity = "Lehký"
 
 # =========================
-# CSS (🔥 MINIMALISTICKÉ)
+# BARVY ATRIBUTŮ
+# =========================
+
+attr_colors = {
+    "Strength": "#FF6B6B",
+    "Dexterity": "#6BCB77",
+    "Constitution": "#FFA94D",
+    "Intelligence": "#4D96FF",
+    "Wisdom": "#B983FF",
+    "Charisma": "#FFD93D"
+}
+
+# =========================
+# CSS (KOMPAKTNÍ + CHIP STYLE)
 # =========================
 
 st.markdown("""
 <style>
 
-/* menší padding stránky */
 .block-container {
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
 
-/* tlačítka – chip style */
+/* tlačítka */
 div.stButton > button {
-    height: 42px;
-    font-size: 15px;
+    height: 40px;
+    font-size: 14px;
     font-weight: 600;
-    padding: 0 12px;
-    margin: 2px;
+    padding: 0 10px;
+    margin: 3px;
 
     width: auto !important;
     min-width: unset;
@@ -63,26 +75,14 @@ div.stButton > button {
     white-space: nowrap;
 }
 
-/* tlačítka vedle sebe */
-.stButton {
-    display: inline-flex;
-    margin: 2px;
-}
-
 /* menší mezery */
-h3 {
-    margin-bottom: 5px;
-    margin-top: 10px;
+div[data-testid="stVerticalBlock"] > div {
+    gap: 0.2rem;
 }
 
 h4 {
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     margin-top: 8px;
-}
-
-/* odstranění velkých gapů */
-div[data-testid="stVerticalBlock"] > div {
-    gap: 0.3rem;
 }
 
 </style>
@@ -132,10 +132,7 @@ if st.session_state.result:
     r = st.session_state.result
 
     st.subheader("💥 Efekt")
-
-    source = r.get("source")
-    if source:
-        st.caption(f"🎯 {source}")
+    st.caption(f"🎯 {r.get('source')}")
 
     st.write(r.get("effect", ""))
 
@@ -161,8 +158,6 @@ if col3.button("🔴 Těžký"):
 if col4.button("🟣 Sranda"):
     st.session_state.severity = "Sranda"
 
-st.write("Závažnost:", st.session_state.severity)
-
 st.markdown("---")
 
 colA, colB, colC = st.columns(3)
@@ -174,19 +169,14 @@ colA, colB, colC = st.columns(3)
 with colA:
     st.subheader("⚔️ Útok")
 
-    attack_data = data.get("Útok", {})
-
-    for attack_type, severity_dict in attack_data.items():
+    for attack_type, severity_dict in data.get("Útok", {}).items():
         if st.button(attack_type, key=f"attack_{attack_type}"):
             pool = severity_dict.get(st.session_state.severity)
 
             if not pool:
                 pool = next(iter(severity_dict.values()), [])
 
-            generate(
-                pool,
-                f"Útok → {attack_type} | {st.session_state.severity}"
-            )
+            generate(pool, f"Útok → {attack_type} | {st.session_state.severity}")
 
 # =========================
 # 🛡️ OBRANA
@@ -195,21 +185,16 @@ with colA:
 with colB:
     st.subheader("🛡️ Obrana")
 
-    defense_data = data.get("Obrana", {})
-
     if st.button("🛡️ Obrana", key="defense_btn"):
-        pool = defense_data.get(st.session_state.severity)
+        pool = data.get("Obrana", {}).get(st.session_state.severity)
 
         if not pool:
-            pool = next(iter(defense_data.values()), [])
+            pool = next(iter(data.get("Obrana", {}).values()), [])
 
-        generate(
-            pool,
-            f"Obrana | {st.session_state.severity}"
-        )
+        generate(pool, f"Obrana | {st.session_state.severity}")
 
 # =========================
-# 🎲 SKILLY
+# 🎲 SKILLY (GRID max 2 řádky)
 # =========================
 
 with colC:
@@ -217,16 +202,31 @@ with colC:
 
     for attr, skills in data.get("Skill", {}).items():
 
-        st.markdown(f"#### {attr}")
+        color = attr_colors.get(attr, "#FFFFFF")
 
-        for skill_name, skill_data in skills.items():
+        st.markdown(
+            f"<h4 style='color:{color}'>{attr}</h4>",
+            unsafe_allow_html=True
+        )
+
+        skills_list = list(skills.items())
+        num_skills = len(skills_list)
+
+        # max 2 řádky → spočítáme sloupce
+        cols_count = (num_skills + 1) // 2
+
+        cols = st.columns(cols_count)
+
+        for i, (skill_name, skill_data) in enumerate(skills_list):
+
+            col_index = i % cols_count
 
             pool = skill_data.get(st.session_state.severity)
 
             if not pool:
                 pool = next(iter(skill_data.values()), [])
 
-            if st.button(
+            if cols[col_index].button(
                 skill_name,
                 key=f"{attr}_{skill_name}"
             ):
