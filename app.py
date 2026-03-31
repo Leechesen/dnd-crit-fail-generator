@@ -36,30 +36,60 @@ if "severity" not in st.session_state:
     st.session_state.severity = "Lehký"
 
 # =========================
-# CSS (AUTO WIDTH BUTTONS)
+# CSS (🔥 MINIMALISTICKÉ)
 # =========================
 
 st.markdown("""
 <style>
+
+/* menší padding stránky */
+.block-container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* tlačítka – chip style */
 div.stButton > button {
-    height: 60px;
-    font-size: 18px;
+    height: 42px;
+    font-size: 15px;
     font-weight: 600;
-    padding: 0 20px;
+    padding: 0 12px;
+    margin: 2px;
+
     width: auto !important;
-    min-width: 120px;
+    min-width: unset;
+
+    border-radius: 999px;
     white-space: nowrap;
 }
 
+/* tlačítka vedle sebe */
 .stButton {
-    display: inline-block;
-    margin: 5px;
+    display: inline-flex;
+    margin: 2px;
 }
+
+/* menší mezery */
+h3 {
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+h4 {
+    margin-bottom: 3px;
+    margin-top: 8px;
+}
+
+/* odstranění velkých gapů */
+div[data-testid="stVerticalBlock"] > div {
+    gap: 0.3rem;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# GENERATE (SE ZDROJEM)
+# GENERATE
 # =========================
 
 def weighted_choice(pool):
@@ -147,10 +177,7 @@ with colA:
     attack_data = data.get("Útok", {})
 
     for attack_type, severity_dict in attack_data.items():
-        if st.button(
-            attack_type,
-            key=f"attack_{attack_type}"
-        ):
+        if st.button(attack_type, key=f"attack_{attack_type}"):
             pool = severity_dict.get(st.session_state.severity)
 
             if not pool:
@@ -190,7 +217,7 @@ with colC:
 
     for attr, skills in data.get("Skill", {}).items():
 
-        st.markdown(f"### {attr}")
+        st.markdown(f"#### {attr}")
 
         for skill_name, skill_data in skills.items():
 
