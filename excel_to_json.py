@@ -4,6 +4,21 @@ import json
 EXCEL_FILE = "crit_fails.xlsx"
 OUTPUT_JSON = "crit_fails.json"
 
+def normalize_severity(s):
+    if not s:
+        return "Lehký"
+    s = str(s).strip().lower()
+    if "leh" in s:
+        return "Lehký"
+    if "stř" in s or "str" in s:
+        return "Střední"
+    if "těž" in s or "tez" in s:
+        return "Těžký"
+    if "sranda" in s:
+        return "Sranda"
+    return "Lehký"
+
+
 def build_json_from_excel():
     xls = pd.ExcelFile(EXCEL_FILE)
     data = {}
@@ -16,26 +31,18 @@ def build_json_from_excel():
 
         for _, row in df.iterrows():
 
-            # =========================
-            # SPRÁVNÉ MAPOVÁNÍ
-            # =========================
-
+            # 🔥 SPRÁVNÉ MAPOVÁNÍ
+            skill = str(row.get("skill", "")).strip()                # Athletics
             attribute = str(row.get("skill_category", "")).strip()   # Strength
-            skill = str(row.get("skill", "")).strip()               # Athletics
             attack_type = str(row.get("attack_type", "")).strip()
-            severity = str(row.get("severity", "")).strip()
+            severity = normalize_severity(row.get("severity", ""))
 
             effect = str(row.get("effect", "")).strip()
             roleplay_1 = str(row.get("roleplay_1", "")).strip()
             roleplay_2 = str(row.get("roleplay_2", "")).strip()
 
-            # skip prázdné řádky
             if not effect:
                 continue
-
-            # defaulty
-            if not severity:
-                severity = "Lehký"
 
             entry = {
                 "effect": effect,
@@ -56,38 +63,29 @@ def build_json_from_excel():
                 data[action][attack_type][severity].append(entry)
 
             # =========================
-            # SKILLY (KLÍČOVÉ)
+            # SKILLY (HLAVNÍ FIX)
             # =========================
             elif action == "Skill":
 
-                if not attribute:
-                    attribute = "Unknown"
-
-                if not skill:
-                    continue  # ← důležité: bez skillu to ignoruj
+                if not attribute or not skill:
+                    continue
 
                 data[action].setdefault(attribute, {})
                 data[action][attribute].setdefault(skill, {})
                 data[action][attribute][skill].setdefault(severity, [])
-
                 data[action][attribute][skill][severity].append(entry)
 
             # =========================
             # OSTATNÍ
             # =========================
             else:
-
                 data[action].setdefault(severity, [])
                 data[action][severity].append(entry)
-
-    # =========================
-    # SAVE
-    # =========================
 
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print("✅ JSON opraven a uložen")
+    print("✅ JSON vygenerován správně")
 
 
 if __name__ == "__main__":
