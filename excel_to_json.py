@@ -1,7 +1,10 @@
-def build_json_from_excel():
-    EXCEL_FILE = "crit_fails.xlsx"
-    OUTPUT_JSON = "crit_fails.json"
+import pandas as pd
+import json
 
+EXCEL_FILE = "crit_fails.xlsx"
+OUTPUT_JSON = "crit_fails.json"
+
+def build_json_from_excel():
     xls = pd.ExcelFile(EXCEL_FILE)
     data = {}
 
@@ -12,6 +15,7 @@ def build_json_from_excel():
 
         for _, row in df.iterrows():
 
+            # ✅ SPRÁVNÉ MAPOVÁNÍ
             attribute = str(row.get("skill_category", "")).strip()
             skill = str(row.get("skill", "")).strip()
             attack_type = str(row.get("attack_type", "")).strip()
@@ -34,6 +38,9 @@ def build_json_from_excel():
                 "weight": int(weight)
             }
 
+            # =========================
+            # ÚTOK
+            # =========================
             if action == "Útok":
                 if not attack_type:
                     attack_type = "Obecný"
@@ -44,6 +51,9 @@ def build_json_from_excel():
                 data[action][attack_type].setdefault(severity, [])
                 data[action][attack_type][severity].append(entry)
 
+            # =========================
+            # SKILL (HLAVNÍ)
+            # =========================
             elif action == "Skill":
                 if not attribute:
                     attribute = "Obecný"
@@ -57,6 +67,9 @@ def build_json_from_excel():
                 data[action][attribute][skill].setdefault(severity, [])
                 data[action][attribute][skill][severity].append(entry)
 
+            # =========================
+            # OSTATNÍ
+            # =========================
             else:
                 if not severity:
                     severity = "Normální"
@@ -66,3 +79,9 @@ def build_json_from_excel():
 
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+    print("✅ JSON vygenerován správně")
+
+
+if __name__ == "__main__":
+    build_json_from_excel()
