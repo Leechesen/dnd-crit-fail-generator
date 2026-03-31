@@ -32,6 +32,9 @@ if "result" not in st.session_state:
 if "severity" not in st.session_state:
     st.session_state.severity = "Lehký"
 
+if "last_pool" not in st.session_state:
+    st.session_state.last_pool = None
+
 # =========================
 # BARVY ATRIBUTŮ
 # =========================
@@ -90,6 +93,7 @@ h4 {
 def weighted_choice(pool):
     return random.choice(pool)
 
+
 def generate(pool, source):
     if not pool:
         st.session_state.result = {
@@ -97,10 +101,12 @@ def generate(pool, source):
             "roleplay": [],
             "source": source
         }
+        st.session_state.last_pool = []
     else:
         result = weighted_choice(pool)
         result["source"] = source
         st.session_state.result = result
+        st.session_state.last_pool = pool  # 🔥 uložíme pool
 
     st.rerun()
 
@@ -111,15 +117,26 @@ def generate(pool, source):
 st.title("🎲 DnD Crit Fail")
 
 # =========================
-# RESULT
+# RESULT + REROLL
 # =========================
 
 if st.session_state.result:
+
+    colE1, colE2 = st.columns([4, 1])
+
+    with colE1:
+        st.subheader("💥 Efekt")
+
+    with colE2:
+        if st.session_state.get("last_pool"):
+            if st.button("🔄 Generuj znovu", key="reroll"):
+                pool = st.session_state.last_pool
+                source = st.session_state.result.get("source", "")
+                generate(pool, source)
+
     r = st.session_state.result
 
-    st.subheader("💥 Efekt")
     st.caption(f"🎯 {r.get('source')}")
-
     st.write(r.get("effect", ""))
 
     st.subheader("🎭 Roleplay")
