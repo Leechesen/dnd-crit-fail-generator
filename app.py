@@ -4,21 +4,22 @@ import random
 import os
 from excel_to_json import build_json_from_excel
 
+st.set_page_config(layout="wide")
+
 EXCEL_FILE = "crit_fails.xlsx"
 OUTPUT_JSON = "crit_fails.json"
 
 # =========================
-# AUTO UPDATE JSON
+# AUTO UPDATE
 # =========================
 
 if not os.path.exists(OUTPUT_JSON):
     build_json_from_excel()
-
 elif os.path.getmtime(EXCEL_FILE) >= os.path.getmtime(OUTPUT_JSON):
     build_json_from_excel()
 
 # =========================
-# LOAD DATA
+# LOAD
 # =========================
 
 with open(OUTPUT_JSON, "r", encoding="utf-8") as f:
@@ -35,28 +36,15 @@ if "severity" not in st.session_state:
     st.session_state.severity = "Lehký"
 
 # =========================
-# ATTRIBUTE COLORS
+# CSS
 # =========================
 
-attr_colors = {
-    "Strength": "#FF6B6B",
-    "Dexterity": "#7CFF9B",
-    "Constitution": "#FFB86B",
-    "Intelligence": "#6BCBFF",
-    "Wisdom": "#D18BFF",
-    "Charisma": "#FFE66D"
-}
-
-# =========================
-# CSS (VELKÁ TLAČÍTKA)
-# =========================
-st.set_page_config(layout="wide")
 st.markdown("""
 <style>
 div.stButton > button {
-    height: 60px;
-    font-size: 18px;
-    font-weight: 600;
+    height: 80px;
+    font-size: 20px;
+    font-weight: 700;
     white-space: nowrap;
 }
 </style>
@@ -83,23 +71,13 @@ def generate(pool):
         st.session_state.result = {"effect": "❌ Žádná data", "roleplay": []}
         return
 
-    new = weighted_choice(pool)
-
-    if st.session_state.result and len(pool) > 1:
-        while new == st.session_state.result:
-            new = weighted_choice(pool)
-
-    st.session_state.result = new
+    st.session_state.result = weighted_choice(pool)
 
 # =========================
 # UI
 # =========================
 
 st.title("🎲 DnD Crit Fail")
-
-# =========================
-# RESULT
-# =========================
 
 if st.session_state.result:
     r = st.session_state.result
@@ -132,59 +110,20 @@ st.write("Závažnost:", st.session_state.severity)
 
 st.markdown("---")
 
-# =========================
-# LAYOUT
-# =========================
-
 colA, colB, colC = st.columns(3)
 
 # =========================
-# ÚTOK
-# =========================
-
-with colA:
-    st.subheader("⚔️ Útok")
-
-    if st.button("Melee", key="melee_btn", use_container_width=True):
-        pool = data["Útok"].get("Melee", {}).get(st.session_state.severity, [])
-        generate(pool)
-
-    if st.button("Ranged", key="ranged_btn", use_container_width=True):
-        pool = data["Útok"].get("Ranged", {}).get(st.session_state.severity, [])
-        generate(pool)
-
-# =========================
-# OBRANA / KOUZLO
-# =========================
-
-with colB:
-    st.subheader("🛡️ Obrana / ✨ Kouzlo")
-
-    if st.button("Obrana", key="obrana_btn", use_container_width=True):
-        pool = data.get("Obrana", {}).get(st.session_state.severity, [])
-        generate(pool)
-
-    if st.button("Kouzlo", key="kouzlo_btn", use_container_width=True):
-        pool = data.get("Kouzlo", {}).get(st.session_state.severity, [])
-        generate(pool)
-
-# =========================
-# SKILLY (VELKÁ TLAČÍTKA)
+# SKILLY (SPRÁVNĚ)
 # =========================
 
 with colC:
     st.subheader("🎲 Skilly")
 
-    max_cols = 2  # 🔥 menší = větší tlačítka
+    max_cols = 2
 
     for attr, skills in data.get("Skill", {}).items():
 
-        color = attr_colors.get(attr, "#FFFFFF")
-
-        st.markdown(
-            f"<h3 style='color:{color}; margin-bottom: 10px;'>{attr}</h3>",
-            unsafe_allow_html=True
-        )
+        st.markdown(f"### {attr}")
 
         skill_items = list(skills.items())
 
@@ -194,7 +133,11 @@ with colC:
 
             for i, (skill_name, skill_data) in enumerate(row):
 
-                pool = skill_data.get(st.session_state.severity, [])
+                pool = skill_data.get(st.session_state.severity)
+
+                # 🔥 fallback fix
+                if not pool:
+                    pool = next(iter(skill_data.values()), [])
 
                 if cols[i].button(
                     skill_name,
@@ -202,11 +145,3 @@ with colC:
                     use_container_width=True
                 ):
                     generate(pool)
-
-# =========================
-# MANUAL REFRESH
-# =========================
-
-if st.button("🔄 Aktualizovat data z Excelu", use_container_width=True):
-    build_json_from_excel()
-    st.success("Data aktualizována!")
