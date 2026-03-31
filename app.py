@@ -35,6 +35,19 @@ if "severity" not in st.session_state:
     st.session_state.severity = "Lehký"
 
 # =========================
+# ATTRIBUTE COLORS
+# =========================
+
+attr_colors = {
+    "Strength": "#FF6B6B",
+    "Dexterity": "#7CFF9B",
+    "Constitution": "#FFB86B",
+    "Intelligence": "#6BCBFF",
+    "Wisdom": "#D18BFF",
+    "Charisma": "#FFE66D"
+}
+
+# =========================
 # GENERATE
 # =========================
 
@@ -141,24 +154,37 @@ with colB:
         generate(pool)
 
 # =========================
-# SKILLY (ČISTÁ VERZE)
+# SKILLY (🔥 BAREVNÉ)
 # =========================
 
 with colC:
     st.subheader("🎲 Skilly")
 
+    max_cols = 4
+
     for attr, skill_dict in data.get("Skill", {}).items():
-        st.markdown(f"## {attr}")
 
-        cols = st.columns(2)
+        color = attr_colors.get(attr, "#FFFFFF")
 
-        for i, (skill_name, skill_data) in enumerate(skill_dict.items()):
-            if cols[i % 2].button(
-                skill_name,
-                key=f"{attr}_{skill_name}"
-            ):
-                pool = skill_data.get(st.session_state.severity, [])
-                generate(pool)
+        # 🎨 barevný nadpis
+        st.markdown(
+            f"<h2 style='color:{color};'>{attr}</h2>",
+            unsafe_allow_html=True
+        )
+
+        skills = list(skill_dict.items())
+
+        for j in range(0, len(skills), max_cols):
+            row = skills[j:j+max_cols]
+            cols = st.columns(len(row))
+
+            for i, (skill_name, skill_data) in enumerate(row):
+                if cols[i].button(
+                    skill_name,
+                    key=f"{attr}_{skill_name}"
+                ):
+                    pool = skill_data.get(st.session_state.severity, [])
+                    generate(pool)
 
 # =========================
 # MANUAL REFRESH
