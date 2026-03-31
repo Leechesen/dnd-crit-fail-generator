@@ -154,7 +154,7 @@ with colB:
         generate(pool)
 
 # =========================
-# SKILLY (MINIMALISTICKÉ)
+# SKILLY (🔥 HARD FIX)
 # =========================
 
 with colC:
@@ -166,7 +166,7 @@ with colC:
 
         color = attr_colors.get(attr, "#FFFFFF")
 
-        # 🔹 NADPIS ATRIBUTU
+        # 🔹 NADPIS
         st.markdown(
             f"<h3 style='color:{color}; margin-bottom: 5px;'>{attr}</h3>",
             unsafe_allow_html=True
@@ -176,11 +176,14 @@ with colC:
 
         # 🔹 ROZDĚLENÍ DO ŘÁDKŮ
         for j in range(0, len(skills), max_cols):
-            row = skills[j:j+max_cols]
-            cols = st.columns(len(row))
 
-            # 🔹 JEN TLAČÍTKA
+            row = skills[j:j+max_cols]
+
+            # 🔥 HARD FIX – vždy fixní počet sloupců
+            cols = st.columns(max_cols)
+
             for i, (skill_name, skill_data) in enumerate(row):
+
                 if cols[i].button(
                     skill_name,
                     key=f"{attr}_{skill_name}"
