@@ -130,11 +130,11 @@ colA, colB, colC = st.columns(3)
 with colA:
     st.subheader("⚔️ Útok")
 
-    if st.button("Melee", key="melee_btn"):
+    if st.button("Melee", key="melee_btn", use_container_width=True):
         pool = data["Útok"].get("Melee", {}).get(st.session_state.severity, [])
         generate(pool)
 
-    if st.button("Ranged", key="ranged_btn"):
+    if st.button("Ranged", key="ranged_btn", use_container_width=True):
         pool = data["Útok"].get("Ranged", {}).get(st.session_state.severity, [])
         generate(pool)
 
@@ -145,28 +145,27 @@ with colA:
 with colB:
     st.subheader("🛡️ Obrana / ✨ Kouzlo")
 
-    if st.button("Obrana", key="obrana_btn"):
+    if st.button("Obrana", key="obrana_btn", use_container_width=True):
         pool = data.get("Obrana", {}).get(st.session_state.severity, [])
         generate(pool)
 
-    if st.button("Kouzlo", key="kouzlo_btn"):
+    if st.button("Kouzlo", key="kouzlo_btn", use_container_width=True):
         pool = data.get("Kouzlo", {}).get(st.session_state.severity, [])
         generate(pool)
 
 # =========================
-# SKILLY (🔥 HARD FIX)
+# SKILLY (FINÁLNÍ FIX)
 # =========================
 
 with colC:
     st.subheader("🎲 Skilly")
 
-    max_cols = 4
+    max_cols = 3  # 🔥 důležité (4 je často moc úzké)
 
     for attr, skill_dict in data.get("Skill", {}).items():
 
         color = attr_colors.get(attr, "#FFFFFF")
 
-        # 🔹 NADPIS
         st.markdown(
             f"<h3 style='color:{color}; margin-bottom: 5px;'>{attr}</h3>",
             unsafe_allow_html=True
@@ -174,19 +173,17 @@ with colC:
 
         skills = list(skill_dict.items())
 
-        # 🔹 ROZDĚLENÍ DO ŘÁDKŮ
         for j in range(0, len(skills), max_cols):
 
             row = skills[j:j+max_cols]
-
-            # 🔥 HARD FIX – vždy fixní počet sloupců
-            cols = st.columns(max_cols)
+            cols = st.columns(len(row))
 
             for i, (skill_name, skill_data) in enumerate(row):
 
                 if cols[i].button(
                     skill_name,
-                    key=f"{attr}_{skill_name}"
+                    key=f"{attr}_{skill_name}",
+                    use_container_width=True  # 🔥 KLÍČOVÝ FIX
                 ):
                     pool = skill_data.get(st.session_state.severity, [])
                     generate(pool)
@@ -195,6 +192,6 @@ with colC:
 # MANUAL REFRESH
 # =========================
 
-if st.button("🔄 Aktualizovat data z Excelu"):
+if st.button("🔄 Aktualizovat data z Excelu", use_container_width=True):
     build_json_from_excel()
     st.success("Data aktualizována!")
