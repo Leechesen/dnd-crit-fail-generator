@@ -1,24 +1,31 @@
 import streamlit as st
 import json
 import random
-import pandas as pd
 import os
+from excel_to_json import build_json_from_excel
+
+EXCEL_FILE = "crit_fails.xlsx"
+OUTPUT_JSON = "crit_fails.json"
 
 # =========================
-# CONFIG
+# AUTO UPDATE JSON
 # =========================
 
-st.set_page_config(page_title="DnD Crit Fail", page_icon="🎲", layout="wide")
+if not os.path.exists(OUTPUT_JSON):
+    build_json_from_excel()
+
+elif os.path.getmtime(EXCEL_FILE) > os.path.getmtime(OUTPUT_JSON):
+    build_json_from_excel()
 
 # =========================
 # LOAD DATA
 # =========================
 
-with open("crit_fails.json", "r", encoding="utf-8") as f:
+with open(OUTPUT_JSON, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 # =========================
-# SESSION STATE
+# SESSION
 # =========================
 
 if "result" not in st.session_state:
@@ -28,82 +35,54 @@ if "severity" not in st.session_state:
     st.session_state.severity = "Lehký"
 
 # =========================
-# STYLY
+# GENERATE
 # =========================
 
-st.markdown("""
-<style>
-.result-box {
-    padding: 1.2rem;
-    border-radius: 12px;
-    border: 1px solid #333;
-    background: #111;
-}
+def weighted_choice(pool):
+    total = sum(item.get("weight", 1) for item in pool)
+    r = random.uniform(0, total)
+    upto = 0
+    for item in pool:
+        w = item.get("weight", 1)
+        if upto + w >= r:
+            return item
+        upto += w
+    return random.choice(pool)
 
-.section {
-    padding: 1rem;
-    border-radius: 12px;
-    border: 1px solid #222;
-    background: #0d0d0d;
-}
 
-.green {color:#7CFF9B;}
-.orange {color:#FFB86B;}
-.red {color:#FF6B6B;}
-.purple {color:#D18BFF;}
+def generate(pool):
+    if not pool:
+        st.session_state.result = {"effect": "❌ Žádná data", "roleplay": []}
+        return
 
-button {
-    border-radius: 10px !important;
-}
-</style>
-""", unsafe_allow_html=True)
+    new = weighted_choice(pool)
+
+    if st.session_state.result and len(pool) > 1:
+        while new == st.session_state.result:
+            new = weighted_choice(pool)
+
+    st.session_state.result = new
 
 # =========================
-# ATTRIBUTE ICONS
+# UI
 # =========================
 
-attr_icons = {
-    "Strength": "🔴",
-    "Dexterity": "🟢",
-    "Constitution": "🟠",
-    "Intelligence": "🔵",
-    "Wisdom": "🟣",
-    "Charisma": "🟡"
-}
+st.title("🎲 DnD Crit Fail")
 
-# =========================
-# TITLE
-# =========================
-
-st.title("🎲 DnD Crit Fail – Combat Panel")
-
-# =========================
-# RESULT (NAHOŘE)
-# =========================
-
+# RESULT
 if st.session_state.result:
     r = st.session_state.result
-
-    st.markdown("<div class='result-box'>", unsafe_allow_html=True)
-
     st.subheader("💥 Efekt")
     st.write(r.get("effect", ""))
 
     st.subheader("🎭 Roleplay")
-    rp = r.get("roleplay", [])
-    if len(rp) > 0:
-        st.write("• " + rp[0])
-    if len(rp) > 1:
-        st.write("• " + rp[1])
-
-    st.markdown("</div>", unsafe_allow_html=True)
+    for rp in r.get("roleplay", []):
+        if rp:
+            st.write("•", rp)
 
 st.markdown("---")
 
-# =========================
 # SEVERITY
-# =========================
-
 col1, col2, col3, col4 = st.columns(4)
 
 if col1.button("🟢 Lehký"):
@@ -115,102 +94,52 @@ if col3.button("🔴 Těžký"):
 if col4.button("🟣 Sranda"):
     st.session_state.severity = "Sranda"
 
-st.write(f"Závažnost: **{st.session_state.severity}**")
+st.write("Závažnost:", st.session_state.severity)
 
 st.markdown("---")
 
-# =========================
-# GENERATE FUNCTION
-# =========================
-
-def weighted_choice(pool):
-    total_weight = sum(item.get("weight", 1) for item in pool)
-    r = random.uniform(0, total_weight)
-    upto = 0
-
-    for item in pool:
-        w = item.get("weight", 1)
-        if upto + w >= r:
-            return item
-        upto += w
-
-    return random.choice(pool)
-
-
-def generate(pool):
-    if not pool:
-        st.session_state.result = {"effect": "❌ Žádná data", "roleplay": []}
-        return
-
-    # weighted random (pokud máš weight)
-    new = weighted_choice(pool)
-
-    # zabrání opakování stejného výsledku
-    if st.session_state.result and len(pool) > 1:
-        while new == st.session_state.result:
-            new = weighted_choice(pool)
-
-    st.session_state.result = new
-
-# =========================
-# LAYOUT
-# =========================
-
 colA, colB, colC = st.columns(3)
 
-# =========================
 # ÚTOK
-# =========================
-
 with colA:
-    st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.subheader("⚔️ Útok")
 
-    if st.button("⚔️ Melee"):
+    if st.button("Melee"):
         pool = data["Útok"].get("Melee", {}).get(st.session_state.severity, [])
         generate(pool)
 
-    if st.button("🏹 Ranged"):
+    if st.button("Ranged"):
         pool = data["Útok"].get("Ranged", {}).get(st.session_state.severity, [])
         generate(pool)
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# =========================
 # OBRANA / KOUZLO
-# =========================
-
 with colB:
-    st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.subheader("🛡️ Obrana / ✨ Kouzlo")
 
-    if st.button("🛡️ Obrana"):
+    if st.button("Obrana"):
         pool = data.get("Obrana", {}).get(st.session_state.severity, [])
         generate(pool)
 
-    if st.button("✨ Kouzlo"):
+    if st.button("Kouzlo"):
         pool = data.get("Kouzlo", {}).get(st.session_state.severity, [])
         generate(pool)
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# =========================
-# SKILLY (OPRAVENO)
-# =========================
-
+# SKILLY (FIXED)
 with colC:
-    st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.subheader("🎲 Skilly")
 
     for attr, skill_dict in data.get("Skill", {}).items():
-        icon = attr_icons.get(attr, "")
-        st.markdown(f"### {icon} {attr}")
+        st.markdown(f"### {attr}")
 
-        cols = st.columns(2)
-
-        for i, (skill_name, skill_data) in enumerate(skill_dict.items()):
-            if cols[i % 2].button(f"{icon} {skill_name}"):
+        for skill_name, skill_data in skill_dict.items():
+            if st.button(f"{skill_name}"):
                 pool = skill_data.get(st.session_state.severity, [])
                 generate(pool)
 
-    st.markdown("</div>", unsafe_allow_html=True)
+# =========================
+# MANUAL REFRESH
+# =========================
+
+if st.button("🔄 Aktualizovat data z Excelu"):
+    build_json_from_excel()
+    st.success("Data aktualizována!")
