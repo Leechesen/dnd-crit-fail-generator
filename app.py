@@ -48,6 +48,21 @@ attr_colors = {
 }
 
 # =========================
+# CSS (VELKÁ TLAČÍTKA)
+# =========================
+
+st.markdown("""
+<style>
+div.stButton > button {
+    height: 60px;
+    font-size: 18px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# =========================
 # GENERATE
 # =========================
 
@@ -154,20 +169,20 @@ with colB:
         generate(pool)
 
 # =========================
-# SKILLY (🔥 OPRAVENO SPRÁVNĚ)
+# SKILLY (VELKÁ TLAČÍTKA)
 # =========================
 
 with colC:
     st.subheader("🎲 Skilly")
 
-    max_cols = 3
+    max_cols = 2  # 🔥 menší = větší tlačítka
 
     for attr, skills in data.get("Skill", {}).items():
 
-        # 🔹 NADPIS ATRIBUTU
         color = attr_colors.get(attr, "#FFFFFF")
+
         st.markdown(
-            f"<h3 style='color:{color}; margin-bottom: 5px;'>{attr}</h3>",
+            f"<h3 style='color:{color}; margin-bottom: 10px;'>{attr}</h3>",
             unsafe_allow_html=True
         )
 
@@ -182,7 +197,7 @@ with colC:
                 pool = skill_data.get(st.session_state.severity, [])
 
                 if cols[i].button(
-                    skill_name,  # ✔ správný název skillu
+                    skill_name,
                     key=f"{attr}_{skill_name}",
                     use_container_width=True
                 ):
