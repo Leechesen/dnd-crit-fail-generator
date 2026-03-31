@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import random
 import os
+import math
 from excel_to_json import build_json_from_excel
 
 st.set_page_config(layout="wide")
@@ -18,10 +19,6 @@ if not os.path.exists(OUTPUT_JSON):
 elif os.path.getmtime(EXCEL_FILE) >= os.path.getmtime(OUTPUT_JSON):
     build_json_from_excel()
 
-# =========================
-# LOAD
-# =========================
-
 with open(OUTPUT_JSON, "r", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -36,7 +33,7 @@ if "severity" not in st.session_state:
     st.session_state.severity = "Lehký"
 
 # =========================
-# BARVY
+# BARVY ATRIBUTŮ
 # =========================
 
 attr_colors = {
@@ -49,13 +46,13 @@ attr_colors = {
 }
 
 # =========================
-# CSS (🔥 RESPONSIVE FLEX)
+# CSS (ULTRA KOMPAKT)
 # =========================
 
 st.markdown("""
 <style>
 
-/* 🔥 SLUPCE – kompaktní */
+/* minimální mezery mezi sloupci */
 div[data-testid="stHorizontalBlock"] {
     gap: 0.2rem !important;
 }
@@ -64,30 +61,18 @@ div[data-testid="column"] {
     padding: 2px !important;
 }
 
-/* 🔥 FLEX CONTAINER */
-.skill-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-/* 🔥 TLAČÍTKA */
+/* tlačítka */
 div.stButton > button {
-    height: 34px;
+    height: 32px;
     font-size: 13px;
-    padding: 0 10px;
-
+    padding: 0 8px;
     border-radius: 999px;
-
-    width: fit-content;
-    max-width: 100%;
-
     white-space: nowrap;
 }
 
-/* 🔥 zabrání roztažení */
-.skill-container .stButton {
-    flex: 0 0 auto;
+/* menší mezery */
+div[data-testid="stVerticalBlock"] > div {
+    gap: 0.1rem;
 }
 
 /* nadpisy */
@@ -161,7 +146,7 @@ if col4.button("🟣 Sranda"):
 
 st.markdown("---")
 
-# 🔥 kompaktní sloupce
+# layout sloupců
 colA, colB, colC = st.columns([1, 1, 2])
 
 # =========================
@@ -174,7 +159,10 @@ with colA:
     for attack_type, severity_dict in data.get("Útok", {}).items():
         if st.button(attack_type, key=f"attack_{attack_type}"):
             pool = severity_dict.get(st.session_state.severity, [])
-            generate(pool, f"Útok → {attack_type}")
+            generate(
+                pool,
+                f"Útok → {attack_type} | {st.session_state.severity}"
+            )
 
 # =========================
 # 🛡️ OBRANA
@@ -183,12 +171,15 @@ with colA:
 with colB:
     st.subheader("🛡️ Obrana")
 
-    if st.button("Obrana", key="defense_btn"):
+    if st.button("Obrana"):
         pool = data.get("Obrana", {}).get(st.session_state.severity, [])
-        generate(pool, "Obrana")
+        generate(
+            pool,
+            f"Obrana | {st.session_state.severity}"
+        )
 
 # =========================
-# 🎲 SKILLY (🔥 FLEXBOX)
+# 🎲 SKILLY (MAX 2 ŘÁDKY)
 # =========================
 
 with colC:
@@ -203,13 +194,34 @@ with colC:
             unsafe_allow_html=True
         )
 
-        st.markdown("<div class='skill-container'>", unsafe_allow_html=True)
+        items = list(skills.items())
+        n = len(items)
 
-        for skill_name, skill_data in skills.items():
+        cols_count = math.ceil(n / 2)
 
-            pool = skill_data.get(st.session_state.severity, [])
+        # řádek 1
+        cols = st.columns(cols_count)
+        for i in range(cols_count):
+            if i < n:
+                skill_name, skill_data = items[i]
+                pool = skill_data.get(st.session_state.severity, [])
 
-            if st.button(skill_name, key=f"{attr}_{skill_name}"):
-                generate(pool, f"{attr} → {skill_name}")
+                if cols[i].button(skill_name, key=f"{attr}_{skill_name}"):
+                    generate(
+                        pool,
+                        f"Skill → {attr} → {skill_name} | {st.session_state.severity}"
+                    )
 
-        st.markdown("</div>", unsafe_allow_html=True)
+        # řádek 2
+        cols = st.columns(cols_count)
+        for i in range(cols_count):
+            index = i + cols_count
+            if index < n:
+                skill_name, skill_data = items[index]
+                pool = skill_data.get(st.session_state.severity, [])
+
+                if cols[i].button(skill_name, key=f"{attr}_{skill_name}_2"):
+                    generate(
+                        pool,
+                        f"Skill → {attr} → {skill_name} | {st.session_state.severity}"
+                    )
