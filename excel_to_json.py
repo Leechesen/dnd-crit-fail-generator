@@ -31,9 +31,8 @@ def build_json_from_excel():
 
         for _, row in df.iterrows():
 
-            # 🔥 SPRÁVNÉ MAPOVÁNÍ
-            skill = str(row.get("skill", "")).strip()                # Athletics
-            attribute = str(row.get("skill_category", "")).strip()   # Strength
+            skill = str(row.get("skill", "")).strip()
+            attribute = str(row.get("skill_category", "")).strip()
             attack_type = str(row.get("attack_type", "")).strip()
             severity = normalize_severity(row.get("severity", ""))
 
@@ -50,11 +49,8 @@ def build_json_from_excel():
                 "weight": int(row.get("weight", 1)) if not pd.isna(row.get("weight")) else 1
             }
 
-            # =========================
             # ÚTOK
-            # =========================
             if action == "Útok":
-
                 if not attack_type:
                     attack_type = "Melee"
 
@@ -62,11 +58,8 @@ def build_json_from_excel():
                 data[action][attack_type].setdefault(severity, [])
                 data[action][attack_type][severity].append(entry)
 
-            # =========================
-            # SKILLY (HLAVNÍ FIX)
-            # =========================
+            # SKILL
             elif action == "Skill":
-
                 if not attribute or not skill:
                     continue
 
@@ -75,9 +68,7 @@ def build_json_from_excel():
                 data[action][attribute][skill].setdefault(severity, [])
                 data[action][attribute][skill][severity].append(entry)
 
-            # =========================
             # OSTATNÍ
-            # =========================
             else:
                 data[action].setdefault(severity, [])
                 data[action][severity].append(entry)
