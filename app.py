@@ -121,11 +121,34 @@ st.markdown("---")
 # GENERATE FUNCTION
 # =========================
 
+def weighted_choice(pool):
+    total_weight = sum(item.get("weight", 1) for item in pool)
+    r = random.uniform(0, total_weight)
+    upto = 0
+
+    for item in pool:
+        w = item.get("weight", 1)
+        if upto + w >= r:
+            return item
+        upto += w
+
+    return random.choice(pool)
+
+
 def generate(pool):
     if not pool:
         st.session_state.result = {"effect": "❌ Žádná data", "roleplay": []}
-    else:
-        st.session_state.result = random.choice(pool)
+        return
+
+    # weighted random (pokud máš weight)
+    new = weighted_choice(pool)
+
+    # zabrání opakování stejného výsledku
+    if st.session_state.result and len(pool) > 1:
+        while new == st.session_state.result:
+            new = weighted_choice(pool)
+
+    st.session_state.result = new
 
 # =========================
 # LAYOUT
@@ -170,22 +193,22 @@ with colB:
     st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================
-# SKILLY
+# SKILLY (OPRAVENO)
 # =========================
 
 with colC:
     st.markdown("<div class='section'>", unsafe_allow_html=True)
     st.subheader("🎲 Skilly")
 
-    for attr, skills in data.get("Skill", {}).items():
+    for attr, skill_dict in data.get("Skill", {}).items():
         icon = attr_icons.get(attr, "")
         st.markdown(f"### {icon} {attr}")
 
         cols = st.columns(2)
 
-        for i, skill in enumerate(skills):
-            if cols[i % 2].button(f"{icon} {skill}"):
-                pool = skills.get(skill, {}).get(st.session_state.severity, [])
+        for i, (skill_name, skill_data) in enumerate(skill_dict.items()):
+            if cols[i % 2].button(f"{icon} {skill_name}"):
+                pool = skill_data.get(st.session_state.severity, [])
                 generate(pool)
 
     st.markdown("</div>", unsafe_allow_html=True)
