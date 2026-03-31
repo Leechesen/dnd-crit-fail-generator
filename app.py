@@ -4,6 +4,7 @@ import random
 import os
 from excel_to_json import build_json_from_excel
 
+# 🔥 WIDE LAYOUT
 st.set_page_config(layout="wide")
 
 EXCEL_FILE = "crit_fails.xlsx"
@@ -36,7 +37,7 @@ if "severity" not in st.session_state:
     st.session_state.severity = "Lehký"
 
 # =========================
-# CSS
+# CSS (VELKÁ TLAČÍTKA)
 # =========================
 
 st.markdown("""
@@ -51,7 +52,7 @@ div.stButton > button {
 """, unsafe_allow_html=True)
 
 # =========================
-# GENERATE
+# GENERATE (🔥 FIX)
 # =========================
 
 def weighted_choice(pool):
@@ -69,9 +70,10 @@ def weighted_choice(pool):
 def generate(pool):
     if not pool:
         st.session_state.result = {"effect": "❌ Žádná data", "roleplay": []}
-        return
+    else:
+        st.session_state.result = weighted_choice(pool)
 
-    st.session_state.result = weighted_choice(pool)
+    st.rerun()  # 🔥 FIX NA DVOJKLIK
 
 # =========================
 # UI
@@ -79,6 +81,7 @@ def generate(pool):
 
 st.title("🎲 DnD Crit Fail")
 
+# RESULT
 if st.session_state.result:
     r = st.session_state.result
     st.subheader("💥 Efekt")
@@ -113,7 +116,7 @@ st.markdown("---")
 colA, colB, colC = st.columns(3)
 
 # =========================
-# SKILLY (SPRÁVNĚ)
+# SKILLY
 # =========================
 
 with colC:
@@ -135,7 +138,7 @@ with colC:
 
                 pool = skill_data.get(st.session_state.severity)
 
-                # 🔥 fallback fix
+                # fallback když chybí severity
                 if not pool:
                     pool = next(iter(skill_data.values()), [])
 
