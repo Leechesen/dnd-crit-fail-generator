@@ -41,31 +41,25 @@ if "severity" not in st.session_state:
 
 st.markdown("""
 <style>
-
-/* tlačítka podle textu */
 div.stButton > button {
     height: 60px;
     font-size: 18px;
     font-weight: 600;
     padding: 0 20px;
-
     width: auto !important;
     min-width: 120px;
-
     white-space: nowrap;
 }
 
-/* zarovnání vedle sebe */
 .stButton {
     display: inline-block;
     margin: 5px;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# GENERATE
+# GENERATE (SE ZDROJEM)
 # =========================
 
 def weighted_choice(pool):
@@ -80,11 +74,17 @@ def weighted_choice(pool):
     return random.choice(pool)
 
 
-def generate(pool):
+def generate(pool, source):
     if not pool:
-        st.session_state.result = {"effect": "❌ Žádná data", "roleplay": []}
+        st.session_state.result = {
+            "effect": "❌ Žádná data",
+            "roleplay": [],
+            "source": source
+        }
     else:
-        st.session_state.result = weighted_choice(pool)
+        result = weighted_choice(pool)
+        result["source"] = source
+        st.session_state.result = result
 
     st.rerun()
 
@@ -94,10 +94,19 @@ def generate(pool):
 
 st.title("🎲 DnD Crit Fail")
 
+# =========================
 # RESULT
+# =========================
+
 if st.session_state.result:
     r = st.session_state.result
+
     st.subheader("💥 Efekt")
+
+    source = r.get("source")
+    if source:
+        st.caption(f"🎯 {source}")
+
     st.write(r.get("effect", ""))
 
     st.subheader("🎭 Roleplay")
@@ -147,7 +156,10 @@ with colA:
             if not pool:
                 pool = next(iter(severity_dict.values()), [])
 
-            generate(pool)
+            generate(
+                pool,
+                f"Útok → {attack_type} | {st.session_state.severity}"
+            )
 
 # =========================
 # 🛡️ OBRANA
@@ -164,10 +176,13 @@ with colB:
         if not pool:
             pool = next(iter(defense_data.values()), [])
 
-        generate(pool)
+        generate(
+            pool,
+            f"Obrana | {st.session_state.severity}"
+        )
 
 # =========================
-# 🎲 SKILLY (AUTO WIDTH)
+# 🎲 SKILLY
 # =========================
 
 with colC:
@@ -188,4 +203,7 @@ with colC:
                 skill_name,
                 key=f"{attr}_{skill_name}"
             ):
-                generate(pool)
+                generate(
+                    pool,
+                    f"Skill → {attr} → {skill_name} | {st.session_state.severity}"
+                )
