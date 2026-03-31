@@ -18,6 +18,10 @@ if not os.path.exists(OUTPUT_JSON):
 elif os.path.getmtime(EXCEL_FILE) >= os.path.getmtime(OUTPUT_JSON):
     build_json_from_excel()
 
+# =========================
+# LOAD
+# =========================
+
 with open(OUTPUT_JSON, "r", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -45,48 +49,45 @@ attr_colors = {
 }
 
 # =========================
-# CSS (🔥 ULTRA KOMPAKT + WRAP)
+# CSS (🔥 RESPONSIVE FLEX)
 # =========================
 
 st.markdown("""
 <style>
 
-/* 🔥 minimální mezery mezi sloupci */
+/* 🔥 SLUPCE – kompaktní */
 div[data-testid="stHorizontalBlock"] {
     gap: 0.2rem !important;
 }
 
-/* padding sloupců */
 div[data-testid="column"] {
-    padding-left: 2px !important;
-    padding-right: 2px !important;
+    padding: 2px !important;
 }
 
-/* tlačítka */
+/* 🔥 FLEX CONTAINER */
+.skill-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* 🔥 TLAČÍTKA */
 div.stButton > button {
     height: 34px;
     font-size: 13px;
-    font-weight: 600;
-    padding: 0 8px;
+    padding: 0 10px;
 
     border-radius: 999px;
 
-    width: auto !important;
-    min-width: unset;
+    width: fit-content;
+    max-width: 100%;
 
     white-space: nowrap;
 }
 
-/* 🔥 WRAP – nikdy se nepřekryjí */
-.stButton {
-    display: inline-flex;
-    flex-wrap: wrap;
-    margin: 1px;
-}
-
-/* menší mezery mezi bloky */
-div[data-testid="stVerticalBlock"] > div {
-    gap: 0.15rem;
+/* 🔥 zabrání roztažení */
+.skill-container .stButton {
+    flex: 0 0 auto;
 }
 
 /* nadpisy */
@@ -124,6 +125,10 @@ def generate(pool, source):
 
 st.title("🎲 DnD Crit Fail")
 
+# =========================
+# RESULT
+# =========================
+
 if st.session_state.result:
     r = st.session_state.result
 
@@ -156,7 +161,7 @@ if col4.button("🟣 Sranda"):
 
 st.markdown("---")
 
-# 🔥 KOMPAKTNÍ SLUPCE
+# 🔥 kompaktní sloupce
 colA, colB, colC = st.columns([1, 1, 2])
 
 # =========================
@@ -178,12 +183,12 @@ with colA:
 with colB:
     st.subheader("🛡️ Obrana")
 
-    if st.button("Obrana"):
+    if st.button("Obrana", key="defense_btn"):
         pool = data.get("Obrana", {}).get(st.session_state.severity, [])
         generate(pool, "Obrana")
 
 # =========================
-# 🎲 SKILLY (MAX 3 ŘÁDKY + WRAP)
+# 🎲 SKILLY (🔥 FLEXBOX)
 # =========================
 
 with colC:
@@ -198,20 +203,13 @@ with colC:
             unsafe_allow_html=True
         )
 
-        skills_list = list(skills.items())
-        num = len(skills_list)
+        st.markdown("<div class='skill-container'>", unsafe_allow_html=True)
 
-        # 🔥 max 3 řádky → spočítáme sloupce
-        max_rows = 3
-        cols_count = max(1, (num + max_rows - 1) // max_rows)
-
-        cols = st.columns(cols_count)
-
-        for i, (skill_name, skill_data) in enumerate(skills_list):
-
-            col_index = i % cols_count
+        for skill_name, skill_data in skills.items():
 
             pool = skill_data.get(st.session_state.severity, [])
 
-            if cols[col_index].button(skill_name, key=f"{attr}_{skill_name}"):
+            if st.button(skill_name, key=f"{attr}_{skill_name}"):
                 generate(pool, f"{attr} → {skill_name}")
+
+        st.markdown("</div>", unsafe_allow_html=True)
