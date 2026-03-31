@@ -154,7 +154,7 @@ with colB:
         generate(pool)
 
 # =========================
-# SKILLY (🔥 BAREVNÉ)
+# SKILLY (MINIMALISTICKÉ)
 # =========================
 
 with colC:
@@ -166,18 +166,20 @@ with colC:
 
         color = attr_colors.get(attr, "#FFFFFF")
 
-        # 🎨 barevný nadpis
+        # 🔹 NADPIS ATRIBUTU
         st.markdown(
-            f"<h2 style='color:{color};'>{attr}</h2>",
+            f"<h3 style='color:{color}; margin-bottom: 5px;'>{attr}</h3>",
             unsafe_allow_html=True
         )
 
         skills = list(skill_dict.items())
 
+        # 🔹 ROZDĚLENÍ DO ŘÁDKŮ
         for j in range(0, len(skills), max_cols):
             row = skills[j:j+max_cols]
             cols = st.columns(len(row))
 
+            # 🔹 JEN TLAČÍTKA
             for i, (skill_name, skill_data) in enumerate(row):
                 if cols[i].button(
                     skill_name,
