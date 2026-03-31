@@ -3852,8 +3852,10 @@
             "weight": 1
           }
         ]
-      },
-      "Athletics": {
+      }
+    },
+    "Athletics": {
+      "Strength": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Athletics checku v tomto kole.",
@@ -4834,8 +4836,10 @@
             "weight": 1
           }
         ]
-      },
-      "Acrobatics": {
+      }
+    },
+    "Acrobatics": {
+      "Dexterity": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Acrobatics checku v tomto kole.",
@@ -5324,8 +5328,10 @@
             "weight": 1
           }
         ]
-      },
-      "Sleight of Hand": {
+      }
+    },
+    "Sleight of Hand": {
+      "Dexterity": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Sleight of Hand checku v tomto kole.",
@@ -5814,8 +5820,10 @@
             "weight": 1
           }
         ]
-      },
-      "Stealth": {
+      }
+    },
+    "Stealth": {
+      "Dexterity": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Stealth checku v tomto kole.",
@@ -6796,8 +6804,10 @@
             "weight": 1
           }
         ]
-      },
-      "Arcana": {
+      }
+    },
+    "Arcana": {
+      "Intelligence": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Arcana checku v tomto kole.",
@@ -7278,8 +7288,10 @@
             "weight": 1
           }
         ]
-      },
-      "History": {
+      }
+    },
+    "History": {
+      "Intelligence": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu History checku v tomto kole.",
@@ -7768,8 +7780,10 @@
             "weight": 1
           }
         ]
-      },
-      "Investigation": {
+      }
+    },
+    "Investigation": {
+      "Intelligence": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Investigation checku v tomto kole.",
@@ -8258,8 +8272,10 @@
             "weight": 1
           }
         ]
-      },
-      "Nature": {
+      }
+    },
+    "Nature": {
+      "Intelligence": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Nature checku v tomto kole.",
@@ -8748,8 +8764,10 @@
             "weight": 1
           }
         ]
-      },
-      "Religion": {
+      }
+    },
+    "Religion": {
+      "Intelligence": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Religion checku v tomto kole.",
@@ -9730,8 +9748,10 @@
             "weight": 1
           }
         ]
-      },
-      "Animal Handling": {
+      }
+    },
+    "Animal Handling": {
+      "Wisdom": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Animal Handling checku v tomto kole.",
@@ -10220,8 +10240,10 @@
             "weight": 1
           }
         ]
-      },
-      "Insight": {
+      }
+    },
+    "Insight": {
+      "Wisdom": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Insight checku v tomto kole.",
@@ -10710,8 +10732,10 @@
             "weight": 1
           }
         ]
-      },
-      "Medicine": {
+      }
+    },
+    "Medicine": {
+      "Wisdom": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Medicine checku v tomto kole.",
@@ -11200,8 +11224,10 @@
             "weight": 1
           }
         ]
-      },
-      "Perception": {
+      }
+    },
+    "Perception": {
+      "Wisdom": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Perception checku v tomto kole.",
@@ -11690,8 +11716,10 @@
             "weight": 1
           }
         ]
-      },
-      "Survival": {
+      }
+    },
+    "Survival": {
+      "Wisdom": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Survival checku v tomto kole.",
@@ -12672,8 +12700,10 @@
             "weight": 1
           }
         ]
-      },
-      "Deception": {
+      }
+    },
+    "Deception": {
+      "Charisma": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Deception checku v tomto kole.",
@@ -13162,8 +13192,10 @@
             "weight": 1
           }
         ]
-      },
-      "Intimidation": {
+      }
+    },
+    "Intimidation": {
+      "Charisma": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Intimidation checku v tomto kole.",
@@ -13652,8 +13684,10 @@
             "weight": 1
           }
         ]
-      },
-      "Performance": {
+      }
+    },
+    "Performance": {
+      "Charisma": {
         "Lehký": [
           {
             "effect": "Máš -1 k dalšímu Performance checku v tomto kole.",
