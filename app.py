@@ -69,7 +69,10 @@ def generate(pool):
 
 st.title("🎲 DnD Crit Fail")
 
+# =========================
 # RESULT
+# =========================
+
 if st.session_state.result:
     r = st.session_state.result
     st.subheader("💥 Efekt")
@@ -100,6 +103,10 @@ if col4.button("🟣 Sranda"):
 st.write("Závažnost:", st.session_state.severity)
 
 st.markdown("---")
+
+# =========================
+# LAYOUT
+# =========================
 
 colA, colB, colC = st.columns(3)
 
@@ -134,7 +141,7 @@ with colB:
         generate(pool)
 
 # =========================
-# SKILLY (🔥 HLAVNÍ FIX)
+# SKILLY (ČISTÁ VERZE)
 # =========================
 
 with colC:
@@ -143,13 +150,10 @@ with colC:
     for attr, skill_dict in data.get("Skill", {}).items():
         st.markdown(f"## {attr}")
 
-        for skill_name, skill_data in skill_dict.items():
+        cols = st.columns(2)
 
-            # 🔹 NADPIS
-            st.markdown(f"### {skill_name}")
-
-            # 🔹 TLAČÍTKO (STEJNÝ TEXT, ALE UNIKÁTNÍ KEY)
-            if st.button(
+        for i, (skill_name, skill_data) in enumerate(skill_dict.items()):
+            if cols[i % 2].button(
                 skill_name,
                 key=f"{attr}_{skill_name}"
             ):
