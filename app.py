@@ -4,7 +4,6 @@ import random
 import os
 from excel_to_json import build_json_from_excel
 
-# 🔥 WIDE LAYOUT
 st.set_page_config(layout="wide")
 
 EXCEL_FILE = "crit_fails.xlsx"
@@ -37,7 +36,7 @@ if "severity" not in st.session_state:
     st.session_state.severity = "Lehký"
 
 # =========================
-# CSS (VELKÁ TLAČÍTKA)
+# CSS
 # =========================
 
 st.markdown("""
@@ -52,7 +51,7 @@ div.stButton > button {
 """, unsafe_allow_html=True)
 
 # =========================
-# GENERATE (🔥 FIX)
+# GENERATE
 # =========================
 
 def weighted_choice(pool):
@@ -73,7 +72,7 @@ def generate(pool):
     else:
         st.session_state.result = weighted_choice(pool)
 
-    st.rerun()  # 🔥 FIX NA DVOJKLIK
+    st.rerun()
 
 # =========================
 # UI
@@ -116,7 +115,52 @@ st.markdown("---")
 colA, colB, colC = st.columns(3)
 
 # =========================
-# SKILLY
+# ⚔️ ÚTOK
+# =========================
+
+with colA:
+    st.subheader("⚔️ Útok")
+
+    attack_data = data.get("Útok", {})
+    cols = st.columns(len(attack_data))
+
+    for i, (attack_type, severity_dict) in enumerate(attack_data.items()):
+
+        if cols[i].button(
+            attack_type,
+            key=f"attack_{attack_type}",
+            use_container_width=True
+        ):
+            pool = severity_dict.get(st.session_state.severity)
+
+            if not pool:
+                pool = next(iter(severity_dict.values()), [])
+
+            generate(pool)
+
+# =========================
+# 🛡️ OBRANA
+# =========================
+
+with colB:
+    st.subheader("🛡️ Obrana")
+
+    defense_data = data.get("Obrana", {})
+
+    if st.button(
+        "🛡️ Obrana",
+        key="defense_btn",
+        use_container_width=True
+    ):
+        pool = defense_data.get(st.session_state.severity)
+
+        if not pool:
+            pool = next(iter(defense_data.values()), [])
+
+        generate(pool)
+
+# =========================
+# 🎲 SKILLY
 # =========================
 
 with colC:
@@ -138,7 +182,6 @@ with colC:
 
                 pool = skill_data.get(st.session_state.severity)
 
-                # fallback když chybí severity
                 if not pool:
                     pool = next(iter(skill_data.values()), [])
 
