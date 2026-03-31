@@ -15,8 +15,11 @@ for sheet in xls.sheet_names:
 
     for _, row in df.iterrows():
 
-        attribute = str(row.get("skill", "")).strip()
-        skill = str(row.get("skill_category", "")).strip()
+        # =========================
+        # SPRÁVNÉ MAPOVÁNÍ (FIX)
+        # =========================
+        attribute = str(row.get("skill_category", "")).strip()   # Strength, Dexterity
+        skill = str(row.get("skill", "")).strip()               # Athletics, Stealth
         attack_type = str(row.get("attack_type", "")).strip()
         severity = str(row.get("severity", "")).strip()
 
@@ -24,17 +27,26 @@ for sheet in xls.sheet_names:
         roleplay_1 = str(row.get("roleplay_1", "")).strip()
         roleplay_2 = str(row.get("roleplay_2", "")).strip()
 
+        # Skip prázdné řádky
         if not effect:
             continue
+
+        # Weight
+        weight = row.get("weight", 1)
+        if pd.isna(weight):
+            weight = 1
 
         entry = {
             "effect": effect,
             "roleplay": [roleplay_1, roleplay_2],
-            "weight": int(row.get("weight", 1)) if not pd.isna(row.get("weight")) else 1
+            "weight": int(weight)
         }
 
+        # =========================
         # ÚTOK
+        # =========================
         if action == "Útok":
+
             if not attack_type:
                 attack_type = "Obecný"
             if not severity:
@@ -44,8 +56,11 @@ for sheet in xls.sheet_names:
             data[action][attack_type].setdefault(severity, [])
             data[action][attack_type][severity].append(entry)
 
-        # SKILL
+        # =========================
+        # SKILL (HLAVNÍ FIX)
+        # =========================
         elif action == "Skill":
+
             if not attribute:
                 attribute = "Obecný"
             if not skill:
@@ -58,15 +73,22 @@ for sheet in xls.sheet_names:
             data[action][attribute][skill].setdefault(severity, [])
             data[action][attribute][skill][severity].append(entry)
 
-        # OSTATNÍ
+        # =========================
+        # OBRANA / KOUZLO / OSTATNÍ
+        # =========================
         else:
+
             if not severity:
                 severity = "Normální"
 
             data[action].setdefault(severity, [])
             data[action][severity].append(entry)
 
+# =========================
+# SAVE JSON
+# =========================
+
 with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 
-print("✅ JSON vygenerován")
+print("✅ JSON vygenerován správně")
