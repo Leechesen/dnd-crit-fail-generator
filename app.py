@@ -36,17 +36,31 @@ if "severity" not in st.session_state:
     st.session_state.severity = "Lehký"
 
 # =========================
-# CSS
+# CSS (AUTO WIDTH BUTTONS)
 # =========================
 
 st.markdown("""
 <style>
+
+/* tlačítka podle textu */
 div.stButton > button {
-    height: 80px;
-    font-size: 20px;
-    font-weight: 700;
+    height: 60px;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 0 20px;
+
+    width: auto !important;
+    min-width: 120px;
+
     white-space: nowrap;
 }
+
+/* zarovnání vedle sebe */
+.stButton {
+    display: inline-block;
+    margin: 5px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -122,14 +136,11 @@ with colA:
     st.subheader("⚔️ Útok")
 
     attack_data = data.get("Útok", {})
-    cols = st.columns(len(attack_data))
 
-    for i, (attack_type, severity_dict) in enumerate(attack_data.items()):
-
-        if cols[i].button(
+    for attack_type, severity_dict in attack_data.items():
+        if st.button(
             attack_type,
-            key=f"attack_{attack_type}",
-            use_container_width=True
+            key=f"attack_{attack_type}"
         ):
             pool = severity_dict.get(st.session_state.severity)
 
@@ -147,11 +158,7 @@ with colB:
 
     defense_data = data.get("Obrana", {})
 
-    if st.button(
-        "🛡️ Obrana",
-        key="defense_btn",
-        use_container_width=True
-    ):
+    if st.button("🛡️ Obrana", key="defense_btn"):
         pool = defense_data.get(st.session_state.severity)
 
         if not pool:
@@ -160,34 +167,25 @@ with colB:
         generate(pool)
 
 # =========================
-# 🎲 SKILLY
+# 🎲 SKILLY (AUTO WIDTH)
 # =========================
 
 with colC:
     st.subheader("🎲 Skilly")
 
-    max_cols = 2
-
     for attr, skills in data.get("Skill", {}).items():
 
         st.markdown(f"### {attr}")
 
-        skill_items = list(skills.items())
+        for skill_name, skill_data in skills.items():
 
-        for j in range(0, len(skill_items), max_cols):
-            row = skill_items[j:j+max_cols]
-            cols = st.columns(len(row))
+            pool = skill_data.get(st.session_state.severity)
 
-            for i, (skill_name, skill_data) in enumerate(row):
+            if not pool:
+                pool = next(iter(skill_data.values()), [])
 
-                pool = skill_data.get(st.session_state.severity)
-
-                if not pool:
-                    pool = next(iter(skill_data.values()), [])
-
-                if cols[i].button(
-                    skill_name,
-                    key=f"{attr}_{skill_name}",
-                    use_container_width=True
-                ):
-                    generate(pool)
+            if st.button(
+                skill_name,
+                key=f"{attr}_{skill_name}"
+            ):
+                generate(pool)
