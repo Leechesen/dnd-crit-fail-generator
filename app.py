@@ -50,7 +50,7 @@ attr_colors = {
 # =========================
 # CSS (VELKÁ TLAČÍTKA)
 # =========================
-
+st.set_page_config(layout="wide")
 st.markdown("""
 <style>
 div.stButton > button {
