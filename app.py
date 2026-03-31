@@ -18,10 +18,6 @@ if not os.path.exists(OUTPUT_JSON):
 elif os.path.getmtime(EXCEL_FILE) >= os.path.getmtime(OUTPUT_JSON):
     build_json_from_excel()
 
-# =========================
-# LOAD
-# =========================
-
 with open(OUTPUT_JSON, "r", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -49,53 +45,53 @@ attr_colors = {
 }
 
 # =========================
-# CSS (🔥 FLEX WRAP + KOMPAKT)
+# CSS (🔥 ULTRA KOMPAKT + WRAP)
 # =========================
 
 st.markdown("""
 <style>
 
-/* menší mezery mezi sloupci */
+/* 🔥 minimální mezery mezi sloupci */
 div[data-testid="stHorizontalBlock"] {
-    gap: 0.5rem !important;
+    gap: 0.2rem !important;
 }
 
 /* padding sloupců */
 div[data-testid="column"] {
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-}
-
-/* container pro tlačítka */
-div[data-testid="stVerticalBlock"] > div {
-    gap: 0.2rem;
-}
-
-/* 🔥 FLEX WRAP – hlavní fix */
-.stButton {
-    display: inline-flex;
-    flex-wrap: wrap;
-    margin: 2px;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
 }
 
 /* tlačítka */
 div.stButton > button {
-    height: 38px;
-    font-size: 14px;
+    height: 34px;
+    font-size: 13px;
     font-weight: 600;
-    padding: 0 10px;
+    padding: 0 8px;
+
+    border-radius: 999px;
 
     width: auto !important;
     min-width: unset;
 
-    border-radius: 999px;
     white-space: nowrap;
+}
+
+/* 🔥 WRAP – nikdy se nepřekryjí */
+.stButton {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin: 1px;
+}
+
+/* menší mezery mezi bloky */
+div[data-testid="stVerticalBlock"] > div {
+    gap: 0.15rem;
 }
 
 /* nadpisy */
 h4 {
-    margin-bottom: 4px;
-    margin-top: 8px;
+    margin: 4px 0 2px 0;
 }
 
 </style>
@@ -106,16 +102,7 @@ h4 {
 # =========================
 
 def weighted_choice(pool):
-    total = sum(item.get("weight", 1) for item in pool)
-    r = random.uniform(0, total)
-    upto = 0
-    for item in pool:
-        w = item.get("weight", 1)
-        if upto + w >= r:
-            return item
-        upto += w
     return random.choice(pool)
-
 
 def generate(pool, source):
     if not pool:
@@ -136,10 +123,6 @@ def generate(pool, source):
 # =========================
 
 st.title("🎲 DnD Crit Fail")
-
-# =========================
-# RESULT
-# =========================
 
 if st.session_state.result:
     r = st.session_state.result
@@ -173,7 +156,7 @@ if col4.button("🟣 Sranda"):
 
 st.markdown("---")
 
-# 🔥 LEPŠÍ ROZLOŽENÍ
+# 🔥 KOMPAKTNÍ SLUPCE
 colA, colB, colC = st.columns([1, 1, 2])
 
 # =========================
@@ -185,12 +168,8 @@ with colA:
 
     for attack_type, severity_dict in data.get("Útok", {}).items():
         if st.button(attack_type, key=f"attack_{attack_type}"):
-            pool = severity_dict.get(st.session_state.severity)
-
-            if not pool:
-                pool = next(iter(severity_dict.values()), [])
-
-            generate(pool, f"Útok → {attack_type} | {st.session_state.severity}")
+            pool = severity_dict.get(st.session_state.severity, [])
+            generate(pool, f"Útok → {attack_type}")
 
 # =========================
 # 🛡️ OBRANA
@@ -199,16 +178,12 @@ with colA:
 with colB:
     st.subheader("🛡️ Obrana")
 
-    if st.button("🛡️ Obrana", key="defense_btn"):
-        pool = data.get("Obrana", {}).get(st.session_state.severity)
-
-        if not pool:
-            pool = next(iter(data.get("Obrana", {}).values()), [])
-
-        generate(pool, f"Obrana | {st.session_state.severity}")
+    if st.button("Obrana"):
+        pool = data.get("Obrana", {}).get(st.session_state.severity, [])
+        generate(pool, "Obrana")
 
 # =========================
-# 🎲 SKILLY (FLEX WRAP)
+# 🎲 SKILLY (MAX 3 ŘÁDKY + WRAP)
 # =========================
 
 with colC:
@@ -223,18 +198,20 @@ with colC:
             unsafe_allow_html=True
         )
 
-        for skill_name, skill_data in skills.items():
+        skills_list = list(skills.items())
+        num = len(skills_list)
 
-            pool = skill_data.get(st.session_state.severity)
+        # 🔥 max 3 řádky → spočítáme sloupce
+        max_rows = 3
+        cols_count = max(1, (num + max_rows - 1) // max_rows)
 
-            if not pool:
-                pool = next(iter(skill_data.values()), [])
+        cols = st.columns(cols_count)
 
-            if st.button(
-                skill_name,
-                key=f"{attr}_{skill_name}"
-            ):
-                generate(
-                    pool,
-                    f"Skill → {attr} → {skill_name} | {st.session_state.severity}"
-                )
+        for i, (skill_name, skill_data) in enumerate(skills_list):
+
+            col_index = i % cols_count
+
+            pool = skill_data.get(st.session_state.severity, [])
+
+            if cols[col_index].button(skill_name, key=f"{attr}_{skill_name}"):
+                generate(pool, f"{attr} → {skill_name}")
