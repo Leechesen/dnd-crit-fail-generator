@@ -36,7 +36,7 @@ if "last_pool" not in st.session_state:
     st.session_state.last_pool = None
 
 # =========================
-# BARVY ATRIBUTŮ
+# BARVY
 # =========================
 
 attr_colors = {
@@ -55,7 +55,7 @@ attr_colors = {
 st.markdown("""
 <style>
 
-/* minimální mezery mezi sloupci */
+/* kompaktní sloupce */
 div[data-testid="stHorizontalBlock"] {
     gap: 0.2rem !important;
 }
@@ -73,7 +73,7 @@ div.stButton > button {
     white-space: nowrap;
 }
 
-/* menší mezery */
+/* mezery */
 div[data-testid="stVerticalBlock"] > div {
     gap: 0.1rem;
 }
@@ -93,7 +93,6 @@ h4 {
 def weighted_choice(pool):
     return random.choice(pool)
 
-
 def generate(pool, source):
     if not pool:
         st.session_state.result = {
@@ -106,7 +105,7 @@ def generate(pool, source):
         result = weighted_choice(pool)
         result["source"] = source
         st.session_state.result = result
-        st.session_state.last_pool = pool  # 🔥 uložíme pool
+        st.session_state.last_pool = pool
 
     st.rerun()
 
@@ -117,22 +116,19 @@ def generate(pool, source):
 st.title("🎲 DnD Crit Fail")
 
 # =========================
-# RESULT + REROLL
+# RESULT
 # =========================
 
 if st.session_state.result:
 
-    colE1, colE2 = st.columns([4, 1])
+    st.subheader("💥 Efekt")
 
-    with colE1:
-        st.subheader("💥 Efekt")
-
-    with colE2:
-        if st.session_state.get("last_pool"):
-            if st.button("🔄 Generuj znovu", key="reroll"):
-                pool = st.session_state.last_pool
-                source = st.session_state.result.get("source", "")
-                generate(pool, source)
+    # 🔥 tlačítko POD NADPISEM
+    if st.session_state.get("last_pool"):
+        if st.button("🔄 Generuj znovu", key="reroll"):
+            pool = st.session_state.last_pool
+            source = st.session_state.result.get("source", "")
+            generate(pool, source)
 
     r = st.session_state.result
 
@@ -163,26 +159,23 @@ if col4.button("🟣 Sranda"):
 
 st.markdown("---")
 
-# layout sloupců
+# layout
 colA, colB, colC = st.columns([1, 1, 2])
 
 # =========================
-# ⚔️ ÚTOK
+# ÚTOK
 # =========================
 
 with colA:
     st.subheader("⚔️ Útok")
 
     for attack_type, severity_dict in data.get("Útok", {}).items():
-        if st.button(attack_type, key=f"attack_{attack_type}"):
+        if st.button(attack_type):
             pool = severity_dict.get(st.session_state.severity, [])
-            generate(
-                pool,
-                f"Útok → {attack_type} | {st.session_state.severity}"
-            )
+            generate(pool, f"Útok → {attack_type} | {st.session_state.severity}")
 
 # =========================
-# 🛡️ OBRANA
+# OBRANA
 # =========================
 
 with colB:
@@ -190,13 +183,10 @@ with colB:
 
     if st.button("Obrana"):
         pool = data.get("Obrana", {}).get(st.session_state.severity, [])
-        generate(
-            pool,
-            f"Obrana | {st.session_state.severity}"
-        )
+        generate(pool, f"Obrana | {st.session_state.severity}")
 
 # =========================
-# 🎲 SKILLY (MAX 2 ŘÁDKY)
+# SKILLY
 # =========================
 
 with colC:
@@ -206,10 +196,7 @@ with colC:
 
         color = attr_colors.get(attr, "#FFFFFF")
 
-        st.markdown(
-            f"<h4 style='color:{color}'>{attr}</h4>",
-            unsafe_allow_html=True
-        )
+        st.markdown(f"<h4 style='color:{color}'>{attr}</h4>", unsafe_allow_html=True)
 
         items = list(skills.items())
         n = len(items)
@@ -232,9 +219,9 @@ with colC:
         # řádek 2
         cols = st.columns(cols_count)
         for i in range(cols_count):
-            index = i + cols_count
-            if index < n:
-                skill_name, skill_data = items[index]
+            idx = i + cols_count
+            if idx < n:
+                skill_name, skill_data = items[idx]
                 pool = skill_data.get(st.session_state.severity, [])
 
                 if cols[i].button(skill_name, key=f"{attr}_{skill_name}_2"):
