@@ -14,7 +14,7 @@ OUTPUT_JSON = "crit_fails.json"
 if not os.path.exists(OUTPUT_JSON):
     build_json_from_excel()
 
-elif os.path.getmtime(EXCEL_FILE) > os.path.getmtime(OUTPUT_JSON):
+elif os.path.getmtime(EXCEL_FILE) >= os.path.getmtime(OUTPUT_JSON):
     build_json_from_excel()
 
 # =========================
@@ -82,7 +82,10 @@ if st.session_state.result:
 
 st.markdown("---")
 
+# =========================
 # SEVERITY
+# =========================
+
 col1, col2, col3, col4 = st.columns(4)
 
 if col1.button("🟢 Lehký"):
@@ -100,39 +103,56 @@ st.markdown("---")
 
 colA, colB, colC = st.columns(3)
 
+# =========================
 # ÚTOK
+# =========================
+
 with colA:
     st.subheader("⚔️ Útok")
 
-    if st.button("Melee"):
+    if st.button("Melee", key="melee_btn"):
         pool = data["Útok"].get("Melee", {}).get(st.session_state.severity, [])
         generate(pool)
 
-    if st.button("Ranged"):
+    if st.button("Ranged", key="ranged_btn"):
         pool = data["Útok"].get("Ranged", {}).get(st.session_state.severity, [])
         generate(pool)
 
+# =========================
 # OBRANA / KOUZLO
+# =========================
+
 with colB:
     st.subheader("🛡️ Obrana / ✨ Kouzlo")
 
-    if st.button("Obrana"):
+    if st.button("Obrana", key="obrana_btn"):
         pool = data.get("Obrana", {}).get(st.session_state.severity, [])
         generate(pool)
 
-    if st.button("Kouzlo"):
+    if st.button("Kouzlo", key="kouzlo_btn"):
         pool = data.get("Kouzlo", {}).get(st.session_state.severity, [])
         generate(pool)
 
-# SKILLY (FIXED)
+# =========================
+# SKILLY (🔥 HLAVNÍ FIX)
+# =========================
+
 with colC:
     st.subheader("🎲 Skilly")
 
     for attr, skill_dict in data.get("Skill", {}).items():
-        st.markdown(f"### {attr}")
+        st.markdown(f"## {attr}")
 
         for skill_name, skill_data in skill_dict.items():
-            if st.button(f"{skill_name}"):
+
+            # 🔹 NADPIS
+            st.markdown(f"### {skill_name}")
+
+            # 🔹 TLAČÍTKO (STEJNÝ TEXT, ALE UNIKÁTNÍ KEY)
+            if st.button(
+                skill_name,
+                key=f"{attr}_{skill_name}"
+            ):
                 pool = skill_data.get(st.session_state.severity, [])
                 generate(pool)
 
