@@ -13,8 +13,8 @@ body {
 }
 
 button {
-  padding: 12px;
-  margin: 6px;
+  padding: 10px 14px;
+  margin: 4px;
   border-radius: 10px;
   border: none;
   font-size: 14px;
@@ -39,6 +39,15 @@ button:hover {
 .section {
   margin-top: 15px;
 }
+
+/* severity */
+.sev-btn {
+  background: #222;
+}
+
+.sev-active {
+  background: #ff9800 !important;
+}
 </style>
 </head>
 
@@ -49,7 +58,7 @@ button:hover {
 <!-- SETUP -->
 <div id="setup">
   <input id="name" placeholder="Tvoje jméno">
-  <input id="room" placeholder="Room code (např. ABC)">
+  <input id="room" placeholder="Room code">
   <br>
   <button onclick="joinDM()">Jsem DM</button>
   <button onclick="joinPlayer()">Jsem hráč</button>
@@ -61,6 +70,10 @@ button:hover {
 
   <div id="players"></div>
 
+  <!-- SEVERITY -->
+  <div id="severity"></div>
+
+  <!-- ACTION BUTTONS -->
   <div id="buttons"></div>
 
   <button onclick="send()">📤 Pošli hráči</button>
@@ -81,7 +94,6 @@ button:hover {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
   authDomain: "ktit-fail-generator.firebaseapp.com",
@@ -96,26 +108,28 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // =========================
-// JSON LOAD
+// STATE
 // =========================
 
 let critData = {};
-
-fetch("crit_fails.json")
-  .then(res => res.json())
-  .then(data => {
-    critData = data;
-    console.log("JSON loaded");
-    buildButtons();
-  });
-
-// =========================
-
 let myId = "";
 let room = "";
 let currentResult = "";
 let selectedPlayer = null;
 let lastState = null;
+let currentSeverity = "Lehký";
+
+// =========================
+// LOAD JSON
+// =========================
+
+fetch("crit_fails.json")
+  .then(res => res.json())
+  .then(data => {
+    critData = data;
+    buildSeverity();
+    buildButtons();
+  });
 
 // =========================
 // JOIN
@@ -123,10 +137,8 @@ let lastState = null;
 
 window.joinDM = function() {
   room = document.getElementById("room").value;
-
   document.getElementById("setup").style.display = "none";
   document.getElementById("dmPanel").style.display = "block";
-
   listenPlayers();
 }
 
@@ -159,23 +171,47 @@ function listenPlayers() {
   onValue(ref(db, 'rooms/' + room + '/players'), (snapshot) => {
     const players = snapshot.val() || {};
     const container = document.getElementById("players");
-
     container.innerHTML = "";
 
     Object.keys(players).forEach(id => {
       const btn = document.createElement("button");
-
       btn.innerText = players[id].name;
 
       btn.onclick = () => {
         selectedPlayer = id;
-
         document.querySelectorAll("#players button").forEach(b => b.style.background = "#222");
         btn.style.background = "#4CAF50";
       };
 
       container.appendChild(btn);
     });
+  });
+}
+
+// =========================
+// SEVERITY
+// =========================
+
+function buildSeverity() {
+  const container = document.getElementById("severity");
+  container.innerHTML = "<h3>🎚️ Obtížnost</h3>";
+
+  ["Lehký", "Střední", "Těžký", "Sranda"].forEach(sev => {
+    const btn = document.createElement("button");
+
+    btn.innerText = sev;
+    btn.className = "sev-btn";
+
+    if (sev === currentSeverity) {
+      btn.classList.add("sev-active");
+    }
+
+    btn.onclick = () => {
+      currentSeverity = sev;
+      buildSeverity();
+    };
+
+    container.appendChild(btn);
   });
 }
 
@@ -187,115 +223,83 @@ function buildButtons() {
   const container = document.getElementById("buttons");
   container.innerHTML = "";
 
-  // =====================
   // ÚTOK
-  // =====================
   if (critData["Útok"]) {
-    const attackSection = document.createElement("div");
-    attackSection.className = "section";
-    attackSection.innerHTML = "<h3>⚔️ Útok</h3>";
+    const section = document.createElement("div");
+    section.innerHTML = "<h3>⚔️ Útok</h3>";
 
     Object.keys(critData["Útok"]).forEach(type => {
-      const typeDiv = document.createElement("div");
-      typeDiv.innerHTML = `<b>${type}</b><br>`;
-
-      Object.keys(critData["Útok"][type]).forEach(severity => {
-        const btn = document.createElement("button");
-
-        btn.innerText = severity;
-        btn.onclick = () => generate("Útok", type, severity);
-
-        typeDiv.appendChild(btn);
-      });
-
-      attackSection.appendChild(typeDiv);
-    });
-
-    container.appendChild(attackSection);
-  }
-
-  // =====================
-  // OBRANA
-  // =====================
-  if (critData["Obrana"]) {
-    const defSection = document.createElement("div");
-    defSection.className = "section";
-    defSection.innerHTML = "<h3>🛡️ Obrana</h3>";
-
-    Object.keys(critData["Obrana"]).forEach(severity => {
       const btn = document.createElement("button");
-
-      btn.innerText = severity;
-      btn.onclick = () => generate("Obrana", null, severity);
-
-      defSection.appendChild(btn);
+      btn.innerText = type;
+      btn.onclick = () => generate("Útok", type);
+      section.appendChild(btn);
     });
 
-    container.appendChild(defSection);
+    container.appendChild(section);
   }
 
-  // =====================
+  // OBRANA
+  if (critData["Obrana"]) {
+    const section = document.createElement("div");
+    section.innerHTML = "<h3>🛡️ Obrana</h3>";
+
+    const btn = document.createElement("button");
+    btn.innerText = "Obrana";
+    btn.onclick = () => generate("Obrana", null);
+
+    section.appendChild(btn);
+    container.appendChild(section);
+  }
+
   // SKILLY
-  // =====================
   if (critData["Skill"]) {
-    const skillSection = document.createElement("div");
-    skillSection.className = "section";
-    skillSection.innerHTML = "<h3>🎲 Skilly</h3>";
+    const section = document.createElement("div");
+    section.innerHTML = "<h3>🎲 Skilly</h3>";
 
     Object.keys(critData["Skill"]).forEach(attr => {
-
       const attrDiv = document.createElement("div");
       attrDiv.innerHTML = `<b>${attr}</b><br>`;
 
       Object.keys(critData["Skill"][attr]).forEach(skill => {
-
-        const skillDiv = document.createElement("div");
-
-        Object.keys(critData["Skill"][attr][skill]).forEach(severity => {
-          const btn = document.createElement("button");
-
-          btn.innerText = `${skill} (${severity})`;
-
-          btn.onclick = () => generate("Skill", {attr, skill}, severity);
-
-          skillDiv.appendChild(btn);
-        });
-
-        attrDiv.appendChild(skillDiv);
+        const btn = document.createElement("button");
+        btn.innerText = skill;
+        btn.onclick = () => generate("Skill", {attr, skill});
+        attrDiv.appendChild(btn);
       });
 
-      skillSection.appendChild(attrDiv);
+      section.appendChild(attrDiv);
     });
 
-    container.appendChild(skillSection);
+    container.appendChild(section);
   }
 }
+
 // =========================
 // GENERATE
 // =========================
 
-window.generate = function(type, sub, severity) {
+window.generate = function(type, sub) {
 
   let pool;
 
   if (type === "Útok") {
-    pool = critData[type][sub][severity];
+    pool = critData[type][sub][currentSeverity];
   } 
   else if (type === "Obrana") {
-    pool = critData[type][severity];
+    pool = critData[type][currentSeverity];
   } 
   else if (type === "Skill") {
-    pool = critData[type][sub.attr][sub.skill][severity];
+    pool = critData[type][sub.attr][sub.skill][currentSeverity];
   }
 
   if (!pool || pool.length === 0) {
-    alert("Žádná data");
+    alert("Žádná data pro tuto obtížnost");
     return;
   }
 
   const random = pool[Math.floor(Math.random() * pool.length)];
 
-  lastState = { pool, type, sub, severity };
+  lastState = { pool, type, sub, severity: currentSeverity };
 
   let label = "";
 
@@ -306,7 +310,7 @@ window.generate = function(type, sub, severity) {
   }
 
   currentResult =
-    `🎯 ${type} → ${label} (${severity})\n\n` +
+    `🎯 ${type} → ${label} (${currentSeverity})\n\n` +
     `💥 ${random.effect}\n\n` +
     `🎭 ${(random.roleplay || []).join(" ")}`;
 
@@ -314,7 +318,7 @@ window.generate = function(type, sub, severity) {
 }
 
 // =========================
-// REROLL (FIXED)
+// REROLL
 // =========================
 
 window.reroll = function() {
