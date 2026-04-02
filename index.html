@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DnD Crit Fail</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #111;
+  color: white;
+  text-align: center;
+}
+button {
+  padding: 12px;
+  margin: 5px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+}
+input, select {
+  padding: 10px;
+  margin: 5px;
+}
+.card {
+  margin-top: 20px;
+  font-size: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎲 DnD Crit Fail</h1>
+
+<div id="setup">
+  <input id="name" placeholder="Tvoje jméno">
+  <input id="room" placeholder="Room code (např. ABC)">
+  <br>
+  <button onclick="joinDM()">Jsem DM</button>
+  <button onclick="joinPlayer()">Jsem hráč</button>
+</div>
+
+<div id="dmPanel" style="display:none;">
+  <h2>DM Panel</h2>
+  <select id="playerSelect"></select>
+  <br>
+  <button onclick="generate()">Generuj</button>
+  <button onclick="send()">Pošli</button>
+  <div class="card" id="dmResult">---</div>
+</div>
+
+<div id="playerView" style="display:none;">
+  <h2>Tvoje událost</h2>
+  <div class="card" id="playerResult">Čekám...</div>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
+  authDomain: "ktit-fail-generator.firebaseapp.com",
+  databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "ktit-fail-generator",
+  storageBucket: "ktit-fail-generator.firebasestorage.app",
+  messagingSenderId: "1077220217346",
+  appId: "1:1077220217346:web:56378b0ed6d52774f88d1b"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let myId = "";
+let room = "";
+let currentResult = "";
+
+window.joinDM = function() {
+  room = document.getElementById("room").value;
+  document.getElementById("setup").style.display = "none";
+  document.getElementById("dmPanel").style.display = "block";
+  listenPlayers();
+}
+
+window.joinPlayer = function() {
+  room = document.getElementById("room").value;
+  const name = document.getElementById("name").value;
+  myId = name + "_" + Math.floor(Math.random()*1000);
+
+  set(ref(db, 'rooms/' + room + '/players/' + myId), {
+    name: name
+  });
+
+  document.getElementById("setup").style.display = "none";
+  document.getElementById("playerView").style.display = "block";
+
+  onValue(ref(db, 'rooms/' + room + '/messages/' + myId), (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      document.getElementById("playerResult").innerText = data.value;
+    }
+  });
+}
+
+function listenPlayers() {
+  onValue(ref(db, 'rooms/' + room + '/players'), (snapshot) => {
+    const players = snapshot.val() || {};
+    const select = document.getElementById("playerSelect");
+    select.innerHTML = "";
+
+    Object.keys(players).forEach(id => {
+      const option = document.createElement("option");
+      option.value = id;
+      option.text = players[id].name;
+      select.appendChild(option);
+    });
+  });
+}
+
+window.generate = function() {
+  const options = [
+    "Upadl jsi",
+    "Ztrácíš rovnováhu",
+    "Zbraň ti spadla",
+    "Zakopl jsi",
+    "Prozradil ses hlukem"
+  ];
+  currentResult = options[Math.floor(Math.random()*options.length)];
+  document.getElementById("dmResult").innerText = currentResult;
+}
+
+window.send = function() {
+  const playerId = document.getElementById("playerSelect").value;
+  if (!playerId) return;
+
+  set(ref(db, 'rooms/' + room + '/messages/' + playerId), {
+    value: currentResult,
+    time: Date.now()
+  });
+}
+
+</script>
+
+</body>
+</html>
