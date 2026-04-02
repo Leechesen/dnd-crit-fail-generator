@@ -12,9 +12,7 @@ body {
   text-align: center;
 }
 
-h1 {
-  color: #ff9800;
-}
+h1 { color: #ff9800; }
 
 button {
   padding: 10px 14px;
@@ -27,30 +25,19 @@ button {
   color: white;
 }
 
-button:hover {
-  background: #444;
-}
+button:hover { background: #444; }
 
 .card {
   margin-top: 10px;
-  font-size: 16px;
   white-space: pre-line;
   padding: 12px;
   border-radius: 10px;
   background: #1a1a1a;
 }
 
-.logout {
-  background: #aa3333;
-}
-
-.player-btn {
-  background: #2a3a5a;
-}
-
-.sev-active {
-  background: #ff9800 !important;
-}
+.logout { background: #aa3333; }
+.player-btn { background: #2a3a5a; }
+.sev-active { background: #ff9800 !important; }
 </style>
 </head>
 
@@ -70,6 +57,7 @@ button:hover {
   <h2>👑 DM Panel</h2>
 
   <button class="logout" onclick="logout()">🚪 Logout</button>
+  <button onclick="deleteRoomManual()">🧹 Smazat room</button>
 
   <div id="players"></div>
   <div id="severity"></div>
@@ -128,6 +116,28 @@ fetch("crit_fails.json")
   });
 
 // =========================
+// ROOM CLEANUP
+// =========================
+
+function deleteRoomIfEmpty() {
+  const playersRef = ref(db, 'rooms/' + room + '/players');
+
+  onValue(playersRef, (snapshot) => {
+    const players = snapshot.val();
+
+    if (!players || Object.keys(players).length === 0) {
+      console.log("🧹 Mažu room:", room);
+      set(ref(db, 'rooms/' + room), null);
+    }
+  }, { onlyOnce: true });
+}
+
+// interval cleanup
+setInterval(() => {
+  if (room) deleteRoomIfEmpty();
+}, 10000);
+
+// =========================
 // JOIN
 // =========================
 
@@ -140,6 +150,7 @@ window.joinDM = function() {
   document.getElementById("setup").style.display = "none";
   document.getElementById("dmPanel").style.display = "block";
 
+  deleteRoomIfEmpty();
   listenPlayers();
 }
 
@@ -157,9 +168,9 @@ window.joinPlayer = function() {
   const playerRef = ref(db, 'rooms/' + room + '/players/' + myId);
 
   set(playerRef, { name: name });
-
-  // 🔥 AUTO REMOVE PŘI ODPOJENÍ
   onDisconnect(playerRef).remove();
+
+  deleteRoomIfEmpty();
 
   document.getElementById("setup").style.display = "none";
   document.getElementById("playerView").style.display = "block";
@@ -211,12 +222,25 @@ function listenPlayerMessages() {
 // =========================
 
 window.logout = function() {
+  deleteRoomIfEmpty();
   localStorage.clear();
   location.reload();
 }
 
 // =========================
-// PLAYERS (LIVE LIST)
+// MANUAL DELETE
+// =========================
+
+window.deleteRoomManual = function() {
+  if (!room) return;
+
+  if (confirm("Smazat room?")) {
+    set(ref(db, 'rooms/' + room), null);
+  }
+}
+
+// =========================
+// PLAYERS
 // =========================
 
 function listenPlayers() {
@@ -242,14 +266,11 @@ function buildSeverity() {
   const container = document.getElementById("severity");
   container.innerHTML = "<h3>🎚️ Obtížnost</h3>";
 
-  ["Lehký", "Střední", "Těžký", "Sranda"].forEach(sev => {
+  ["Lehký","Střední","Těžký","Sranda"].forEach(sev => {
     const btn = document.createElement("button");
-
     btn.innerText = sev;
 
-    if (sev === currentSeverity) {
-      btn.classList.add("sev-active");
-    }
+    if (sev === currentSeverity) btn.classList.add("sev-active");
 
     btn.onclick = () => {
       currentSeverity = sev;
@@ -345,10 +366,9 @@ window.generate = function(type, sub, buttonElement) {
 
   if (activeContainer) activeContainer.remove();
 
-  let playersHTML = "";
-  Object.entries(currentPlayers).forEach(([id, p]) => {
-    playersHTML += `<button class="player-btn" onclick="sendTo('${id}')">${p.name}</button>`;
-  });
+  let playersHTML = Object.entries(currentPlayers)
+    .map(([id,p]) => `<button class="player-btn" onclick="sendTo('${id}')">${p.name}</button>`)
+    .join("");
 
   const box = document.createElement("div");
   box.className = "card";
@@ -388,9 +408,9 @@ window.reroll = function() {
     <br><br>
     <button onclick="reroll()">🔄 Generuj znovu</button>
     <br><br>
-    ${Object.entries(currentPlayers).map(([id, p]) =>
-      `<button class="player-btn" onclick="sendTo('${id}')">${p.name}</button>`
-    ).join("")}
+    ${Object.entries(currentPlayers)
+      .map(([id,p]) => `<button class="player-btn" onclick="sendTo('${id}')">${p.name}</button>`)
+      .join("")}
   `;
 }
 
