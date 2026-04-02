@@ -10,13 +10,14 @@ body { margin:0; font-family:Arial; background:#0e0e0e; color:white; }
 header {
   display:flex;
   justify-content:space-between;
+  align-items:center;
   padding:10px;
   background:#1a1a1a;
 }
 
 .title { color:#ff9800; font-weight:bold; }
 
-.container { padding:10px; }
+.container { padding:12px; }
 
 button {
   margin:4px;
@@ -43,6 +44,13 @@ input {
   border:none;
   border-radius:8px;
 }
+
+.room {
+  padding:8px;
+  margin:5px;
+  background:#1a1a1a;
+  border-radius:8px;
+}
 </style>
 </head>
 
@@ -51,39 +59,45 @@ input {
 <header>
   <div class="title">🎲 KritFailer</div>
   <div id="playersTop"></div>
-  <button onclick="logout()">Logout</button>
+  <div id="topButtons"></div>
 </header>
 
 <div id="setup" class="container">
+
   <input id="name" placeholder="Jméno"><br>
   <input id="room" placeholder="Room"><br>
+
   <button onclick="joinDM()">👑 DM</button>
   <button onclick="joinPlayer()">🎭 Hráč</button>
+
+  <h3>Otevřené hry</h3>
+  <div id="roomsList"></div>
+
 </div>
 
 <div id="app" class="container" style="display:none;">
 
-  <!-- DM PANEL -->
+  <!-- DM -->
   <div id="dmPanel" style="display:none;">
 
-    <button onclick="setSeverity('Lehký')" id="sLehký">Lehký</button>
-    <button onclick="setSeverity('Střední')" id="sStřední">Střední</button>
-    <button onclick="setSeverity('Těžký')" id="sTěžký">Těžký</button>
-    <button onclick="setSeverity('Sranda')" id="sSranda">Sranda</button>
+    <div>
+      <button onclick="setSeverity('Lehký')">Lehký</button>
+      <button onclick="setSeverity('Střední')">Střední</button>
+      <button onclick="setSeverity('Těžký')">Těžký</button>
+      <button onclick="setSeverity('Sranda')">Sranda</button>
+    </div>
 
-    <br>
-
+    <h3>Akce</h3>
     <button onclick="generateAttack('Melee', this)">⚔️ Melee</button>
     <button onclick="generateAttack('Ranged', this)">🏹 Ranged</button>
     <button onclick="generateDefense(this)">🛡️ Obrana</button>
-    <button onclick="deleteRoom()">🗑️ Smazat room</button>
 
     <h3>🎲 Skilly</h3>
     <div id="skills"></div>
 
   </div>
 
-  <!-- PLAYER PANEL -->
+  <!-- PLAYER -->
   <div id="playerPanel" style="display:none;">
     <h3 id="roomName"></h3>
     <div id="playerResult">Čekám na výsledek...</div>
@@ -125,6 +139,22 @@ fetch("crit_fails.json").then(r=>r.json()).then(j=>{
   data=j;
   buildSkills();
 });
+
+// ================= LOBBY =================
+
+onValue(ref(db,"rooms"), snap=>{
+  const rooms = snap.val() || {};
+  let html="";
+  Object.keys(rooms).forEach(r=>{
+    html += `<div class="room">${r} 
+      <button onclick="quickJoin('${r}')">Join</button></div>`;
+  });
+  document.getElementById("roomsList").innerHTML = html;
+});
+
+window.quickJoin = function(r){
+  document.getElementById("room").value = r;
+}
 
 // ================= LOGIN =================
 
@@ -180,9 +210,13 @@ function start(){
 
   if(isDM){
     document.getElementById("dmPanel").style.display="block";
+    document.getElementById("topButtons").innerHTML =
+      `<button onclick="deleteRoom()">🗑️</button><button onclick="logout()">Logout</button>`;
   } else {
     document.getElementById("playerPanel").style.display="block";
-    document.getElementById("roomName").innerText = "Room: "+room;
+    document.getElementById("roomName").innerText="Room: "+room;
+    document.getElementById("topButtons").innerHTML =
+      `<button onclick="logout()">Logout</button>`;
   }
 
   onDisconnect(ref(db,"rooms/"+room+"/players/"+myId)).remove();
@@ -211,7 +245,6 @@ function listenPlayers(){
 function listenRoom(){
   onValue(ref(db,"rooms/"+room), snap=>{
     if(!snap.exists()){
-      alert("Room ukončena");
       logout();
     }
   });
@@ -319,4 +352,4 @@ function buildSkills(){
 </script>
 
 </body>
-</html>
+</html> 
