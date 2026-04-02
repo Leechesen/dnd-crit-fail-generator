@@ -30,6 +30,10 @@ button {
 
 button:hover { background:#444; }
 
+.active {
+  background:#ff9800 !important;
+}
+
 .card {
   background:#1a1a1a;
   padding:10px;
@@ -84,11 +88,11 @@ input {
 
   <div id="dmPanel" style="display:none;">
 
-    <div>
-      <button onclick="setSeverity('Lehký')">Lehký</button>
-      <button onclick="setSeverity('Střední')">Střední</button>
-      <button onclick="setSeverity('Těžký')">Těžký</button>
-      <button onclick="setSeverity('Sranda')">Sranda</button>
+    <div id="severityButtons">
+      <button onclick="setSeverity('Lehký')" id="sev-Lehký">Lehký</button>
+      <button onclick="setSeverity('Střední')" id="sev-Střední">Střední</button>
+      <button onclick="setSeverity('Těžký')" id="sev-Těžký">Těžký</button>
+      <button onclick="setSeverity('Sranda')" id="sev-Sranda">Sranda</button>
     </div>
 
     <h3>Akce</h3>
@@ -125,6 +129,17 @@ const db = getDatabase(app);
 let room="", name="", myId="", isDM=false;
 let players={}, data={}, severity="Lehký";
 
+// ===== SEVERITY =====
+window.setSeverity = function(level){
+  severity = level;
+
+  document.querySelectorAll("#severityButtons button").forEach(b=>{
+    b.classList.remove("active");
+  });
+
+  document.getElementById("sev-"+level).classList.add("active");
+}
+
 // ===== SESSION =====
 if(localStorage.room){
   room = localStorage.room;
@@ -140,8 +155,22 @@ fetch("crit_fails.json").then(r=>r.json()).then(j=>{
   buildSkills();
 });
 
-// ===== LOGIN =====
+// ===== LOBBY =====
+onValue(ref(db,"rooms"), snap=>{
+  const rooms = snap.val() || {};
+  let html="";
+  Object.keys(rooms).forEach(r=>{
+    html += `<div class="room">${r} 
+      <button onclick="quickJoin('${r}')">Join</button></div>`;
+  });
+  document.getElementById("roomsList").innerHTML = html;
+});
 
+window.quickJoin = function(r){
+  document.getElementById("room").value = r;
+}
+
+// ===== LOGIN =====
 window.joinDM = async function(){
 
   room = val("room");
@@ -193,7 +222,6 @@ window.joinPlayer = async function(){
 }
 
 // ===== START =====
-
 function start(){
 
   document.getElementById("setup").style.display="none";
@@ -218,7 +246,6 @@ function start(){
 }
 
 // ===== PLAYERS =====
-
 function listenPlayers(){
   onValue(ref(db,"rooms/"+room+"/players"), snap=>{
     players = snap.val() || {};
@@ -228,7 +255,6 @@ function listenPlayers(){
 }
 
 // ===== ROOM DELETE =====
-
 function listenRoom(){
   onValue(ref(db,"rooms/"+room), snap=>{
     if(!snap.exists()){
@@ -238,7 +264,6 @@ function listenRoom(){
 }
 
 // ===== GENERATE =====
-
 window.generateSkill = function(attr, skill, btn){
   render(btn, data.Skill?.[attr]?.[skill]?.[severity] || [], `Skill (${skill})`);
 }
@@ -252,7 +277,6 @@ window.generateDefense = function(btn){
 }
 
 // ===== RENDER =====
-
 function render(btn, pool, label){
 
   document.querySelectorAll(".card").forEach(e=>e.remove());
@@ -286,13 +310,11 @@ function render(btn, pool, label){
 }
 
 // ===== SEND =====
-
 window.send = function(pid,text){
   set(ref(db,"rooms/"+room+"/msg/"+pid), text);
 }
 
 // ===== RECEIVE =====
-
 function listenMessages(){
   onValue(ref(db,"rooms/"+room+"/msg/"+myId), snap=>{
     if(snap.val()){
@@ -302,20 +324,17 @@ function listenMessages(){
 }
 
 // ===== DELETE =====
-
 window.deleteRoom = function(){
   remove(ref(db,"rooms/"+room));
 }
 
 // ===== LOGOUT =====
-
 window.logout = function(){
   localStorage.clear();
   location.reload();
 }
 
 // ===== HELPERS =====
-
 function val(id){ return document.getElementById(id).value; }
 
 function save(){
@@ -326,7 +345,6 @@ function save(){
 }
 
 // ===== SKILLS =====
-
 function buildSkills(){
 
   let html="";
@@ -341,7 +359,4 @@ function buildSkills(){
   document.getElementById("skills").innerHTML=html;
 }
 
-</script>
-
-</body>
-</html>
+</script
