@@ -36,20 +36,16 @@ button:hover {
   background: #1a1a1a;
 }
 
-.section {
-  margin-top: 15px;
+.logout {
+  background: #aa3333;
 }
 
-.sev-btn {
-  background: #222;
+.player-btn {
+  background: #2a3a5a;
 }
 
 .sev-active {
   background: #ff9800 !important;
-}
-
-.logout {
-  background: #aa3333;
 }
 </style>
 </head>
@@ -71,8 +67,13 @@ button:hover {
 
   <button class="logout" onclick="logout()">🚪 Logout</button>
 
+  <!-- INFO HRÁČI -->
   <div id="players"></div>
+
+  <!-- SEVERITY -->
   <div id="severity"></div>
+
+  <!-- BUTTONS -->
   <div id="buttons"></div>
 </div>
 
@@ -109,11 +110,11 @@ const db = getDatabase(app);
 let critData = {};
 let room = "";
 let myId = "";
-let selectedPlayer = null;
 let currentSeverity = "Lehký";
 let lastState = null;
 let activeContainer = null;
 let currentResult = "";
+let currentPlayers = {};
 
 // =========================
 // LOAD JSON
@@ -165,15 +166,12 @@ window.joinPlayer = function() {
 }
 
 // =========================
-// AUTO LOGIN (FIXED)
+// AUTO LOGIN
 // =========================
 
 document.addEventListener("DOMContentLoaded", () => {
-
   const role = localStorage.getItem("role");
   const savedRoom = localStorage.getItem("room");
-
-  console.log("AUTO LOGIN:", role, savedRoom);
 
   if (!role || !savedRoom) return;
 
@@ -182,19 +180,15 @@ document.addEventListener("DOMContentLoaded", () => {
   if (role === "dm") {
     document.getElementById("setup").style.display = "none";
     document.getElementById("dmPanel").style.display = "block";
-
     listenPlayers();
   }
 
   if (role === "player") {
     myId = localStorage.getItem("id");
-
     document.getElementById("setup").style.display = "none";
     document.getElementById("playerView").style.display = "block";
-
     listenPlayerMessages();
   }
-
 });
 
 // =========================
@@ -220,26 +214,20 @@ window.logout = function() {
 }
 
 // =========================
-// PLAYERS
+// PLAYERS (INFO)
 // =========================
 
 function listenPlayers() {
   onValue(ref(db, 'rooms/' + room + '/players'), (snapshot) => {
-    const players = snapshot.val() || {};
+    currentPlayers = snapshot.val() || {};
+
     const container = document.getElementById("players");
-    container.innerHTML = "";
+    container.innerHTML = "<h3>👥 Připojeni:</h3>";
 
-    Object.keys(players).forEach(id => {
-      const btn = document.createElement("button");
-      btn.innerText = players[id].name;
-
-      btn.onclick = () => {
-        selectedPlayer = id;
-        document.querySelectorAll("#players button").forEach(b => b.style.background = "#222");
-        btn.style.background = "#4CAF50";
-      };
-
-      container.appendChild(btn);
+    Object.values(currentPlayers).forEach(p => {
+      const div = document.createElement("div");
+      div.innerText = "• " + p.name;
+      container.appendChild(div);
     });
   });
 }
@@ -327,7 +315,7 @@ function buildButtons() {
 }
 
 // =========================
-// GENERATE
+// GENERATE (INLINE + PLAYERS)
 // =========================
 
 window.generate = function(type, sub, buttonElement) {
@@ -355,6 +343,11 @@ window.generate = function(type, sub, buttonElement) {
 
   if (activeContainer) activeContainer.remove();
 
+  let playersHTML = "";
+  Object.entries(currentPlayers).forEach(([id, p]) => {
+    playersHTML += `<button class="player-btn" onclick="sendTo('${id}')">${p.name}</button>`;
+  });
+
   const box = document.createElement("div");
   box.className = "card";
 
@@ -362,7 +355,8 @@ window.generate = function(type, sub, buttonElement) {
     ${currentResult}
     <br><br>
     <button onclick="reroll()">🔄 Generuj znovu</button>
-    <button onclick="send()">📤 Pošli hráči</button>
+    <br><br>
+    ${playersHTML}
   `;
 
   buttonElement.parentNode.insertBefore(box, buttonElement.nextSibling);
@@ -391,7 +385,10 @@ window.reroll = function() {
     ${currentResult}
     <br><br>
     <button onclick="reroll()">🔄 Generuj znovu</button>
-    <button onclick="send()">📤 Pošli hráči</button>
+    <br><br>
+    ${Object.entries(currentPlayers).map(([id, p]) =>
+      `<button class="player-btn" onclick="sendTo('${id}')">${p.name}</button>`
+    ).join("")}
   `;
 }
 
@@ -399,10 +396,8 @@ window.reroll = function() {
 // SEND
 // =========================
 
-window.send = function() {
-  if (!selectedPlayer || !currentResult) return;
-
-  set(ref(db, 'rooms/' + room + '/messages/' + selectedPlayer), {
+window.sendTo = function(playerId) {
+  set(ref(db, 'rooms/' + room + '/messages/' + playerId), {
     value: currentResult,
     time: Date.now()
   });
