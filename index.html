@@ -47,6 +47,7 @@ button:hover { background: #444; }
 <h1>🎲 KritFailer</h1>
 
 <div id="setup">
+
   <input id="name" placeholder="Tvoje jméno"><br>
 
   <h3>Vytvořit místnost</h3>
@@ -57,16 +58,17 @@ button:hover { background: #444; }
 
   <h3>Aktivní místnosti</h3>
   <div id="rooms"></div>
+
 </div>
 
 <div id="dmPanel" style="display:none;">
-  <h2>👑 DM</h2>
+  <h2>👑 DM Panel</h2>
   <button onclick="logout()">Logout</button>
   <div id="players"></div>
 </div>
 
 <div id="playerView" style="display:none;">
-  <h2>Hráč</h2>
+  <h2>🎭 Hráč</h2>
   <button onclick="logout()">Logout</button>
 </div>
 
@@ -87,9 +89,9 @@ let room = "";
 let myId = "";
 
 // =========================
-// SAFE ID (🔥 FIX)
+// SAFE ID (bez tečky)
 // =========================
-function generateId(prefix) {
+function createId(prefix) {
   return prefix + "_" + Date.now() + "_" + Math.floor(Math.random()*1000);
 }
 
@@ -123,20 +125,18 @@ loadRooms();
 // =========================
 window.joinDM = async function() {
 
+  const name = document.getElementById("name").value || "DM";
+  const password = document.getElementById("password").value;
+  room = document.getElementById("room").value;
+
+  if (!room) {
+    alert("Zadej název místnosti");
+    return;
+  }
+
+  myId = createId("DM");
+
   try {
-
-    room = document.getElementById("room").value;
-    const name = document.getElementById("name").value || "DM";
-    const password = document.getElementById("password").value;
-
-    if (!room) {
-      alert("Zadej název místnosti");
-      return;
-    }
-
-    myId = generateId("DM");
-
-    console.log("👉 Vytvářím room");
 
     await set(ref(db, 'rooms/' + room), {
       createdAt: Date.now(),
@@ -148,13 +148,7 @@ window.joinDM = async function() {
       }
     });
 
-    console.log("✅ Room vytvořena");
-
     onDisconnect(ref(db, 'rooms/' + room + '/players/' + myId)).remove();
-
-    localStorage.setItem("role", "dm");
-    localStorage.setItem("room", room);
-    localStorage.setItem("id", myId);
 
     document.getElementById("setup").style.display = "none";
     document.getElementById("dmPanel").style.display = "block";
@@ -162,7 +156,7 @@ window.joinDM = async function() {
     listenPlayers();
 
   } catch (e) {
-    console.error("❌ ERROR:", e);
+    console.error(e);
     alert("Chyba – F12 console");
   }
 }
@@ -172,40 +166,40 @@ window.joinDM = async function() {
 // =========================
 window.joinRoom = async function(r) {
 
-  try {
+  const name = document.getElementById("name").value;
 
-    const name = document.getElementById("name").value;
-    if (!name) return alert("Zadej jméno");
-
-    const snap = await get(ref(db, 'rooms/' + r));
-    const data = snap.val();
-
-    if (!data) return alert("Room neexistuje");
-
-    if (data.password) {
-      const pass = prompt("Zadej heslo");
-      if (pass !== data.password) return alert("Špatné heslo");
-    }
-
-    room = r;
-    myId = generateId("P");
-
-    await set(ref(db, 'rooms/' + room + '/players/' + myId), {
-      name: name
-    });
-
-    onDisconnect(ref(db, 'rooms/' + room + '/players/' + myId)).remove();
-
-    localStorage.setItem("role", "player");
-    localStorage.setItem("room", room);
-    localStorage.setItem("id", myId);
-
-    document.getElementById("setup").style.display = "none";
-    document.getElementById("playerView").style.display = "block";
-
-  } catch (e) {
-    console.error("❌ JOIN ERROR:", e);
+  if (!name) {
+    alert("Zadej jméno");
+    return;
   }
+
+  const snap = await get(ref(db, 'rooms/' + r));
+  const data = snap.val();
+
+  if (!data) {
+    alert("Room neexistuje");
+    return;
+  }
+
+  if (data.password) {
+    const pass = prompt("Zadej heslo");
+    if (pass !== data.password) {
+      alert("Špatné heslo");
+      return;
+    }
+  }
+
+  room = r;
+  myId = createId("P");
+
+  await set(ref(db, 'rooms/' + room + '/players/' + myId), {
+    name: name
+  });
+
+  onDisconnect(ref(db, 'rooms/' + room + '/players/' + myId)).remove();
+
+  document.getElementById("setup").style.display = "none";
+  document.getElementById("playerView").style.display = "block";
 }
 
 // =========================
@@ -213,9 +207,10 @@ window.joinRoom = async function(r) {
 // =========================
 function listenPlayers() {
   onValue(ref(db, 'rooms/' + room + '/players'), (snapshot) => {
-    const players = snapshot.val() || {};
 
+    const players = snapshot.val() || {};
     const div = document.getElementById("players");
+
     div.innerHTML = "<h3>Hráči:</h3>";
 
     Object.values(players).forEach(p => {
@@ -228,7 +223,6 @@ function listenPlayers() {
 // LOGOUT
 // =========================
 window.logout = function() {
-  localStorage.clear();
   location.reload();
 }
 
