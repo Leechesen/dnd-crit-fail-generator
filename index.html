@@ -41,6 +41,7 @@ button:hover { background:#444; }
 
 .meta { color:#aaa; font-size:12px; }
 
+/* hráči barvy */
 .player1 { background:#ef4444; }
 .player2 { background:#22c55e; }
 .player3 { background:#3b82f6; }
@@ -55,6 +56,11 @@ button:hover { background:#444; }
 }
 
 #playersList { margin-top:10px; }
+
+#playerResult .card {
+  border:1px solid #333;
+  box-shadow:0 0 10px rgba(0,0,0,0.5);
+}
 </style>
 </head>
 
@@ -289,12 +295,19 @@ function render(btn,pool,label){
 
   btn.parentNode.querySelectorAll(".card").forEach(e=>e.remove());
 
+  const payload = {
+    severity,
+    label,
+    effect: r.effect,
+    roleplay: r.roleplay
+  };
+
   let html="";
   let i=1;
 
   Object.entries(players).forEach(([id,p])=>{
     if(!p.name.includes("👑")){
-      html += `<button class="player${i}" onclick="send('${id}','${r.effect}')">${p.name}</button>`;
+      html += `<button class="player${i}" onclick='send("${id}", ${JSON.stringify(payload)})'>${p.name}</button>`;
       i++;
     }
   });
@@ -307,24 +320,47 @@ function render(btn,pool,label){
   setTimeout(()=>{
     div.innerHTML=`
       <div class="meta">${severity} | ${label}</div>
-      <b>${r.effect}</b><br>
-      ${r.roleplay.join("<br>")}<br><br>
-      ${html}
+      <b>${r.effect}</b><br><br>
+      ${r.roleplay.join("<br>")}
     `;
   },400);
 }
 
 // ===== FIREBASE =====
-function send(pid,text){
-  set(ref(db,"rooms/"+room+"/msg/"+pid),text);
+function send(pid,data){
+  set(ref(db,"rooms/"+room+"/msg/"+pid),data);
 }
 window.send = send;
 
 function listenMessages(){
   onValue(ref(db,"rooms/"+room+"/msg/"+myId),snap=>{
-    if(snap.val()){
-      document.getElementById("playerResult").innerText = snap.val();
+    if(!snap.val()) return;
+
+    const data = snap.val();
+
+    if(typeof data === "string"){
+      document.getElementById("playerResult").innerText = data;
+      return;
     }
+
+    document.getElementById("playerResult").innerHTML = `
+      <div class="card">
+        <div class="meta">🎯 ${data.severity} | ${data.label}</div>
+
+        <div style="font-size:18px; margin-bottom:10px;">
+          <b>${data.effect}</b>
+        </div>
+
+        <div style="
+          background:#111;
+          padding:10px;
+          border-radius:8px;
+          border-left:4px solid #ff9800;
+        ">
+          ${data.roleplay.join("<br>")}
+        </div>
+      </div>
+    `;
   });
 }
 
