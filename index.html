@@ -41,7 +41,6 @@ button:hover { background:#444; }
 
 .meta { color:#aaa; font-size:12px; }
 
-/* hráči barvy */
 .player1 { background:#ef4444; }
 .player2 { background:#22c55e; }
 .player3 { background:#3b82f6; }
@@ -54,6 +53,8 @@ button:hover { background:#444; }
   margin:5px 0;
   border-radius:10px;
 }
+
+#playersList { margin-top:10px; }
 </style>
 </head>
 
@@ -94,6 +95,7 @@ button:hover { background:#444; }
 
   <div id="playerPanel" style="display:none;">
     <h3 id="roomNameDisplay"></h3>
+    <div id="playersList"></div>
     <div id="playerResult">Čekám na výsledek...</div>
   </div>
 
@@ -116,6 +118,15 @@ const db = getDatabase(app);
 let room="", name="", myId="", isDM=false;
 let players={}, data={};
 let severityList=[], severity="";
+
+// ===== AUTO RECONNECT =====
+if(localStorage.room){
+  room = localStorage.room;
+  name = localStorage.name;
+  myId = localStorage.myId;
+  isDM = localStorage.isDM === "true";
+  start();
+}
 
 // ===== LOAD JSON =====
 fetch("crit_fails.json").then(r=>r.json()).then(j=>{
@@ -202,7 +213,7 @@ async function joinRoom(r){
   }
 
   room = r;
-  myId = "P_"+Date.now();
+  myId = localStorage.myId || "P_"+Date.now();
   isDM = false;
 
   await set(ref(db,"rooms/"+room+"/players/"+myId),{ name });
@@ -234,8 +245,13 @@ function start(){
 
   onValue(ref(db,"rooms/"+room+"/players"), snap=>{
     players = snap.val() || {};
-    document.getElementById("playersTop").innerText =
-      Object.values(players).map(p=>p.name).join(" | ");
+    const names = Object.values(players).map(p=>p.name);
+
+    document.getElementById("playersTop").innerText = names.join(" | ");
+
+    const listHTML = names.map(n=>`<div>👤 ${n}</div>`).join("");
+    const el = document.getElementById("playersList");
+    if(el) el.innerHTML = listHTML;
   });
 
   listenMessages();
@@ -319,13 +335,16 @@ function save(){
   localStorage.room=room;
   localStorage.name=name;
   localStorage.myId=myId;
-  localStorage.isDM=isDM;
+  localStorage.isDM=isDM ? "true" : "false";
 }
 
 function deleteRoom(){ remove(ref(db,"rooms/"+room)); }
 window.deleteRoom = deleteRoom;
 
-function logout(){ localStorage.clear(); location.reload(); }
+function logout(){
+  localStorage.clear();
+  location.reload();
+}
 window.logout = logout;
 
 // ===== SKILLS =====
