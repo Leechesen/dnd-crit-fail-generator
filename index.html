@@ -116,6 +116,22 @@ fetch("crit_fails.json")
   });
 
 // =========================
+// ROOM STATUS LISTENER (🔥 AUTO LOGOUT)
+// =========================
+
+function listenRoomStatus() {
+  const roomRef = ref(db, 'rooms/' + room);
+
+  onValue(roomRef, (snapshot) => {
+    if (!snapshot.exists()) {
+      alert("Místnost byla ukončena DM");
+      localStorage.clear();
+      location.reload();
+    }
+  });
+}
+
+// =========================
 // ROOM CLEANUP
 // =========================
 
@@ -126,13 +142,11 @@ function deleteRoomIfEmpty() {
     const players = snapshot.val();
 
     if (!players || Object.keys(players).length === 0) {
-      console.log("🧹 Mažu room:", room);
       set(ref(db, 'rooms/' + room), null);
     }
   }, { onlyOnce: true });
 }
 
-// interval cleanup
 setInterval(() => {
   if (room) deleteRoomIfEmpty();
 }, 10000);
@@ -152,6 +166,7 @@ window.joinDM = function() {
 
   deleteRoomIfEmpty();
   listenPlayers();
+  listenRoomStatus();
 }
 
 window.joinPlayer = function() {
@@ -176,6 +191,7 @@ window.joinPlayer = function() {
   document.getElementById("playerView").style.display = "block";
 
   listenPlayerMessages();
+  listenRoomStatus(); // 🔥
 }
 
 // =========================
@@ -194,6 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("setup").style.display = "none";
     document.getElementById("dmPanel").style.display = "block";
     listenPlayers();
+    listenRoomStatus();
   }
 
   if (role === "player") {
@@ -201,6 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("setup").style.display = "none";
     document.getElementById("playerView").style.display = "block";
     listenPlayerMessages();
+    listenRoomStatus();
   }
 });
 
