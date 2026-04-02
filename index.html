@@ -116,7 +116,7 @@ fetch("crit_fails.json")
   });
 
 // =========================
-// ROOM STATUS (AUTO LOGOUT)
+// ROOM STATUS → AUTO LOGOUT
 // =========================
 
 function listenRoomStatus() {
@@ -124,7 +124,7 @@ function listenRoomStatus() {
 
   onValue(roomRef, (snapshot) => {
     if (!snapshot.exists()) {
-      alert("Místnost byla ukončena DM");
+      alert("Místnost byla ukončena");
       localStorage.clear();
       location.reload();
     }
@@ -132,7 +132,7 @@ function listenRoomStatus() {
 }
 
 // =========================
-// ROOM CLEANUP (FIXED)
+// CLEANUP
 // =========================
 
 function deleteRoomIfEmpty() {
@@ -144,33 +144,39 @@ function deleteRoomIfEmpty() {
 
     const players = data.players;
     const createdAt = data.createdAt || 0;
-
     const age = Date.now() - createdAt;
 
     if ((!players || Object.keys(players).length === 0) && age > 10000) {
-      console.log("🧹 Mažu room:", room);
       set(roomRef, null);
     }
 
   }, { onlyOnce: true });
 }
 
-// interval cleanup
 setInterval(() => {
   if (room) deleteRoomIfEmpty();
 }, 10000);
 
 // =========================
-// JOIN
+// JOIN DM (🔥 DM = PLAYER)
 // =========================
 
 window.joinDM = function() {
   room = document.getElementById("room").value;
+  const name = document.getElementById("name").value || "DM";
+
+  myId = "DM_" + Math.floor(Math.random()*1000);
 
   localStorage.setItem("role", "dm");
   localStorage.setItem("room", room);
+  localStorage.setItem("name", name);
+  localStorage.setItem("id", myId);
 
-  // 🔥 vytvoření timestampu
+  const playerRef = ref(db, 'rooms/' + room + '/players/' + myId);
+
+  set(playerRef, { name: name + " 👑" });
+  onDisconnect(playerRef).remove();
+
   set(ref(db, 'rooms/' + room + '/createdAt'), Date.now());
 
   document.getElementById("setup").style.display = "none";
@@ -179,6 +185,10 @@ window.joinDM = function() {
   listenPlayers();
   listenRoomStatus();
 }
+
+// =========================
+// JOIN PLAYER
+// =========================
 
 window.joinPlayer = function() {
   room = document.getElementById("room").value;
@@ -218,16 +228,21 @@ document.addEventListener("DOMContentLoaded", () => {
   room = savedRoom;
 
   if (role === "dm") {
+    myId = localStorage.getItem("id");
+
     document.getElementById("setup").style.display = "none";
     document.getElementById("dmPanel").style.display = "block";
+
     listenPlayers();
     listenRoomStatus();
   }
 
   if (role === "player") {
     myId = localStorage.getItem("id");
+
     document.getElementById("setup").style.display = "none";
     document.getElementById("playerView").style.display = "block";
+
     listenPlayerMessages();
     listenRoomStatus();
   }
