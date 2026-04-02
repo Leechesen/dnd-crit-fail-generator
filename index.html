@@ -73,6 +73,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+let critData = {};
+
+fetch("crit_fails.json")
+  .then(res => res.json())
+  .then(data => {
+    critData = data;
+    console.log("JSON loaded");
+  });
+
 let myId = "";
 let room = "";
 let currentResult = "";
