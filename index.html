@@ -115,7 +115,7 @@ let myId = "";
 let room = "";
 let currentResult = "";
 let selectedPlayer = null;
-let lastParams = null;
+let lastPool = null;
 
 // =========================
 // JOIN
@@ -152,7 +152,7 @@ window.joinPlayer = function() {
 }
 
 // =========================
-// PLAYERS (BUTTONS)
+// PLAYERS
 // =========================
 
 function listenPlayers() {
@@ -180,7 +180,7 @@ function listenPlayers() {
 }
 
 // =========================
-// BUTTONS (ÚTOK)
+// BUTTONS
 // =========================
 
 function buildButtons() {
@@ -212,14 +212,14 @@ function buildButtons() {
 
 function generate(type, sub, severity) {
 
-  lastParams = { type, sub, severity };
-
   const pool = critData[type][sub][severity];
 
   if (!pool || pool.length === 0) {
     alert("Žádná data");
     return;
   }
+
+  lastPool = pool;
 
   const random = pool[Math.floor(Math.random() * pool.length)];
 
@@ -236,8 +236,16 @@ function generate(type, sub, severity) {
 // =========================
 
 function reroll() {
-  if (!lastParams) return;
-  generate(lastParams.type, lastParams.sub, lastParams.severity);
+  if (!lastPool) return;
+
+  const random = lastPool[Math.floor(Math.random() * lastPool.length)];
+
+  currentResult =
+    `🔄 Znovu\n\n` +
+    `💥 ${random.effect}\n\n` +
+    `🎭 ${(random.roleplay || []).join(" ")}`;
+
+  document.getElementById("dmResult").innerText = currentResult;
 }
 
 // =========================
