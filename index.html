@@ -94,7 +94,7 @@ button:hover { background: #444; }
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, onValue, get, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, set, update, onValue, get, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
@@ -121,7 +121,6 @@ function loadRooms() {
     const rooms = snapshot.val() || {};
 
     Object.keys(rooms).forEach(r => {
-
       if (!rooms[r].createdAt) return;
 
       const div = document.createElement("div");
@@ -154,10 +153,10 @@ function listenRoomStatus() {
 }
 
 // =========================
-// JOIN DM (🔥 AUTO JOIN)
+// JOIN DM (FIXED)
 // =========================
 
-window.joinDM = function() {
+window.joinDM = async function() {
   room = document.getElementById("room").value;
   const name = document.getElementById("name").value || "DM";
   const password = document.getElementById("password").value;
@@ -168,16 +167,19 @@ window.joinDM = function() {
 
   myId = "DM_" + Math.random();
 
-  set(ref(db, 'rooms/' + room), {
+  const roomRef = ref(db, 'rooms/' + room);
+
+  // 🔥 FIX: update místo set
+  await update(roomRef, {
     password: password || "",
     createdAt: Date.now()
   });
 
   const playerRef = ref(db, 'rooms/' + room + '/players/' + myId);
-  set(playerRef, { name: name + " 👑" });
+  await set(playerRef, { name: name + " 👑" });
+
   onDisconnect(playerRef).remove();
 
-  // 🔥 AUTO PŘIPOJENÍ DO PANELU
   localStorage.setItem("role", "dm");
   localStorage.setItem("room", room);
   localStorage.setItem("id", myId);
@@ -190,7 +192,7 @@ window.joinDM = function() {
 }
 
 // =========================
-// JOIN PLAYER (🔥 PASSWORD FIX)
+// JOIN PLAYER
 // =========================
 
 window.joinRoom = async function(r) {
@@ -202,10 +204,8 @@ window.joinRoom = async function(r) {
 
   if (!data) return alert("Room neexistuje");
 
-  // 🔥 pokud JE heslo → ptáme se
   if (data.password && data.password !== "") {
     const pass = prompt("Zadej heslo");
-
     if (data.password !== pass) {
       return alert("Špatné heslo");
     }
@@ -296,7 +296,7 @@ window.generate = function(text) {
   currentResult = text;
 
   const playersHTML = Object.entries(currentPlayers)
-    .filter(([id, p]) => !p.name.includes("👑")) // 🔥 DM FILTER
+    .filter(([id, p]) => !p.name.includes("👑"))
     .map(([id,p]) => `<button class="player-btn" onclick="sendTo('${id}')">${p.name}</button>`)
     .join("");
 
