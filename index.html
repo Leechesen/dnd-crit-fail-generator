@@ -33,8 +33,8 @@ button:hover { background:#444; }
 
 .card {
   background:#1a1a1a;
-  padding:10px;
-  margin-top:5px;
+  padding:12px;
+  margin-top:10px;
   border-radius:10px;
 }
 
@@ -50,6 +50,11 @@ input {
   margin:5px;
   background:#1a1a1a;
   border-radius:8px;
+}
+.meta {
+  color:#aaa;
+  font-size:12px;
+  margin-bottom:6px;
 }
 </style>
 </head>
@@ -88,12 +93,15 @@ input {
     </div>
 
     <h3>Akce</h3>
-    <button onclick="generateAttack('Melee', this)">⚔️ Melee</button>
-    <button onclick="generateAttack('Ranged', this)">🏹 Ranged</button>
-    <button onclick="generateDefense(this)">🛡️ Obrana</button>
+    <button onclick="generateAttack('Melee')">⚔️ Melee</button>
+    <button onclick="generateAttack('Ranged')">🏹 Ranged</button>
+    <button onclick="generateDefense()">🛡️ Obrana</button>
 
     <h3>🎲 Skilly</h3>
     <div id="skills"></div>
+
+    <!-- 🔥 JEDEN VÝSLEDEK -->
+    <div id="resultBox"></div>
 
   </div>
 
@@ -118,13 +126,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// ================= STATE =================
-
+// ===== STATE =====
 let room="", name="", myId="", isDM=false;
 let players={}, data={}, severity="Lehký";
 
-// ================= SESSION =================
-
+// ===== SESSION =====
 if(localStorage.room){
   room = localStorage.room;
   name = localStorage.name;
@@ -133,15 +139,13 @@ if(localStorage.room){
   start();
 }
 
-// ================= LOAD JSON =================
-
+// ===== JSON =====
 fetch("crit_fails.json").then(r=>r.json()).then(j=>{
   data=j;
   buildSkills();
 });
 
-// ================= LOBBY =================
-
+// ===== LOBBY =====
 onValue(ref(db,"rooms"), snap=>{
   const rooms = snap.val() || {};
   let html="";
@@ -156,8 +160,7 @@ window.quickJoin = function(r){
   document.getElementById("room").value = r;
 }
 
-// ================= LOGIN =================
-
+// ===== LOGIN =====
 window.joinDM = async function(){
 
   room = val("room");
@@ -201,8 +204,7 @@ window.joinPlayer = async function(){
   start();
 }
 
-// ================= START =================
-
+// ===== START =====
 function start(){
 
   document.getElementById("setup").style.display="none";
@@ -226,8 +228,7 @@ function start(){
   listenMessages();
 }
 
-// ================= PLAYERS =================
-
+// ===== PLAYERS =====
 function listenPlayers(){
   onValue(ref(db,"rooms/"+room+"/players"), snap=>{
     players = snap.val() || {};
@@ -240,8 +241,7 @@ function listenPlayers(){
   });
 }
 
-// ================= ROOM DELETE =================
-
+// ===== ROOM DELETE =====
 function listenRoom(){
   onValue(ref(db,"rooms/"+room), snap=>{
     if(!snap.exists()){
@@ -250,26 +250,25 @@ function listenRoom(){
   });
 }
 
-// ================= GENERATE =================
-
-window.generateSkill = function(attr, skill, btn){
-  render(btn, data.Skill[attr][skill][severity]);
+// ===== GENERATE =====
+window.generateSkill = function(attr, skill){
+  render(data.Skill?.[attr]?.[skill]?.[severity] || [], `Skill (${skill})`);
 }
 
-window.generateAttack = function(type, btn){
-  render(btn, data["Útok"][type][severity]);
+window.generateAttack = function(type){
+  render(data["Útok"]?.[type]?.[severity] || [], `Útok (${type})`);
 }
 
-window.generateDefense = function(btn){
-  render(btn, data["Obrana"][severity]);
+window.generateDefense = function(){
+  render(data["Obrana"]?.[severity] || [], "Obrana");
 }
 
-// ================= RENDER =================
+// ===== RENDER =====
+function render(pool, label){
 
-function render(btn, pool){
-
-  if(btn.nextElementSibling?.classList.contains("card")){
-    btn.nextElementSibling.remove();
+  if(!pool || pool.length === 0){
+    alert("Žádná data");
+    return;
   }
 
   const r = pool[Math.floor(Math.random()*pool.length)];
@@ -282,25 +281,22 @@ function render(btn, pool){
     }
   });
 
-  const div=document.createElement("div");
-  div.className="card";
-  div.innerHTML=`
-    <b>${r.effect}</b><br>
-    ${r.roleplay.join("<br>")}<br><br>
-    ${playersHTML}
+  document.getElementById("resultBox").innerHTML = `
+    <div class="card">
+      <div class="meta">${severity} | ${label}</div>
+      <b>${r.effect}</b><br>
+      ${r.roleplay.join("<br>")}<br><br>
+      ${playersHTML}
+    </div>
   `;
-
-  btn.after(div);
 }
 
-// ================= SEND =================
-
+// ===== SEND =====
 window.send = function(pid,text){
   set(ref(db,"rooms/"+room+"/msg/"+pid), text);
 }
 
-// ================= RECEIVE =================
-
+// ===== RECEIVE =====
 function listenMessages(){
   onValue(ref(db,"rooms/"+room+"/msg/"+myId), snap=>{
     if(snap.val()){
@@ -309,21 +305,18 @@ function listenMessages(){
   });
 }
 
-// ================= DELETE ROOM =================
-
+// ===== DELETE =====
 window.deleteRoom = function(){
   remove(ref(db,"rooms/"+room));
 }
 
-// ================= LOGOUT =================
-
+// ===== LOGOUT =====
 window.logout = function(){
   localStorage.clear();
   location.reload();
 }
 
-// ================= HELPERS =================
-
+// ===== HELPERS =====
 function val(id){ return document.getElementById(id).value; }
 
 function save(){
@@ -333,8 +326,7 @@ function save(){
   localStorage.isDM=isDM;
 }
 
-// ================= SKILLS =================
-
+// ===== SKILLS =====
 function buildSkills(){
 
   let html="";
@@ -342,7 +334,7 @@ function buildSkills(){
   Object.entries(data.Skill).forEach(([attr,skills])=>{
     html+=`<h4>${attr}</h4>`;
     Object.keys(skills).forEach(s=>{
-      html+=`<button onclick="generateSkill('${attr}','${s}', this)">${s}</button>`;
+      html+=`<button onclick="generateSkill('${attr}','${s}')">${s}</button>`;
     });
   });
 
@@ -352,4 +344,4 @@ function buildSkills(){
 </script>
 
 </body>
-</html> 
+</html>
