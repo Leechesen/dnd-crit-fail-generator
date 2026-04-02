@@ -34,12 +34,13 @@ button:hover { background:#444; }
 
 .card {
   background:#1a1a1a;
-  padding:12px;
-  margin-top:8px;
+  padding:16px;
+  margin-top:12px;
   border-radius:12px;
+  font-size:16px;
 }
 
-.meta { color:#aaa; font-size:12px; }
+.meta { color:#aaa; font-size:12px; margin-bottom:8px; }
 
 .str { background:#8b0000; }
 .dex { background:#006400; }
@@ -48,6 +49,9 @@ button:hover { background:#444; }
 .wis { background:#6b21a8; }
 .cha { background:#92400e; }
 
+#resultBox {
+  margin-top:20px;
+}
 </style>
 </head>
 
@@ -84,6 +88,10 @@ button:hover { background:#444; }
 
     <h3>🎲 Skilly</h3>
     <div id="skills"></div>
+
+    <!-- 🔥 JEDINÉ MÍSTO PRO VÝSLEDEK -->
+    <div id="resultBox"></div>
+
   </div>
 
   <div id="playerPanel" style="display:none;">
@@ -242,29 +250,28 @@ function getPoolSafe(source){
   return [];
 }
 
-function generateAttack(type, btn){
-  render(btn, getPoolSafe(data["Útok"]?.[type]), "Útok");
+function generateAttack(type){
+  render(getPoolSafe(data["Útok"]?.[type]), "Útok");
 }
 window.generateAttack = generateAttack;
 
-function generateDefense(btn){
-  render(btn, getPoolSafe(data["Obrana"]), "Obrana");
+function generateDefense(){
+  render(getPoolSafe(data["Obrana"]), "Obrana");
 }
 window.generateDefense = generateDefense;
 
-function generateSkill(attr, skill, btn){
-  render(btn, getPoolSafe(data.Skill?.[attr]?.[skill]), `Skill (${skill})`);
+function generateSkill(attr, skill){
+  render(getPoolSafe(data.Skill?.[attr]?.[skill]), `Skill (${skill})`);
 }
 window.generateSkill = generateSkill;
 
-// ===== RENDER =====
-function render(btn, pool, label){
+// ===== RENDER (FIXED) =====
+function render(pool, label){
 
-  // 🔥 SMAŽ STARÝ VÝSLEDEK
-  document.querySelectorAll(".card").forEach(e=>e.remove());
+  const container = document.getElementById("resultBox");
 
   if(!pool.length){
-    alert("Žádná data");
+    container.innerHTML = "❌ Žádná data";
     return;
   }
 
@@ -277,17 +284,16 @@ function render(btn, pool, label){
     }
   });
 
-  const div=document.createElement("div");
-  div.className="card";
-  div.innerHTML=`<div class="meta">🎲 Rolling...</div>`;
-  btn.after(div);
+  container.innerHTML = `<div class="card"><div class="meta">🎲 Rolling...</div></div>`;
 
   setTimeout(()=>{
-    div.innerHTML=`
-      <div class="meta">${severity} | ${label}</div>
-      <b>${r.effect}</b><br>
-      ${r.roleplay.join("<br>")}<br><br>
-      ${playersHTML}
+    container.innerHTML = `
+      <div class="card">
+        <div class="meta">${severity} | ${label}</div>
+        <b>${r.effect}</b><br>
+        ${r.roleplay.join("<br>")}<br><br>
+        ${playersHTML}
+      </div>
     `;
   }, 400);
 }
@@ -333,7 +339,7 @@ function buildSkills(){
   Object.entries(data.Skill).forEach(([attr,skills])=>{
     html+=`<h4>${attr}</h4>`;
     Object.keys(skills).forEach(s=>{
-      html+=`<button class="${attr.toLowerCase()}" onclick="generateSkill('${attr}','${s}', this)">${s}</button>`;
+      html+=`<button class="${attr.toLowerCase()}" onclick="generateSkill('${attr}','${s}')">${s}</button>`;
     });
   });
   document.getElementById("skills").innerHTML=html;
@@ -357,7 +363,7 @@ function buildSeverity(){
         Object.keys(t).forEach(sev=> set.add(sev));
       });
     } else {
-      Object.keys(data[type]).forEach(sev=> set.add(sev));
+      Object.keys(data[type]).forEach(sev=> set.add(sev);
     }
   });
 
