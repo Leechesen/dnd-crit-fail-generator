@@ -5,37 +5,30 @@
 <title>KritFailer</title>
 
 <style>
-body {
-  margin:0;
-  font-family:Arial;
-  background:#0e0e0e;
-  color:white;
-}
+body { margin:0; font-family:Arial; background:#0e0e0e; color:white; }
 
 header {
   display:flex;
   justify-content:space-between;
   padding:12px;
   background:#1a1a1a;
-  box-shadow:0 2px 10px rgba(0,0,0,0.5);
 }
 
-.title { color:#ff9800; font-weight:bold; font-size:18px; }
+.title { color:#ff9800; font-weight:bold; }
 
 .container { padding:12px; }
 
 button {
   margin:4px;
-  padding:10px 14px;
+  padding:10px;
   border:none;
   border-radius:10px;
   background:#222;
   color:white;
   cursor:pointer;
-  transition:0.2s;
 }
 
-button:hover { background:#444; transform:scale(1.05); }
+button:hover { background:#444; }
 
 .active { background:#ff9800 !important; }
 
@@ -44,36 +37,10 @@ button:hover { background:#444; transform:scale(1.05); }
   padding:12px;
   margin-top:8px;
   border-radius:12px;
-  box-shadow:0 0 10px rgba(0,0,0,0.4);
-  animation:fadeIn 0.3s ease;
 }
 
-@keyframes fadeIn {
-  from {opacity:0; transform:translateY(10px);}
-  to {opacity:1; transform:translateY(0);}
-}
+.meta { color:#aaa; font-size:12px; }
 
-input {
-  padding:10px;
-  margin:5px;
-  border:none;
-  border-radius:8px;
-}
-
-.room {
-  padding:8px;
-  margin:5px;
-  background:#1a1a1a;
-  border-radius:8px;
-}
-
-.meta {
-  color:#aaa;
-  font-size:12px;
-  margin-bottom:6px;
-}
-
-/* ATTR COLORS */
 .str { background:#8b0000; }
 .dex { background:#006400; }
 .con { background:#444; }
@@ -144,15 +111,6 @@ let room="", name="", myId="", isDM=false;
 let players={}, data={};
 let severityList=[], severity="";
 
-// ===== SESSION =====
-if(localStorage.room){
-  room = localStorage.room;
-  name = localStorage.name;
-  myId = localStorage.myId;
-  isDM = localStorage.isDM==="true";
-  start();
-}
-
 // ===== LOAD JSON =====
 fetch("crit_fails.json").then(r=>r.json()).then(j=>{
   data=j;
@@ -164,80 +122,128 @@ fetch("crit_fails.json").then(r=>r.json()).then(j=>{
 function weightedRandom(pool){
   let total = 0;
   pool.forEach(p=> total += p.weight || 1);
-
   let r = Math.random() * total;
-
   for(let item of pool){
     r -= item.weight || 1;
     if(r <= 0) return item;
   }
-
   return pool[0];
 }
 
-// ===== SEVERITY =====
-function buildSeverity(){
-  const set = new Set();
+// ===== LOBBY =====
+onValue(ref(db,"rooms"), snap=>{
+  const rooms = snap.val() || {};
+  let html="";
 
-  ["Útok","Obrana","Skill"].forEach(type=>{
-    if(!data[type]) return;
-
-    if(type==="Skill"){
-      Object.values(data[type]).forEach(attr=>{
-        Object.values(attr).forEach(skill=>{
-          Object.keys(skill).forEach(sev=> set.add(sev));
-        });
-      });
-    } else if(type==="Útok"){
-      Object.values(data[type]).forEach(t=>{
-        Object.keys(t).forEach(sev=> set.add(sev));
-      });
-    } else {
-      Object.keys(data[type]).forEach(sev=> set.add(sev));
+  Object.keys(rooms).forEach(r=>{
+    if(rooms[r].dm){
+      html += `<div>${r} <button onclick="quickJoin('${r}')">Join</button></div>`;
     }
   });
 
-  severityList = Array.from(set);
-  severity = severityList[0];
-  renderSeverityButtons();
+  document.getElementById("roomsList").innerHTML = html;
+});
+
+function quickJoin(r){
+  document.getElementById("room").value = r;
 }
+window.quickJoin = quickJoin;
 
-function renderSeverityButtons(){
-  let html="";
-  severityList.forEach(sev=>{
-    html += `<button id="sev-${sev}" onclick="setSeverity('${sev}')">${sev}</button>`;
-  });
-  document.getElementById("severityButtons").innerHTML = html;
-  setSeverity(severity);
-}
+// ===== JOIN DM =====
+async function joinDM(){
 
-function setSeverity(level){
-  severity = level;
-  document.querySelectorAll("#severityButtons button").forEach(b=>b.classList.remove("active"));
-  document.getElementById("sev-"+level)?.classList.add("active");
-}
-window.setSeverity = setSeverity;
+  room = val("room");
+  name = val("name");
+  isDM = true;
 
-// ===== SAFE POOL =====
-function getPoolSafe(source){
-  if(!source) return [];
-  if(source[severity]?.length) return source[severity];
+  const roomRef = ref(db, "rooms/" + room);
+  const snap = await get(roomRef);
 
-  for(const key in source){
-    if(source[key]?.length) return source[key];
+  if(snap.exists() && snap.val().dm){
+    alert("DM už existuje");
+    return;
   }
 
-  return [];
+  myId = "DM_" + Date.now();
+
+  await set(roomRef, {
+    dm: myId,
+    players: {
+      [myId]: { name: name + " 👑" }
+    }
+  });
+
+  save();
+  start();
+}
+window.joinDM = joinDM;
+
+// ===== JOIN PLAYER =====
+async function joinPlayer(){
+
+  room = val("room");
+  name = val("name");
+
+  const snap = await get(ref(db,"rooms/"+room));
+
+  if(!snap.exists()){
+    alert("Room neexistuje");
+    return;
+  }
+
+  myId = "P_" + Date.now();
+
+  await set(ref(db,"rooms/"+room+"/players/"+myId),{ name });
+
+  save();
+  start();
+}
+window.joinPlayer = joinPlayer;
+
+// ===== START =====
+function start(){
+
+  document.getElementById("setup").style.display="none";
+  document.getElementById("app").style.display="block";
+
+  if(isDM){
+    document.getElementById("dmPanel").style.display="block";
+    document.getElementById("topButtons").innerHTML =
+      `<button onclick="deleteRoom()">🗑️</button><button onclick="logout()">Logout</button>`;
+  } else {
+    document.getElementById("playerPanel").style.display="block";
+    document.getElementById("roomName").innerText="Room: "+room;
+    document.getElementById("topButtons").innerHTML =
+      `<button onclick="logout()">Logout</button>`;
+  }
+
+  onDisconnect(ref(db,"rooms/"+room+"/players/"+myId)).remove();
+
+  if(isDM){
+    onDisconnect(ref(db,"rooms/"+room)).remove();
+  }
+
+  onValue(ref(db,"rooms/"+room+"/players"), snap=>{
+    players = snap.val() || {};
+    document.getElementById("playersTop").innerText =
+      Object.values(players).map(p=>p.name).join(" | ");
+  });
+
+  listenMessages();
 }
 
 // ===== GENERATE =====
-function generateSkill(attr, skill, btn){
-  render(btn, getPoolSafe(data.Skill?.[attr]?.[skill]), `Skill (${skill})`);
+function getPoolSafe(source){
+  if(!source) return [];
+  if(source[severity]?.length) return source[severity];
+  for(const k in source){
+    if(source[k]?.length) return source[k];
+  }
+  return [];
 }
-window.generateSkill = generateSkill;
 
 function generateAttack(type, btn){
-  render(btn, getPoolSafe(data["Útok"]?.[type]), `Útok (${type})`);
+  render(btn, getPoolSafe(data["Útok"]?.[type]), "Útok");
 }
 window.generateAttack = generateAttack;
 
@@ -246,8 +252,16 @@ function generateDefense(btn){
 }
 window.generateDefense = generateDefense;
 
+function generateSkill(attr, skill, btn){
+  render(btn, getPoolSafe(data.Skill?.[attr]?.[skill]), `Skill (${skill})`);
+}
+window.generateSkill = generateSkill;
+
 // ===== RENDER =====
 function render(btn, pool, label){
+
+  // 🔥 SMAŽ STARÝ VÝSLEDEK
+  document.querySelectorAll(".card").forEach(e=>e.remove());
 
   if(!pool.length){
     alert("Žádná data");
@@ -275,10 +289,6 @@ function render(btn, pool, label){
       ${r.roleplay.join("<br>")}<br><br>
       ${playersHTML}
     `;
-
-    const cards = document.querySelectorAll(".card");
-    if(cards.length > 5) cards[0].remove();
-
   }, 400);
 }
 
@@ -296,57 +306,8 @@ function listenMessages(){
   });
 }
 
-// ===== START =====
-function start(){
-  document.getElementById("setup").style.display="none";
-  document.getElementById("app").style.display="block";
-
-  if(isDM){
-    document.getElementById("dmPanel").style.display="block";
-    document.getElementById("topButtons").innerHTML =
-      `<button onclick="deleteRoom()">🗑️</button><button onclick="logout()">Logout</button>`;
-  } else {
-    document.getElementById("playerPanel").style.display="block";
-    document.getElementById("roomName").innerText="Room: "+room;
-    document.getElementById("topButtons").innerHTML =
-      `<button onclick="logout()">Logout</button>`;
-  }
-
-  onDisconnect(ref(db,"rooms/"+room+"/players/"+myId)).remove();
-
-  onValue(ref(db,"rooms/"+room+"/players"), snap=>{
-    players = snap.val() || {};
-    document.getElementById("playersTop").innerText =
-      Object.values(players).map(p=>p.name).join(" | ");
-  });
-
-  listenMessages();
-}
-
-// ===== LOGIN =====
+// ===== HELPERS =====
 function val(id){ return document.getElementById(id).value; }
-
-async function joinDM(){
-  room = val("room"); name = val("name"); isDM = true;
-  myId = "DM_"+Date.now();
-  await set(ref(db,"rooms/"+room+"/players/"+myId),{ name:name+" 👑" });
-  save(); start();
-}
-window.joinDM = joinDM;
-
-async function joinPlayer(){
-  room = val("room"); name = val("name");
-  myId = "P_"+Date.now();
-  await set(ref(db,"rooms/"+room+"/players/"+myId),{ name });
-  save(); start();
-}
-window.joinPlayer = joinPlayer;
-
-function deleteRoom(){ remove(ref(db,"rooms/"+room)); }
-window.deleteRoom = deleteRoom;
-
-function logout(){ localStorage.clear(); location.reload(); }
-window.logout = logout;
 
 function save(){
   localStorage.room=room;
@@ -354,6 +315,17 @@ function save(){
   localStorage.myId=myId;
   localStorage.isDM=isDM;
 }
+
+function deleteRoom(){
+  remove(ref(db,"rooms/"+room));
+}
+window.deleteRoom = deleteRoom;
+
+function logout(){
+  localStorage.clear();
+  location.reload();
+}
+window.logout = logout;
 
 // ===== SKILLS =====
 function buildSkills(){
@@ -366,6 +338,47 @@ function buildSkills(){
   });
   document.getElementById("skills").innerHTML=html;
 }
+
+// ===== SEVERITY =====
+function buildSeverity(){
+  const set = new Set();
+
+  ["Útok","Obrana","Skill"].forEach(type=>{
+    if(!data[type]) return;
+
+    if(type==="Skill"){
+      Object.values(data[type]).forEach(attr=>{
+        Object.values(attr).forEach(skill=>{
+          Object.keys(skill).forEach(sev=> set.add(sev));
+        });
+      });
+    } else if(type==="Útok"){
+      Object.values(data[type]).forEach(t=>{
+        Object.keys(t).forEach(sev=> set.add(sev));
+      });
+    } else {
+      Object.keys(data[type]).forEach(sev=> set.add(sev));
+    }
+  });
+
+  severityList = Array.from(set);
+  severity = severityList[0];
+
+  let html="";
+  severityList.forEach(sev=>{
+    html += `<button id="sev-${sev}" onclick="setSeverity('${sev}')">${sev}</button>`;
+  });
+
+  document.getElementById("severityButtons").innerHTML = html;
+  setSeverity(severity);
+}
+
+function setSeverity(level){
+  severity = level;
+  document.querySelectorAll("#severityButtons button").forEach(b=>b.classList.remove("active"));
+  document.getElementById("sev-"+level)?.classList.add("active");
+}
+window.setSeverity = setSeverity;
 
 </script>
 
