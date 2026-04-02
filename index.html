@@ -11,20 +11,29 @@ body {
   color: white;
   text-align: center;
 }
+
 button {
   padding: 12px;
-  margin: 5px;
+  margin: 6px;
   border-radius: 10px;
   border: none;
-  font-size: 16px;
+  font-size: 14px;
+  cursor: pointer;
 }
+
 input, select {
   padding: 10px;
   margin: 5px;
 }
+
 .card {
   margin-top: 20px;
-  font-size: 20px;
+  font-size: 18px;
+  white-space: pre-line;
+}
+
+.section {
+  margin-top: 15px;
 }
 </style>
 </head>
@@ -33,6 +42,7 @@ input, select {
 
 <h1>🎲 DnD Crit Fail</h1>
 
+<!-- SETUP -->
 <div id="setup">
   <input id="name" placeholder="Tvoje jméno">
   <input id="room" placeholder="Room code (např. ABC)">
@@ -41,18 +51,23 @@ input, select {
   <button onclick="joinPlayer()">Jsem hráč</button>
 </div>
 
+<!-- DM PANEL -->
 <div id="dmPanel" style="display:none;">
-  <h2>DM Panel</h2>
+  <h2>👑 DM Panel</h2>
+
   <select id="playerSelect"></select>
-  <br>
-  <button onclick="generate()">Generuj</button>
-  <button onclick="send()">Pošli</button>
+
+  <div id="buttons"></div>
+
+  <button onclick="send()">📤 Pošli hráči</button>
+
   <div class="card" id="dmResult">---</div>
 </div>
 
+<!-- PLAYER -->
 <div id="playerView" style="display:none;">
-  <h2>Tvoje událost</h2>
-  <div class="card" id="playerResult">Čekám...</div>
+  <h2>🎭 Tvoje událost</h2>
+  <div class="card" id="playerResult">Čekám na DM...</div>
 </div>
 
 <script type="module">
@@ -60,6 +75,7 @@ input, select {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+// 🔥 TVŮJ FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
   authDomain: "ktit-fail-generator.firebaseapp.com",
@@ -73,6 +89,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// =========================
+// JSON LOAD
+// =========================
+
 let critData = {};
 
 fetch("crit_fails.json")
@@ -80,22 +100,32 @@ fetch("crit_fails.json")
   .then(data => {
     critData = data;
     console.log("JSON loaded");
+    buildButtons();
   });
+
+// =========================
 
 let myId = "";
 let room = "";
 let currentResult = "";
 
+// =========================
+// JOIN
+// =========================
+
 window.joinDM = function() {
   room = document.getElementById("room").value;
+
   document.getElementById("setup").style.display = "none";
   document.getElementById("dmPanel").style.display = "block";
+
   listenPlayers();
 }
 
 window.joinPlayer = function() {
   room = document.getElementById("room").value;
   const name = document.getElementById("name").value;
+
   myId = name + "_" + Math.floor(Math.random()*1000);
 
   set(ref(db, 'rooms/' + room + '/players/' + myId), {
@@ -113,9 +143,14 @@ window.joinPlayer = function() {
   });
 }
 
+// =========================
+// PLAYERS
+// =========================
+
 function listenPlayers() {
   onValue(ref(db, 'rooms/' + room + '/players'), (snapshot) => {
     const players = snapshot.val() || {};
+
     const select = document.getElementById("playerSelect");
     select.innerHTML = "";
 
@@ -128,21 +163,64 @@ function listenPlayers() {
   });
 }
 
-window.generate = function() {
-  const options = [
-    "Upadl jsi",
-    "Ztrácíš rovnováhu",
-    "Zbraň ti spadla",
-    "Zakopl jsi",
-    "Prozradil ses hlukem"
-  ];
-  currentResult = options[Math.floor(Math.random()*options.length)];
+// =========================
+// BUTTONS (DYNAMIC)
+// =========================
+
+function buildButtons() {
+  const container = document.getElementById("buttons");
+  container.innerHTML = "";
+
+  if (!critData["Útok"]) return;
+
+  const section = document.createElement("div");
+  section.className = "section";
+  section.innerHTML = "<h3>⚔️ Útok (Melee)</h3>";
+
+  ["Lehký", "Střední", "Těžký"].forEach(severity => {
+    const btn = document.createElement("button");
+
+    btn.innerText = severity;
+
+    btn.onclick = () => generate("Útok", "Melee", severity);
+
+    section.appendChild(btn);
+  });
+
+  container.appendChild(section);
+}
+
+// =========================
+// GENERATE
+// =========================
+
+function generate(type, sub, severity) {
+
+  const pool = critData[type][sub][severity];
+
+  if (!pool || pool.length === 0) {
+    alert("Žádná data");
+    return;
+  }
+
+  const random = pool[Math.floor(Math.random() * pool.length)];
+
+  currentResult =
+    `🎯 ${type} → ${sub} (${severity})\n\n` +
+    `💥 ${random.effect}\n\n` +
+    `🎭 ${(random.roleplay || []).join(" ")}`;
+
   document.getElementById("dmResult").innerText = currentResult;
 }
 
+// =========================
+// SEND
+// =========================
+
 window.send = function() {
   const playerId = document.getElementById("playerSelect").value;
-  if (!playerId) return;
+
+  if (!playerId || !currentResult) return;
 
   set(ref(db, 'rooms/' + room + '/messages/' + playerId), {
     value: currentResult,
