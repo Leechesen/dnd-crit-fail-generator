@@ -115,7 +115,7 @@ let myId = "";
 let room = "";
 let currentResult = "";
 let selectedPlayer = null;
-let lastPool = null;
+let lastState = null;
 
 // =========================
 // JOIN
@@ -207,7 +207,7 @@ function buildButtons() {
 }
 
 // =========================
-// GENERATE (GLOBAL FIX)
+// GENERATE
 // =========================
 
 window.generate = function(type, sub, severity) {
@@ -219,9 +219,14 @@ window.generate = function(type, sub, severity) {
     return;
   }
 
-  lastPool = pool;
-
   const random = pool[Math.floor(Math.random() * pool.length)];
+
+  lastState = {
+    pool: pool,
+    type: type,
+    sub: sub,
+    severity: severity
+  };
 
   currentResult =
     `🎯 ${type} → ${sub} (${severity})\n\n` +
@@ -232,16 +237,21 @@ window.generate = function(type, sub, severity) {
 }
 
 // =========================
-// REROLL (GLOBAL FIX)
+// REROLL (FIXED)
 // =========================
 
 window.reroll = function() {
-  if (!lastPool) return;
+  if (!lastState || !lastState.pool) {
+    alert("Nejdřív musíš něco vygenerovat!");
+    return;
+  }
 
-  const random = lastPool[Math.floor(Math.random() * lastPool.length)];
+  const pool = lastState.pool;
+
+  const random = pool[Math.floor(Math.random() * pool.length)];
 
   currentResult =
-    `🔄 Znovu\n\n` +
+    `🎯 ${lastState.type} → ${lastState.sub} (${lastState.severity})\n\n` +
     `💥 ${random.effect}\n\n` +
     `🎭 ${(random.roleplay || []).join(" ")}`;
 
