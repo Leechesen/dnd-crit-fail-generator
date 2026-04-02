@@ -19,17 +19,21 @@ button {
   border: none;
   font-size: 14px;
   cursor: pointer;
+  background: #222;
+  color: white;
 }
 
-input, select {
-  padding: 10px;
-  margin: 5px;
+button:hover {
+  background: #444;
 }
 
 .card {
   margin-top: 20px;
   font-size: 18px;
   white-space: pre-line;
+  padding: 15px;
+  border-radius: 12px;
+  background: #1a1a1a;
 }
 
 .section {
@@ -55,13 +59,15 @@ input, select {
 <div id="dmPanel" style="display:none;">
   <h2>👑 DM Panel</h2>
 
-  <select id="playerSelect"></select>
+  <div id="players"></div>
 
   <div id="buttons"></div>
 
   <button onclick="send()">📤 Pošli hráči</button>
 
   <div class="card" id="dmResult">---</div>
+
+  <button onclick="reroll()">🔄 Generuj znovu</button>
 </div>
 
 <!-- PLAYER -->
@@ -75,7 +81,7 @@ input, select {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// 🔥 TVŮJ FIREBASE CONFIG
+// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
   authDomain: "ktit-fail-generator.firebaseapp.com",
@@ -108,6 +114,8 @@ fetch("crit_fails.json")
 let myId = "";
 let room = "";
 let currentResult = "";
+let selectedPlayer = null;
+let lastParams = null;
 
 // =========================
 // JOIN
@@ -144,27 +152,35 @@ window.joinPlayer = function() {
 }
 
 // =========================
-// PLAYERS
+// PLAYERS (BUTTONS)
 // =========================
 
 function listenPlayers() {
   onValue(ref(db, 'rooms/' + room + '/players'), (snapshot) => {
     const players = snapshot.val() || {};
+    const container = document.getElementById("players");
 
-    const select = document.getElementById("playerSelect");
-    select.innerHTML = "";
+    container.innerHTML = "";
 
     Object.keys(players).forEach(id => {
-      const option = document.createElement("option");
-      option.value = id;
-      option.text = players[id].name;
-      select.appendChild(option);
+      const btn = document.createElement("button");
+
+      btn.innerText = players[id].name;
+
+      btn.onclick = () => {
+        selectedPlayer = id;
+
+        document.querySelectorAll("#players button").forEach(b => b.style.background = "#222");
+        btn.style.background = "#4CAF50";
+      };
+
+      container.appendChild(btn);
     });
   });
 }
 
 // =========================
-// BUTTONS (DYNAMIC)
+// BUTTONS (ÚTOK)
 // =========================
 
 function buildButtons() {
@@ -196,6 +212,8 @@ function buildButtons() {
 
 function generate(type, sub, severity) {
 
+  lastParams = { type, sub, severity };
+
   const pool = critData[type][sub][severity];
 
   if (!pool || pool.length === 0) {
@@ -214,15 +232,22 @@ function generate(type, sub, severity) {
 }
 
 // =========================
+// REROLL
+// =========================
+
+function reroll() {
+  if (!lastParams) return;
+  generate(lastParams.type, lastParams.sub, lastParams.severity);
+}
+
+// =========================
 // SEND
 // =========================
 
 window.send = function() {
-  const playerId = document.getElementById("playerSelect").value;
+  if (!selectedPlayer || !currentResult) return;
 
-  if (!playerId || !currentResult) return;
-
-  set(ref(db, 'rooms/' + room + '/messages/' + playerId), {
+  set(ref(db, 'rooms/' + room + '/messages/' + selectedPlayer), {
     value: currentResult,
     time: Date.now()
   });
