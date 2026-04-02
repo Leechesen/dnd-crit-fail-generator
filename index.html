@@ -12,9 +12,7 @@ body {
   text-align: center;
 }
 
-h1 {
-  color: #ff9800; /* 🔥 ORANŽOVÝ NADPIS */
-}
+h1 { color: #ff9800; }
 
 input {
   padding: 8px;
@@ -82,7 +80,6 @@ button:hover { background: #444; }
   <button onclick="deleteRoomManual()">🧹 Smazat room</button>
 
   <div id="players"></div>
-  <div id="severity"></div>
   <div id="buttons"></div>
 </div>
 
@@ -110,13 +107,10 @@ const db = getDatabase(app);
 let room = "";
 let myId = "";
 let currentPlayers = {};
-let currentSeverity = "Lehký";
-let lastState = null;
-let activeContainer = null;
 let currentResult = "";
 
 // =========================
-// LOBBY (FILTER CLEAN)
+// LOBBY
 // =========================
 
 function loadRooms() {
@@ -128,7 +122,6 @@ function loadRooms() {
 
     Object.keys(rooms).forEach(r => {
 
-      // ❌ FILTR - ignoruj rozbité roomky
       if (!rooms[r].createdAt) return;
 
       const div = document.createElement("div");
@@ -161,33 +154,7 @@ function listenRoomStatus() {
 }
 
 // =========================
-// CLEANUP
-// =========================
-
-function deleteRoomIfEmpty() {
-  const roomRef = ref(db, 'rooms/' + room);
-
-  onValue(roomRef, (snapshot) => {
-    const data = snapshot.val();
-    if (!data) return;
-
-    const players = data.players;
-    const createdAt = data.createdAt || 0;
-    const age = Date.now() - createdAt;
-
-    if ((!players || Object.keys(players).length === 0) && age > 10000) {
-      set(roomRef, null);
-    }
-
-  }, { onlyOnce: true });
-}
-
-setInterval(() => {
-  if (room) deleteRoomIfEmpty();
-}, 10000);
-
-// =========================
-// JOIN DM
+// JOIN DM (🔥 AUTO JOIN)
 // =========================
 
 window.joinDM = function() {
@@ -210,6 +177,7 @@ window.joinDM = function() {
   set(playerRef, { name: name + " 👑" });
   onDisconnect(playerRef).remove();
 
+  // 🔥 AUTO PŘIPOJENÍ DO PANELU
   localStorage.setItem("role", "dm");
   localStorage.setItem("room", room);
   localStorage.setItem("id", myId);
@@ -222,22 +190,25 @@ window.joinDM = function() {
 }
 
 // =========================
-// JOIN PLAYER
+// JOIN PLAYER (🔥 PASSWORD FIX)
 // =========================
 
 window.joinRoom = async function(r) {
   const name = document.getElementById("name").value;
   if (!name) return alert("Zadej jméno");
 
-  const pass = prompt("Zadej heslo");
-
   const snap = await get(ref(db, 'rooms/' + r));
   const data = snap.val();
 
   if (!data) return alert("Room neexistuje");
 
-  if (data.password && data.password !== pass) {
-    return alert("Špatné heslo");
+  // 🔥 pokud JE heslo → ptáme se
+  if (data.password && data.password !== "") {
+    const pass = prompt("Zadej heslo");
+
+    if (data.password !== pass) {
+      return alert("Špatné heslo");
+    }
   }
 
   room = r;
@@ -287,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // =========================
-// PLAYERS LIST
+// PLAYERS
 // =========================
 
 function listenPlayers() {
@@ -317,26 +288,15 @@ function listenPlayerMessages() {
 }
 
 // =========================
-// GENERATE (🔥 DM není v targetu)
+// GENERATE
 // =========================
 
-window.generate = function(type, sub, btn) {
+window.generate = function(text) {
 
-  let pool;
+  currentResult = text;
 
-  if (type === "Útok") pool = critData[type][sub][currentSeverity];
-  else if (type === "Obrana") pool = critData[type][currentSeverity];
-  else pool = critData[type][sub.attr][sub.skill][currentSeverity];
-
-  const random = pool[Math.floor(Math.random() * pool.length)];
-
-  currentResult = random.effect;
-
-  if (activeContainer) activeContainer.remove();
-
-  // 🔥 FILTER – odstraní DM z targetů
   const playersHTML = Object.entries(currentPlayers)
-    .filter(([id, p]) => !p.name.includes("👑"))
+    .filter(([id, p]) => !p.name.includes("👑")) // 🔥 DM FILTER
     .map(([id,p]) => `<button class="player-btn" onclick="sendTo('${id}')">${p.name}</button>`)
     .join("");
 
@@ -344,13 +304,12 @@ window.generate = function(type, sub, btn) {
   box.className = "card";
 
   box.innerHTML = `
-    ${random.effect}
+    ${text}
     <br><br>
     ${playersHTML}
   `;
 
-  btn.parentNode.insertBefore(box, btn.nextSibling);
-  activeContainer = box;
+  document.getElementById("buttons").appendChild(box);
 }
 
 // =========================
@@ -362,6 +321,25 @@ window.sendTo = function(playerId) {
     value: currentResult,
     time: Date.now()
   });
+}
+
+// =========================
+// LOGOUT
+// =========================
+
+window.logout = function() {
+  localStorage.clear();
+  location.reload();
+}
+
+// =========================
+// DELETE ROOM
+// =========================
+
+window.deleteRoomManual = function() {
+  if (confirm("Smazat room?")) {
+    set(ref(db, 'rooms/' + room), null);
+  }
 }
 
 </script>
