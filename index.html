@@ -50,7 +50,6 @@ button:hover { background: #444; }
 
 .logout { background: #aa3333; }
 .player-btn { background: #2a3a5a; }
-.sev-active { background: #ff9800 !important; }
 </style>
 </head>
 
@@ -94,7 +93,7 @@ button:hover { background: #444; }
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, update, onValue, get, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, set, onValue, get, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
@@ -153,7 +152,7 @@ function listenRoomStatus() {
 }
 
 // =========================
-// JOIN DM (FIXED)
+// JOIN DM (🔥 FIXED)
 // =========================
 
 window.joinDM = async function() {
@@ -167,18 +166,18 @@ window.joinDM = async function() {
 
   myId = "DM_" + Math.random();
 
-  const roomRef = ref(db, 'rooms/' + room);
-
-  // 🔥 FIX: update místo set
-  await update(roomRef, {
+  // 🔥 vše uložíme najednou
+  await set(ref(db, 'rooms/' + room), {
+    createdAt: Date.now(),
     password: password || "",
-    createdAt: Date.now()
+    players: {
+      [myId]: {
+        name: name + " 👑"
+      }
+    }
   });
 
-  const playerRef = ref(db, 'rooms/' + room + '/players/' + myId);
-  await set(playerRef, { name: name + " 👑" });
-
-  onDisconnect(playerRef).remove();
+  onDisconnect(ref(db, 'rooms/' + room + '/players/' + myId)).remove();
 
   localStorage.setItem("role", "dm");
   localStorage.setItem("room", room);
@@ -216,6 +215,7 @@ window.joinRoom = async function(r) {
 
   const playerRef = ref(db, 'rooms/' + room + '/players/' + myId);
   set(playerRef, { name: name });
+
   onDisconnect(playerRef).remove();
 
   localStorage.setItem("role", "player");
