@@ -139,7 +139,7 @@ fetch("crit_fails.json").then(r=>r.json()).then(j=>{
   buildSkills();
 });
 
-// ===== SEVERITY SYSTEM =====
+// ===== DYNAMIC SEVERITY =====
 function buildSeverity(){
 
   const set = new Set();
@@ -163,7 +163,6 @@ function buildSeverity(){
   }
 
   severityList = Array.from(set);
-
   severity = severityList[0];
 
   renderSeverityButtons();
@@ -191,10 +190,27 @@ function setSeverity(level){
     b.classList.remove("active");
   });
 
-  const btn = document.getElementById("sev-"+level);
-  if(btn) btn.classList.add("active");
+  document.getElementById("sev-"+level)?.classList.add("active");
 }
 window.setSeverity = setSeverity;
+
+// ===== FALLBACK SYSTEM =====
+function getPoolSafe(source){
+
+  if(!source) return [];
+
+  if(source[severity] && source[severity].length > 0){
+    return source[severity];
+  }
+
+  for(const key in source){
+    if(source[key] && source[key].length > 0){
+      return source[key];
+    }
+  }
+
+  return [];
+}
 
 // ===== LOBBY =====
 function quickJoin(r){
@@ -308,19 +324,19 @@ function listenRoom(){
 
 // ===== GENERATE =====
 function generateSkill(attr, skill, btn){
-  const pool = data.Skill?.[attr]?.[skill]?.[severity] || [];
+  const pool = getPoolSafe(data.Skill?.[attr]?.[skill]);
   render(btn, pool, `Skill (${skill})`);
 }
 window.generateSkill = generateSkill;
 
 function generateAttack(type, btn){
-  const pool = data["Útok"]?.[type]?.[severity] || [];
+  const pool = getPoolSafe(data["Útok"]?.[type]);
   render(btn, pool, `Útok (${type})`);
 }
 window.generateAttack = generateAttack;
 
 function generateDefense(btn){
-  const pool = data["Obrana"]?.[severity] || [];
+  const pool = getPoolSafe(data["Obrana"]);
   render(btn, pool, "Obrana");
 }
 window.generateDefense = generateDefense;
@@ -331,7 +347,7 @@ function render(btn, pool, label){
   document.querySelectorAll(".card").forEach(e=>e.remove());
 
   if(!pool || pool.length === 0){
-    alert("Žádná data pro tuto obtížnost");
+    alert("Žádná data vůbec");
     return;
   }
 
