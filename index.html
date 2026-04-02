@@ -12,6 +12,10 @@ body {
   text-align: center;
 }
 
+h1 {
+  color: #ff9800; /* 🔥 ORANŽOVÝ NADPIS */
+}
+
 input {
   padding: 8px;
   margin: 4px;
@@ -56,7 +60,6 @@ button:hover { background: #444; }
 
 <h1>🎲 KritFailer</h1>
 
-<!-- SETUP / LOBBY -->
 <div id="setup">
 
   <input id="name" placeholder="Tvoje jméno"><br>
@@ -72,7 +75,6 @@ button:hover { background: #444; }
 
 </div>
 
-<!-- DM PANEL -->
 <div id="dmPanel" style="display:none;">
   <h2>👑 DM Panel</h2>
 
@@ -84,7 +86,6 @@ button:hover { background: #444; }
   <div id="buttons"></div>
 </div>
 
-<!-- PLAYER -->
 <div id="playerView" style="display:none;">
   <h2>🎭 Tvoje událost</h2>
 
@@ -106,33 +107,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// =========================
-// STATE
-// =========================
-
-let critData = {};
 let room = "";
 let myId = "";
+let currentPlayers = {};
 let currentSeverity = "Lehký";
 let lastState = null;
 let activeContainer = null;
 let currentResult = "";
-let currentPlayers = {};
 
 // =========================
-// LOAD JSON
-// =========================
-
-fetch("crit_fails.json")
-  .then(res => res.json())
-  .then(data => {
-    critData = data;
-    buildSeverity();
-    buildButtons();
-  });
-
-// =========================
-// LOBBY
+// LOBBY (FILTER CLEAN)
 // =========================
 
 function loadRooms() {
@@ -143,6 +127,10 @@ function loadRooms() {
     const rooms = snapshot.val() || {};
 
     Object.keys(rooms).forEach(r => {
+
+      // ❌ FILTR - ignoruj rozbité roomky
+      if (!rooms[r].createdAt) return;
+
       const div = document.createElement("div");
       div.className = "room";
 
@@ -203,9 +191,13 @@ setInterval(() => {
 // =========================
 
 window.joinDM = function() {
-  const name = document.getElementById("name").value || "DM";
   room = document.getElementById("room").value;
+  const name = document.getElementById("name").value || "DM";
   const password = document.getElementById("password").value;
+
+  if (!room || room.trim() === "") {
+    return alert("Zadej název místnosti");
+  }
 
   myId = "DM_" + Math.random();
 
@@ -295,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // =========================
-// PLAYERS
+// PLAYERS LIST
 // =========================
 
 function listenPlayers() {
@@ -325,86 +317,7 @@ function listenPlayerMessages() {
 }
 
 // =========================
-// LOGOUT
-// =========================
-
-window.logout = function() {
-  deleteRoomIfEmpty();
-  localStorage.clear();
-  location.reload();
-}
-
-// =========================
-// DELETE ROOM
-// =========================
-
-window.deleteRoomManual = function() {
-  if (confirm("Smazat room?")) {
-    set(ref(db, 'rooms/' + room), null);
-  }
-}
-
-// =========================
-// SEVERITY
-// =========================
-
-function buildSeverity() {
-  const div = document.getElementById("severity");
-  div.innerHTML = "";
-
-  ["Lehký","Střední","Těžký","Sranda"].forEach(sev => {
-    const btn = document.createElement("button");
-    btn.innerText = sev;
-
-    if (sev === currentSeverity) btn.classList.add("sev-active");
-
-    btn.onclick = () => {
-      currentSeverity = sev;
-      buildSeverity();
-    };
-
-    div.appendChild(btn);
-  });
-}
-
-// =========================
-// BUTTONS
-// =========================
-
-function buildButtons() {
-  const container = document.getElementById("buttons");
-  container.innerHTML = "";
-
-  if (critData["Útok"]) {
-    Object.keys(critData["Útok"]).forEach(type => {
-      const btn = document.createElement("button");
-      btn.innerText = type;
-      btn.onclick = (e) => generate("Útok", type, e.target);
-      container.appendChild(btn);
-    });
-  }
-
-  if (critData["Obrana"]) {
-    const btn = document.createElement("button");
-    btn.innerText = "Obrana";
-    btn.onclick = (e) => generate("Obrana", null, e.target);
-    container.appendChild(btn);
-  }
-
-  if (critData["Skill"]) {
-    Object.keys(critData["Skill"]).forEach(attr => {
-      Object.keys(critData["Skill"][attr]).forEach(skill => {
-        const btn = document.createElement("button");
-        btn.innerText = skill;
-        btn.onclick = (e) => generate("Skill", {attr, skill}, e.target);
-        container.appendChild(btn);
-      });
-    });
-  }
-}
-
-// =========================
-// GENERATE
+// GENERATE (🔥 DM není v targetu)
 // =========================
 
 window.generate = function(type, sub, btn) {
@@ -415,24 +328,25 @@ window.generate = function(type, sub, btn) {
   else if (type === "Obrana") pool = critData[type][currentSeverity];
   else pool = critData[type][sub.attr][sub.skill][currentSeverity];
 
-  if (!pool) return;
-
   const random = pool[Math.floor(Math.random() * pool.length)];
 
-  lastState = { pool, type, sub };
-
-  currentResult =
-    `💥 ${random.effect}\n\n🎭 ${(random.roleplay || []).join(" ")}`;
+  currentResult = random.effect;
 
   if (activeContainer) activeContainer.remove();
+
+  // 🔥 FILTER – odstraní DM z targetů
+  const playersHTML = Object.entries(currentPlayers)
+    .filter(([id, p]) => !p.name.includes("👑"))
+    .map(([id,p]) => `<button class="player-btn" onclick="sendTo('${id}')">${p.name}</button>`)
+    .join("");
 
   const box = document.createElement("div");
   box.className = "card";
 
   box.innerHTML = `
-    ${currentResult}
+    ${random.effect}
     <br><br>
-    <button onclick="reroll()">🔄 Generuj znovu</button>
+    ${playersHTML}
   `;
 
   btn.parentNode.insertBefore(box, btn.nextSibling);
@@ -440,22 +354,14 @@ window.generate = function(type, sub, btn) {
 }
 
 // =========================
-// REROLL
+// SEND
 // =========================
 
-window.reroll = function() {
-  if (!lastState) return;
-
-  const random = lastState.pool[Math.floor(Math.random() * lastState.pool.length)];
-
-  currentResult =
-    `💥 ${random.effect}\n\n🎭 ${(random.roleplay || []).join(" ")}`;
-
-  activeContainer.innerHTML = `
-    ${currentResult}
-    <br><br>
-    <button onclick="reroll()">🔄 Generuj znovu</button>
-  `;
+window.sendTo = function(playerId) {
+  set(ref(db, 'rooms/' + room + '/messages/' + playerId), {
+    value: currentResult,
+    time: Date.now()
+  });
 }
 
 </script>
