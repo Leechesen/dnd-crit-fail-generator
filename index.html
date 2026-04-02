@@ -5,48 +5,30 @@
 <title>KritFailer</title>
 
 <style>
-body {
-  margin:0;
-  font-family:Arial;
-  background:#0e0e0e;
-  color:white;
-}
+body { margin:0; font-family:Arial; background:#0e0e0e; color:white; }
 
 header {
-  background:#1a1a1a;
-  padding:10px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
+  padding:10px;
+  background:#1a1a1a;
 }
 
-.title {
-  color:#ff9800;
-  font-weight:bold;
-  font-size:20px;
-}
+.title { color:#ff9800; font-weight:bold; }
 
-.players {
-  font-size:14px;
-}
-
-.container {
-  padding:15px;
-}
+.container { padding:10px; }
 
 button {
-  padding:8px 12px;
   margin:4px;
-  border-radius:8px;
+  padding:8px 12px;
   border:none;
+  border-radius:8px;
   background:#222;
   color:white;
   cursor:pointer;
 }
 
 button:hover { background:#444; }
-
-.selected { background:#ff9800; }
 
 .card {
   background:#1a1a1a;
@@ -58,8 +40,8 @@ button:hover { background:#444; }
 input {
   padding:10px;
   margin:5px;
-  border-radius:8px;
   border:none;
+  border-radius:8px;
 }
 </style>
 </head>
@@ -68,10 +50,8 @@ input {
 
 <header>
   <div class="title">🎲 KritFailer</div>
-  <div id="playersTop" class="players"></div>
-  <div>
-    <button onclick="logout()">Logout</button>
-  </div>
+  <div id="playersTop"></div>
+  <button onclick="logout()">Logout</button>
 </header>
 
 <div id="setup" class="container">
@@ -83,7 +63,9 @@ input {
 
 <div id="app" class="container" style="display:none;">
 
-  <div id="dmControls" style="display:none;">
+  <!-- DM PANEL -->
+  <div id="dmPanel" style="display:none;">
+
     <button onclick="setSeverity('Lehký')" id="sLehký">Lehký</button>
     <button onclick="setSeverity('Střední')" id="sStřední">Střední</button>
     <button onclick="setSeverity('Těžký')" id="sTěžký">Těžký</button>
@@ -91,15 +73,21 @@ input {
 
     <br>
 
-    <button onclick="generateAttack()">⚔️ Útok</button>
-    <button onclick="generateDefense()">🛡️ Obrana</button>
+    <button onclick="generateAttack('Melee', this)">⚔️ Melee</button>
+    <button onclick="generateAttack('Ranged', this)">🏹 Ranged</button>
+    <button onclick="generateDefense(this)">🛡️ Obrana</button>
     <button onclick="deleteRoom()">🗑️ Smazat room</button>
+
+    <h3>🎲 Skilly</h3>
+    <div id="skills"></div>
+
   </div>
 
-  <h3>🎲 Skilly</h3>
-  <div id="skills"></div>
-
-  <div id="playerBox"></div>
+  <!-- PLAYER PANEL -->
+  <div id="playerPanel" style="display:none;">
+    <h3 id="roomName"></h3>
+    <div id="playerResult">Čekám na výsledek...</div>
+  </div>
 
 </div>
 
@@ -119,15 +107,16 @@ const db = getDatabase(app);
 // ================= STATE =================
 
 let room="", name="", myId="", isDM=false;
-let players={}, data={}, severity="Lehký", currentPool=[];
+let players={}, data={}, severity="Lehký";
 
 // ================= SESSION =================
 
 if(localStorage.room){
   room = localStorage.room;
   name = localStorage.name;
+  myId = localStorage.myId;
   isDM = localStorage.isDM==="true";
-  reconnect();
+  start();
 }
 
 // ================= LOAD JSON =================
@@ -137,62 +126,48 @@ fetch("crit_fails.json").then(r=>r.json()).then(j=>{
   buildSkills();
 });
 
-// ================= ID =================
-
-function makeId(prefix){
-  return prefix+"_"+Date.now();
-}
-
 // ================= LOGIN =================
 
 window.joinDM = async function(){
 
-  room = roomInput();
-  name = nameInput();
+  room = val("room");
+  name = val("name");
   isDM = true;
 
   const snap = await get(ref(db,"rooms/"+room+"/players"));
-  const playersData = snap.val();
+  const p = snap.val();
 
-  if(playersData){
-    if(Object.values(playersData).some(p=>p.name.includes("👑"))){
-      alert("DM už existuje");
-      return;
-    }
+  if(p && Object.values(p).some(x=>x.name.includes("👑"))){
+    alert("DM už existuje");
+    return;
   }
 
-  myId = makeId("DM");
+  myId = "DM_"+Date.now();
 
-  await set(ref(db,"rooms/"+room+"/players/"+myId),{
-    name:name+" 👑"
-  });
+  await set(ref(db,"rooms/"+room+"/players/"+myId),{ name:name+" 👑" });
 
-  saveSession();
+  save();
   start();
 }
 
 window.joinPlayer = async function(){
 
-  room = roomInput();
-  name = nameInput();
+  room = val("room");
+  name = val("name");
 
   const snap = await get(ref(db,"rooms/"+room+"/players"));
-  const playersData = snap.val() || {};
+  const p = snap.val() || {};
 
-  if(Object.values(playersData).some(p=>p.name===name)){
-    myId = Object.keys(playersData).find(k=>playersData[k].name===name);
+  const existing = Object.entries(p).find(([id,x])=>x.name===name);
+
+  if(existing){
+    myId = existing[0];
   } else {
-    myId = makeId("P");
+    myId = "P_"+Date.now();
     await set(ref(db,"rooms/"+room+"/players/"+myId),{ name });
   }
 
-  saveSession();
-  start();
-}
-
-// ================= RECONNECT =================
-
-function reconnect(){
+  save();
   start();
 }
 
@@ -203,11 +178,17 @@ function start(){
   document.getElementById("setup").style.display="none";
   document.getElementById("app").style.display="block";
 
-  if(isDM) document.getElementById("dmControls").style.display="block";
+  if(isDM){
+    document.getElementById("dmPanel").style.display="block";
+  } else {
+    document.getElementById("playerPanel").style.display="block";
+    document.getElementById("roomName").innerText = "Room: "+room;
+  }
 
   onDisconnect(ref(db,"rooms/"+room+"/players/"+myId)).remove();
 
   listenPlayers();
+  listenRoom();
   listenMessages();
 }
 
@@ -216,9 +197,8 @@ function start(){
 function listenPlayers(){
   onValue(ref(db,"rooms/"+room+"/players"), snap=>{
     players = snap.val() || {};
-
-    const list = Object.values(players).map(p=>p.name).join(" | ");
-    document.getElementById("playersTop").innerText = list;
+    document.getElementById("playersTop").innerText =
+      Object.values(players).map(p=>p.name).join(" | ");
 
     if(Object.keys(players).length===0){
       remove(ref(db,"rooms/"+room));
@@ -226,30 +206,46 @@ function listenPlayers(){
   });
 }
 
+// ================= ROOM DELETE =================
+
+function listenRoom(){
+  onValue(ref(db,"rooms/"+room), snap=>{
+    if(!snap.exists()){
+      alert("Room ukončena");
+      logout();
+    }
+  });
+}
+
 // ================= GENERATE =================
 
 window.generateSkill = function(attr, skill, btn){
+  render(btn, data.Skill[attr][skill][severity]);
+}
 
-  currentPool = data.Skill[attr][skill][severity] || [];
+window.generateAttack = function(type, btn){
+  render(btn, data["Útok"][type][severity]);
+}
 
-  const r = rand(currentPool);
-
-  renderUnder(btn,r);
+window.generateDefense = function(btn){
+  render(btn, data["Obrana"][severity]);
 }
 
 // ================= RENDER =================
 
-function renderUnder(btn, r){
+function render(btn, pool){
 
   if(btn.nextElementSibling?.classList.contains("card")){
     btn.nextElementSibling.remove();
   }
 
-  let html="";
+  const r = pool[Math.floor(Math.random()*pool.length)];
+
+  let playersHTML="";
 
   Object.entries(players).forEach(([id,p])=>{
     if(!p.name.includes("👑")){
-      html+=`<button onclick="send('${id}', '${r.effect}')">${p.name}</button>`;
+      playersHTML += `<button onclick="send('${id}','${r.effect}')">${p.name}</button>`;
     }
   });
 
@@ -258,21 +254,15 @@ function renderUnder(btn, r){
   div.innerHTML=`
     <b>${r.effect}</b><br>
     ${r.roleplay.join("<br>")}<br><br>
-    <button onclick="reroll(this)">🔄</button><br>
-    ${html}
+    ${playersHTML}
   `;
 
   btn.after(div);
 }
 
-window.reroll=function(btn){
-  const r=rand(currentPool);
-  btn.parentNode.innerHTML=r.effect;
-}
-
 // ================= SEND =================
 
-window.send = function(pid, text){
+window.send = function(pid,text){
   set(ref(db,"rooms/"+room+"/msg/"+pid), text);
 }
 
@@ -281,7 +271,7 @@ window.send = function(pid, text){
 function listenMessages(){
   onValue(ref(db,"rooms/"+room+"/msg/"+myId), snap=>{
     if(snap.val()){
-      document.getElementById("playerBox").innerText=snap.val();
+      document.getElementById("playerResult").innerText = snap.val();
     }
   });
 }
@@ -290,7 +280,6 @@ function listenMessages(){
 
 window.deleteRoom = function(){
   remove(ref(db,"rooms/"+room));
-  logout();
 }
 
 // ================= LOGOUT =================
@@ -302,21 +291,12 @@ window.logout = function(){
 
 // ================= HELPERS =================
 
-function rand(arr){
-  return arr[Math.floor(Math.random()*arr.length)];
-}
+function val(id){ return document.getElementById(id).value; }
 
-function nameInput(){
-  return document.getElementById("name").value;
-}
-
-function roomInput(){
-  return document.getElementById("room").value;
-}
-
-function saveSession(){
+function save(){
   localStorage.room=room;
   localStorage.name=name;
+  localStorage.myId=myId;
   localStorage.isDM=isDM;
 }
 
