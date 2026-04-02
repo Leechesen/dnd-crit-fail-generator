@@ -30,9 +30,7 @@ button {
 
 button:hover { background:#444; }
 
-.active {
-  background:#ff9800 !important;
-}
+.active { background:#ff9800 !important; }
 
 .card {
   background:#1a1a1a;
@@ -130,7 +128,7 @@ let room="", name="", myId="", isDM=false;
 let players={}, data={}, severity="Lehký";
 
 // ===== SEVERITY =====
-window.setSeverity = function(level){
+function setSeverity(level){
   severity = level;
 
   document.querySelectorAll("#severityButtons button").forEach(b=>{
@@ -139,6 +137,7 @@ window.setSeverity = function(level){
 
   document.getElementById("sev-"+level).classList.add("active");
 }
+window.setSeverity = setSeverity;
 
 // ===== SESSION =====
 if(localStorage.room){
@@ -156,6 +155,11 @@ fetch("crit_fails.json").then(r=>r.json()).then(j=>{
 });
 
 // ===== LOBBY =====
+function quickJoin(r){
+  document.getElementById("room").value = r;
+}
+window.quickJoin = quickJoin;
+
 onValue(ref(db,"rooms"), snap=>{
   const rooms = snap.val() || {};
   let html="";
@@ -166,12 +170,8 @@ onValue(ref(db,"rooms"), snap=>{
   document.getElementById("roomsList").innerHTML = html;
 });
 
-window.quickJoin = function(r){
-  document.getElementById("room").value = r;
-}
-
 // ===== LOGIN =====
-window.joinDM = async function(){
+async function joinDM(){
 
   room = val("room");
   name = val("name");
@@ -192,8 +192,9 @@ window.joinDM = async function(){
   save();
   start();
 }
+window.joinDM = joinDM;
 
-window.joinPlayer = async function(){
+async function joinPlayer(){
 
   room = val("room");
   name = val("name");
@@ -220,6 +221,7 @@ window.joinPlayer = async function(){
   save();
   start();
 }
+window.joinPlayer = joinPlayer;
 
 // ===== START =====
 function start(){
@@ -264,17 +266,20 @@ function listenRoom(){
 }
 
 // ===== GENERATE =====
-window.generateSkill = function(attr, skill, btn){
+function generateSkill(attr, skill, btn){
   render(btn, data.Skill?.[attr]?.[skill]?.[severity] || [], `Skill (${skill})`);
 }
+window.generateSkill = generateSkill;
 
-window.generateAttack = function(type, btn){
+function generateAttack(type, btn){
   render(btn, data["Útok"]?.[type]?.[severity] || [], `Útok (${type})`);
 }
+window.generateAttack = generateAttack;
 
-window.generateDefense = function(btn){
+function generateDefense(btn){
   render(btn, data["Obrana"]?.[severity] || [], "Obrana");
 }
+window.generateDefense = generateDefense;
 
 // ===== RENDER =====
 function render(btn, pool, label){
@@ -310,9 +315,10 @@ function render(btn, pool, label){
 }
 
 // ===== SEND =====
-window.send = function(pid,text){
+function send(pid,text){
   set(ref(db,"rooms/"+room+"/msg/"+pid), text);
 }
+window.send = send;
 
 // ===== RECEIVE =====
 function listenMessages(){
@@ -324,15 +330,17 @@ function listenMessages(){
 }
 
 // ===== DELETE =====
-window.deleteRoom = function(){
+function deleteRoom(){
   remove(ref(db,"rooms/"+room));
 }
+window.deleteRoom = deleteRoom;
 
 // ===== LOGOUT =====
-window.logout = function(){
+function logout(){
   localStorage.clear();
   location.reload();
 }
+window.logout = logout;
 
 // ===== HELPERS =====
 function val(id){ return document.getElementById(id).value; }
@@ -359,4 +367,7 @@ function buildSkills(){
   document.getElementById("skills").innerHTML=html;
 }
 
-</script
+</script>
+
+</body>
+</html>
