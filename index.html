@@ -28,11 +28,11 @@ button:hover {
 }
 
 .card {
-  margin-top: 20px;
-  font-size: 18px;
+  margin-top: 10px;
+  font-size: 16px;
   white-space: pre-line;
-  padding: 15px;
-  border-radius: 12px;
+  padding: 12px;
+  border-radius: 10px;
   background: #1a1a1a;
 }
 
@@ -40,7 +40,6 @@ button:hover {
   margin-top: 15px;
 }
 
-/* severity */
 .sev-btn {
   background: #222;
 }
@@ -55,7 +54,6 @@ button:hover {
 
 <h1>🎲 DnD Crit Fail</h1>
 
-<!-- SETUP -->
 <div id="setup">
   <input id="name" placeholder="Tvoje jméno">
   <input id="room" placeholder="Room code">
@@ -64,26 +62,14 @@ button:hover {
   <button onclick="joinPlayer()">Jsem hráč</button>
 </div>
 
-<!-- DM PANEL -->
 <div id="dmPanel" style="display:none;">
   <h2>👑 DM Panel</h2>
 
   <div id="players"></div>
-
-  <!-- SEVERITY -->
   <div id="severity"></div>
-
-  <!-- ACTION BUTTONS -->
   <div id="buttons"></div>
-
-  <button onclick="send()">📤 Pošli hráči</button>
-
-  <div class="card" id="dmResult">---</div>
-
-  <button onclick="reroll()">🔄 Generuj znovu</button>
 </div>
 
-<!-- PLAYER -->
 <div id="playerView" style="display:none;">
   <h2>🎭 Tvoje událost</h2>
   <div class="card" id="playerResult">Čekám na DM...</div>
@@ -112,12 +98,13 @@ const db = getDatabase(app);
 // =========================
 
 let critData = {};
-let myId = "";
 let room = "";
-let currentResult = "";
+let myId = "";
 let selectedPlayer = null;
-let lastState = null;
 let currentSeverity = "Lehký";
+let lastState = null;
+let activeContainer = null;
+let currentResult = "";
 
 // =========================
 // LOAD JSON
@@ -231,7 +218,7 @@ function buildButtons() {
     Object.keys(critData["Útok"]).forEach(type => {
       const btn = document.createElement("button");
       btn.innerText = type;
-      btn.onclick = () => generate("Útok", type);
+      btn.onclick = (e) => generate("Útok", type, e.target);
       section.appendChild(btn);
     });
 
@@ -245,7 +232,7 @@ function buildButtons() {
 
     const btn = document.createElement("button");
     btn.innerText = "Obrana";
-    btn.onclick = () => generate("Obrana", null);
+    btn.onclick = (e) => generate("Obrana", null, e.target);
 
     section.appendChild(btn);
     container.appendChild(section);
@@ -263,7 +250,7 @@ function buildButtons() {
       Object.keys(critData["Skill"][attr]).forEach(skill => {
         const btn = document.createElement("button");
         btn.innerText = skill;
-        btn.onclick = () => generate("Skill", {attr, skill});
+        btn.onclick = (e) => generate("Skill", {attr, skill}, e.target);
         attrDiv.appendChild(btn);
       });
 
@@ -275,10 +262,10 @@ function buildButtons() {
 }
 
 // =========================
-// GENERATE
+// GENERATE (INLINE RESULT)
 // =========================
 
-window.generate = function(type, sub) {
+window.generate = function(type, sub, buttonElement) {
 
   let pool;
 
@@ -293,7 +280,7 @@ window.generate = function(type, sub) {
   }
 
   if (!pool || pool.length === 0) {
-    alert("Žádná data pro tuto obtížnost");
+    alert("Žádná data");
     return;
   }
 
@@ -314,7 +301,20 @@ window.generate = function(type, sub) {
     `💥 ${random.effect}\n\n` +
     `🎭 ${(random.roleplay || []).join(" ")}`;
 
-  document.getElementById("dmResult").innerText = currentResult;
+  if (activeContainer) activeContainer.remove();
+
+  const box = document.createElement("div");
+  box.className = "card";
+
+  box.innerHTML = `
+    ${currentResult}
+    <br><br>
+    <button onclick="reroll()">🔄 Generuj znovu</button>
+    <button onclick="send()">📤 Pošli hráči</button>
+  `;
+
+  buttonElement.parentNode.insertBefore(box, buttonElement.nextSibling);
+  activeContainer = box;
 }
 
 // =========================
@@ -322,7 +322,7 @@ window.generate = function(type, sub) {
 // =========================
 
 window.reroll = function() {
-  if (!lastState || !lastState.pool) return;
+  if (!lastState) return;
 
   const pool = lastState.pool;
   const random = pool[Math.floor(Math.random() * pool.length)];
@@ -340,7 +340,12 @@ window.reroll = function() {
     `💥 ${random.effect}\n\n` +
     `🎭 ${(random.roleplay || []).join(" ")}`;
 
-  document.getElementById("dmResult").innerText = currentResult;
+  activeContainer.innerHTML = `
+    ${currentResult}
+    <br><br>
+    <button onclick="reroll()">🔄 Generuj znovu</button>
+    <button onclick="send()">📤 Pošli hráči</button>
+  `;
 }
 
 // =========================
