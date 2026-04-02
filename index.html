@@ -152,42 +152,56 @@ function listenRoomStatus() {
 }
 
 // =========================
-// JOIN DM (🔥 FIXED)
+// JOIN DM (🔥 DEBUG + FIX)
 // =========================
 
 window.joinDM = async function() {
-  room = document.getElementById("room").value;
-  const name = document.getElementById("name").value || "DM";
-  const password = document.getElementById("password").value;
 
-  if (!room || room.trim() === "") {
-    return alert("Zadej název místnosti");
-  }
+  try {
 
-  myId = "DM_" + Math.random();
+    room = document.getElementById("room").value;
+    const name = document.getElementById("name").value || "DM";
+    const password = document.getElementById("password").value;
 
-  // 🔥 vše uložíme najednou
-  await set(ref(db, 'rooms/' + room), {
-    createdAt: Date.now(),
-    password: password || "",
-    players: {
-      [myId]: {
-        name: name + " 👑"
-      }
+    if (!room || room.trim() === "") {
+      return alert("Zadej název místnosti");
     }
-  });
 
-  onDisconnect(ref(db, 'rooms/' + room + '/players/' + myId)).remove();
+    myId = "DM_" + Math.random();
 
-  localStorage.setItem("role", "dm");
-  localStorage.setItem("room", room);
-  localStorage.setItem("id", myId);
+    console.log("👉 Vytvářím room:", room);
 
-  document.getElementById("setup").style.display = "none";
-  document.getElementById("dmPanel").style.display = "block";
+    // 🔥 vytvoření room
+    await set(ref(db, 'rooms/' + room), {
+      createdAt: Date.now(),
+      password: password || ""
+    });
 
-  listenPlayers();
-  listenRoomStatus();
+    console.log("✅ Room vytvořena");
+
+    // 🔥 přidání DM
+    await set(ref(db, 'rooms/' + room + '/players/' + myId), {
+      name: name + " 👑"
+    });
+
+    console.log("✅ DM přidán");
+
+    onDisconnect(ref(db, 'rooms/' + room + '/players/' + myId)).remove();
+
+    localStorage.setItem("role", "dm");
+    localStorage.setItem("room", room);
+    localStorage.setItem("id", myId);
+
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("dmPanel").style.display = "block";
+
+    listenPlayers();
+    listenRoomStatus();
+
+  } catch (err) {
+    console.error("❌ ERROR:", err);
+    alert("Chyba – otevři console (F12)");
+  }
 }
 
 // =========================
@@ -195,38 +209,48 @@ window.joinDM = async function() {
 // =========================
 
 window.joinRoom = async function(r) {
-  const name = document.getElementById("name").value;
-  if (!name) return alert("Zadej jméno");
 
-  const snap = await get(ref(db, 'rooms/' + r));
-  const data = snap.val();
+  try {
 
-  if (!data) return alert("Room neexistuje");
+    const name = document.getElementById("name").value;
+    if (!name) return alert("Zadej jméno");
 
-  if (data.password && data.password !== "") {
-    const pass = prompt("Zadej heslo");
-    if (data.password !== pass) {
-      return alert("Špatné heslo");
+    const snap = await get(ref(db, 'rooms/' + r));
+    const data = snap.val();
+
+    console.log("ROOM DATA:", data);
+
+    if (!data) return alert("Room neexistuje");
+
+    if (data.password && data.password !== "") {
+      const pass = prompt("Zadej heslo");
+      if (data.password !== pass) {
+        return alert("Špatné heslo");
+      }
     }
+
+    room = r;
+    myId = name + "_" + Math.random();
+
+    const playerRef = ref(db, 'rooms/' + room + '/players/' + myId);
+    await set(playerRef, { name: name });
+
+    onDisconnect(playerRef).remove();
+
+    localStorage.setItem("role", "player");
+    localStorage.setItem("room", room);
+    localStorage.setItem("id", myId);
+
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("playerView").style.display = "block";
+
+    listenPlayerMessages();
+    listenRoomStatus();
+
+  } catch (err) {
+    console.error("❌ JOIN ERROR:", err);
+    alert("Chyba při připojení – F12");
   }
-
-  room = r;
-  myId = name + "_" + Math.random();
-
-  const playerRef = ref(db, 'rooms/' + room + '/players/' + myId);
-  set(playerRef, { name: name });
-
-  onDisconnect(playerRef).remove();
-
-  localStorage.setItem("role", "player");
-  localStorage.setItem("room", room);
-  localStorage.setItem("id", myId);
-
-  document.getElementById("setup").style.display = "none";
-  document.getElementById("playerView").style.display = "block";
-
-  listenPlayerMessages();
-  listenRoomStatus();
 }
 
 // =========================
@@ -285,31 +309,6 @@ function listenPlayerMessages() {
       document.getElementById("playerResult").innerText = data.value;
     }
   });
-}
-
-// =========================
-// GENERATE
-// =========================
-
-window.generate = function(text) {
-
-  currentResult = text;
-
-  const playersHTML = Object.entries(currentPlayers)
-    .filter(([id, p]) => !p.name.includes("👑"))
-    .map(([id,p]) => `<button class="player-btn" onclick="sendTo('${id}')">${p.name}</button>`)
-    .join("");
-
-  const box = document.createElement("div");
-  box.className = "card";
-
-  box.innerHTML = `
-    ${text}
-    <br><br>
-    ${playersHTML}
-  `;
-
-  document.getElementById("buttons").appendChild(box);
 }
 
 // =========================
