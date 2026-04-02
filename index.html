@@ -47,6 +47,10 @@ button:hover {
 .sev-active {
   background: #ff9800 !important;
 }
+
+.logout {
+  background: #aa3333;
+}
 </style>
 </head>
 
@@ -65,6 +69,8 @@ button:hover {
 <div id="dmPanel" style="display:none;">
   <h2>👑 DM Panel</h2>
 
+  <button class="logout" onclick="logout()">🚪 Logout</button>
+
   <div id="players"></div>
   <div id="severity"></div>
   <div id="buttons"></div>
@@ -72,6 +78,9 @@ button:hover {
 
 <div id="playerView" style="display:none;">
   <h2>🎭 Tvoje událost</h2>
+
+  <button class="logout" onclick="logout()">🚪 Logout</button>
+
   <div class="card" id="playerResult">Čekám na DM...</div>
 </div>
 
@@ -124,8 +133,13 @@ fetch("crit_fails.json")
 
 window.joinDM = function() {
   room = document.getElementById("room").value;
+
+  localStorage.setItem("role", "dm");
+  localStorage.setItem("room", room);
+
   document.getElementById("setup").style.display = "none";
   document.getElementById("dmPanel").style.display = "block";
+
   listenPlayers();
 }
 
@@ -135,6 +149,11 @@ window.joinPlayer = function() {
 
   myId = name + "_" + Math.floor(Math.random()*1000);
 
+  localStorage.setItem("role", "player");
+  localStorage.setItem("room", room);
+  localStorage.setItem("name", name);
+  localStorage.setItem("id", myId);
+
   set(ref(db, 'rooms/' + room + '/players/' + myId), {
     name: name
   });
@@ -142,12 +161,57 @@ window.joinPlayer = function() {
   document.getElementById("setup").style.display = "none";
   document.getElementById("playerView").style.display = "block";
 
+  listenPlayerMessages();
+}
+
+// =========================
+// AUTO LOGIN
+// =========================
+
+window.onload = function() {
+  const role = localStorage.getItem("role");
+  const savedRoom = localStorage.getItem("room");
+
+  if (!role || !savedRoom) return;
+
+  room = savedRoom;
+
+  if (role === "dm") {
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("dmPanel").style.display = "block";
+    listenPlayers();
+  }
+
+  if (role === "player") {
+    myId = localStorage.getItem("id");
+
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("playerView").style.display = "block";
+
+    listenPlayerMessages();
+  }
+}
+
+// =========================
+// PLAYER MESSAGES
+// =========================
+
+function listenPlayerMessages() {
   onValue(ref(db, 'rooms/' + room + '/messages/' + myId), (snapshot) => {
     const data = snapshot.val();
     if (data) {
       document.getElementById("playerResult").innerText = data.value;
     }
   });
+}
+
+// =========================
+// LOGOUT
+// =========================
+
+window.logout = function() {
+  localStorage.clear();
+  location.reload();
 }
 
 // =========================
@@ -187,7 +251,6 @@ function buildSeverity() {
     const btn = document.createElement("button");
 
     btn.innerText = sev;
-    btn.className = "sev-btn";
 
     if (sev === currentSeverity) {
       btn.classList.add("sev-active");
@@ -210,7 +273,6 @@ function buildButtons() {
   const container = document.getElementById("buttons");
   container.innerHTML = "";
 
-  // ÚTOK
   if (critData["Útok"]) {
     const section = document.createElement("div");
     section.innerHTML = "<h3>⚔️ Útok</h3>";
@@ -225,7 +287,6 @@ function buildButtons() {
     container.appendChild(section);
   }
 
-  // OBRANA
   if (critData["Obrana"]) {
     const section = document.createElement("div");
     section.innerHTML = "<h3>🛡️ Obrana</h3>";
@@ -238,7 +299,6 @@ function buildButtons() {
     container.appendChild(section);
   }
 
-  // SKILLY
   if (critData["Skill"]) {
     const section = document.createElement("div");
     section.innerHTML = "<h3>🎲 Skilly</h3>";
@@ -262,39 +322,26 @@ function buildButtons() {
 }
 
 // =========================
-// GENERATE (INLINE RESULT)
+// GENERATE
 // =========================
 
 window.generate = function(type, sub, buttonElement) {
 
   let pool;
 
-  if (type === "Útok") {
-    pool = critData[type][sub][currentSeverity];
-  } 
-  else if (type === "Obrana") {
-    pool = critData[type][currentSeverity];
-  } 
-  else if (type === "Skill") {
-    pool = critData[type][sub.attr][sub.skill][currentSeverity];
-  }
+  if (type === "Útok") pool = critData[type][sub][currentSeverity];
+  else if (type === "Obrana") pool = critData[type][currentSeverity];
+  else if (type === "Skill") pool = critData[type][sub.attr][sub.skill][currentSeverity];
 
-  if (!pool || pool.length === 0) {
-    alert("Žádná data");
-    return;
-  }
+  if (!pool) return;
 
   const random = pool[Math.floor(Math.random() * pool.length)];
 
   lastState = { pool, type, sub, severity: currentSeverity };
 
-  let label = "";
-
-  if (type === "Skill") {
-    label = `${sub.attr} → ${sub.skill}`;
-  } else if (sub) {
-    label = sub;
-  }
+  let label = type === "Skill"
+    ? `${sub.attr} → ${sub.skill}`
+    : sub || "";
 
   currentResult =
     `🎯 ${type} → ${label} (${currentSeverity})\n\n` +
@@ -324,16 +371,11 @@ window.generate = function(type, sub, buttonElement) {
 window.reroll = function() {
   if (!lastState) return;
 
-  const pool = lastState.pool;
-  const random = pool[Math.floor(Math.random() * pool.length)];
+  const random = lastState.pool[Math.floor(Math.random() * lastState.pool.length)];
 
-  let label = "";
-
-  if (lastState.type === "Skill") {
-    label = `${lastState.sub.attr} → ${lastState.sub.skill}`;
-  } else if (lastState.sub) {
-    label = lastState.sub;
-  }
+  let label = lastState.type === "Skill"
+    ? `${lastState.sub.attr} → ${lastState.sub.skill}`
+    : lastState.sub || "";
 
   currentResult =
     `🎯 ${lastState.type} → ${label} (${lastState.severity})\n\n` +
