@@ -198,7 +198,7 @@ function buildButtons() {
 
     btn.innerText = severity;
 
-    btn.onclick = () => generate("Útok", "Melee", severity);
+    btn.onclick = () => window.generate("Útok", "Melee", severity);
 
     section.appendChild(btn);
   });
@@ -207,10 +207,10 @@ function buildButtons() {
 }
 
 // =========================
-// GENERATE
+// GENERATE (GLOBAL FIX)
 // =========================
 
-function generate(type, sub, severity) {
+window.generate = function(type, sub, severity) {
 
   const pool = critData[type][sub][severity];
 
@@ -232,10 +232,10 @@ function generate(type, sub, severity) {
 }
 
 // =========================
-// REROLL
+// REROLL (GLOBAL FIX)
 // =========================
 
-function reroll() {
+window.reroll = function() {
   if (!lastPool) return;
 
   const random = lastPool[Math.floor(Math.random() * lastPool.length)];
