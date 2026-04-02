@@ -30,14 +30,11 @@ button {
 
 button:hover { background:#444; }
 
-.active { background:#ff9800 !important; }
-
 .card {
   background:#1a1a1a;
   padding:16px;
   margin-top:12px;
   border-radius:12px;
-  font-size:16px;
 }
 
 .meta { color:#aaa; font-size:12px; margin-bottom:8px; }
@@ -49,9 +46,15 @@ button:hover { background:#444; }
 .wis { background:#6b21a8; }
 .cha { background:#92400e; }
 
-#resultBox {
-  margin-top:20px;
+.room {
+  background:#1a1a1a;
+  padding:10px;
+  margin:5px 0;
+  border-radius:10px;
 }
+
+#resultBox { margin-top:20px; }
+
 </style>
 </head>
 
@@ -66,10 +69,8 @@ button:hover { background:#444; }
 <div id="setup" class="container">
 
   <input id="name" placeholder="Jméno"><br>
-  <input id="room" placeholder="Room"><br>
 
-  <button onclick="joinDM()">👑 DM</button>
-  <button onclick="joinPlayer()">🎭 Hráč</button>
+  <button onclick="createRoom()">🎲 Vytvořit místnost</button>
 
   <h3>Otevřené hry</h3>
   <div id="roomsList"></div>
@@ -82,16 +83,14 @@ button:hover { background:#444; }
     <div id="severityButtons"></div>
 
     <h3>Akce</h3>
-    <button onclick="generateAttack('Melee', this)">⚔️ Melee</button>
-    <button onclick="generateAttack('Ranged', this)">🏹 Ranged</button>
-    <button onclick="generateDefense(this)">🛡️ Obrana</button>
+    <button onclick="generateAttack('Melee')">⚔️ Melee</button>
+    <button onclick="generateAttack('Ranged')">🏹 Ranged</button>
+    <button onclick="generateDefense()">🛡️ Obrana</button>
 
     <h3>🎲 Skilly</h3>
     <div id="skills"></div>
 
-    <!-- 🔥 JEDINÉ MÍSTO PRO VÝSLEDEK -->
     <div id="resultBox"></div>
-
   </div>
 
   <div id="playerPanel" style="display:none;">
@@ -138,43 +137,21 @@ function weightedRandom(pool){
   return pool[0];
 }
 
-// ===== LOBBY =====
-onValue(ref(db,"rooms"), snap=>{
-  const rooms = snap.val() || {};
-  let html="";
+// ===== CREATE ROOM (DM) =====
+async function createRoom(){
 
-  Object.keys(rooms).forEach(r=>{
-    if(rooms[r].dm){
-      html += `<div>${r} <button onclick="quickJoin('${r}')">Join</button></div>`;
-    }
-  });
-
-  document.getElementById("roomsList").innerHTML = html;
-});
-
-function quickJoin(r){
-  document.getElementById("room").value = r;
-}
-window.quickJoin = quickJoin;
-
-// ===== JOIN DM =====
-async function joinDM(){
-
-  room = val("room");
   name = val("name");
-  isDM = true;
 
-  const roomRef = ref(db, "rooms/" + room);
-  const snap = await get(roomRef);
-
-  if(snap.exists() && snap.val().dm){
-    alert("DM už existuje");
+  if(!name){
+    alert("Zadej jméno");
     return;
   }
 
+  room = "room_" + Math.floor(Math.random()*100000);
   myId = "DM_" + Date.now();
+  isDM = true;
 
-  await set(roomRef, {
+  await set(ref(db, "rooms/" + room), {
     dm: myId,
     players: {
       [myId]: { name: name + " 👑" }
@@ -184,29 +161,49 @@ async function joinDM(){
   save();
   start();
 }
-window.joinDM = joinDM;
+window.createRoom = createRoom;
+
+// ===== LOBBY =====
+onValue(ref(db,"rooms"), snap=>{
+  const rooms = snap.val() || {};
+  let html="";
+
+  Object.entries(rooms).forEach(([r,data])=>{
+    if(data.dm){
+      const count = data.players ? Object.keys(data.players).length : 0;
+
+      html += `
+        <div class="room">
+          🎲 ${r} (${count} hráčů)
+          <button onclick="joinRoom('${r}')">Join</button>
+        </div>
+      `;
+    }
+  });
+
+  document.getElementById("roomsList").innerHTML = html;
+});
 
 // ===== JOIN PLAYER =====
-async function joinPlayer(){
+async function joinRoom(r){
 
-  room = val("room");
   name = val("name");
 
-  const snap = await get(ref(db,"rooms/"+room));
-
-  if(!snap.exists()){
-    alert("Room neexistuje");
+  if(!name){
+    alert("Zadej jméno");
     return;
   }
 
+  room = r;
   myId = "P_" + Date.now();
+  isDM = false;
 
   await set(ref(db,"rooms/"+room+"/players/"+myId),{ name });
 
   save();
   start();
 }
-window.joinPlayer = joinPlayer;
+window.joinRoom = joinRoom;
 
 // ===== START =====
 function start(){
@@ -265,7 +262,7 @@ function generateSkill(attr, skill){
 }
 window.generateSkill = generateSkill;
 
-// ===== RENDER (FIXED) =====
+// ===== RENDER =====
 function render(pool, label){
 
   const container = document.getElementById("resultBox");
@@ -363,7 +360,7 @@ function buildSeverity(){
         Object.keys(t).forEach(sev=> set.add(sev));
       });
     } else {
-      Object.keys(data[type]).forEach(sev=> set.add(sev);
+      Object.keys(data[type]).forEach(sev=> set.add(sev));
     }
   });
 
