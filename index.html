@@ -86,12 +86,7 @@ input {
 
   <div id="dmPanel" style="display:none;">
 
-    <div id="severityButtons">
-      <button onclick="setSeverity('Lehký')" id="sev-Lehký">Lehký</button>
-      <button onclick="setSeverity('Střední')" id="sev-Střední">Střední</button>
-      <button onclick="setSeverity('Těžký')" id="sev-Těžký">Těžký</button>
-      <button onclick="setSeverity('Sranda')" id="sev-Sranda">Sranda</button>
-    </div>
+    <div id="severityButtons"></div>
 
     <h3>Akce</h3>
     <button onclick="generateAttack('Melee', this)">⚔️ Melee</button>
@@ -125,19 +120,8 @@ const db = getDatabase(app);
 
 // ===== STATE =====
 let room="", name="", myId="", isDM=false;
-let players={}, data={}, severity="Lehký";
-
-// ===== SEVERITY =====
-function setSeverity(level){
-  severity = level;
-
-  document.querySelectorAll("#severityButtons button").forEach(b=>{
-    b.classList.remove("active");
-  });
-
-  document.getElementById("sev-"+level).classList.add("active");
-}
-window.setSeverity = setSeverity;
+let players={}, data={};
+let severityList=[], severity="";
 
 // ===== SESSION =====
 if(localStorage.room){
@@ -148,11 +132,69 @@ if(localStorage.room){
   start();
 }
 
-// ===== JSON =====
+// ===== LOAD JSON =====
 fetch("crit_fails.json").then(r=>r.json()).then(j=>{
   data=j;
+  buildSeverity();
   buildSkills();
 });
+
+// ===== SEVERITY SYSTEM =====
+function buildSeverity(){
+
+  const set = new Set();
+
+  if(data["Útok"]){
+    Object.values(data["Útok"]).forEach(type=>{
+      Object.keys(type).forEach(sev=> set.add(sev));
+    });
+  }
+
+  if(data["Obrana"]){
+    Object.keys(data["Obrana"]).forEach(sev=> set.add(sev));
+  }
+
+  if(data["Skill"]){
+    Object.values(data["Skill"]).forEach(attr=>{
+      Object.values(attr).forEach(skill=>{
+        Object.keys(skill).forEach(sev=> set.add(sev));
+      });
+    });
+  }
+
+  severityList = Array.from(set);
+
+  severity = severityList[0];
+
+  renderSeverityButtons();
+}
+
+function renderSeverityButtons(){
+
+  const container = document.getElementById("severityButtons");
+
+  let html = "";
+
+  severityList.forEach(sev=>{
+    html += `<button id="sev-${sev}" onclick="setSeverity('${sev}')">${sev}</button>`;
+  });
+
+  container.innerHTML = html;
+
+  setSeverity(severity);
+}
+
+function setSeverity(level){
+  severity = level;
+
+  document.querySelectorAll("#severityButtons button").forEach(b=>{
+    b.classList.remove("active");
+  });
+
+  const btn = document.getElementById("sev-"+level);
+  if(btn) btn.classList.add("active");
+}
+window.setSeverity = setSeverity;
 
 // ===== LOBBY =====
 function quickJoin(r){
@@ -164,8 +206,7 @@ onValue(ref(db,"rooms"), snap=>{
   const rooms = snap.val() || {};
   let html="";
   Object.keys(rooms).forEach(r=>{
-    html += `<div class="room">${r} 
-      <button onclick="quickJoin('${r}')">Join</button></div>`;
+    html += `<div class="room">${r} <button onclick="quickJoin('${r}')">Join</button></div>`;
   });
   document.getElementById("roomsList").innerHTML = html;
 });
@@ -267,17 +308,20 @@ function listenRoom(){
 
 // ===== GENERATE =====
 function generateSkill(attr, skill, btn){
-  render(btn, data.Skill?.[attr]?.[skill]?.[severity] || [], `Skill (${skill})`);
+  const pool = data.Skill?.[attr]?.[skill]?.[severity] || [];
+  render(btn, pool, `Skill (${skill})`);
 }
 window.generateSkill = generateSkill;
 
 function generateAttack(type, btn){
-  render(btn, data["Útok"]?.[type]?.[severity] || [], `Útok (${type})`);
+  const pool = data["Útok"]?.[type]?.[severity] || [];
+  render(btn, pool, `Útok (${type})`);
 }
 window.generateAttack = generateAttack;
 
 function generateDefense(btn){
-  render(btn, data["Obrana"]?.[severity] || [], "Obrana");
+  const pool = data["Obrana"]?.[severity] || [];
+  render(btn, pool, "Obrana");
 }
 window.generateDefense = generateDefense;
 
@@ -287,7 +331,7 @@ function render(btn, pool, label){
   document.querySelectorAll(".card").forEach(e=>e.remove());
 
   if(!pool || pool.length === 0){
-    alert("Žádná data");
+    alert("Žádná data pro tuto obtížnost");
     return;
   }
 
