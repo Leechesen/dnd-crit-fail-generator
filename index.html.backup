@@ -36,6 +36,7 @@
 
     input {
       display: block;
+      width: 100%;
       margin: 8px 0;
       padding: 10px;
       border: 1px solid #333;
@@ -77,6 +78,8 @@
       padding: 12px;
       margin-top: 8px;
       border-radius: 12px;
+      border: 1px solid #333;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
 
     .meta {
@@ -102,11 +105,6 @@
 
     #playersList {
       margin-top: 10px;
-    }
-
-    #playerResult .card {
-      border: 1px solid #333;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
 
     .roleplay-box {
@@ -226,7 +224,6 @@
 
     function setupEventListeners() {
       elements.createRoomBtn.addEventListener("click", createRoom);
-
       elements.dmPanel.addEventListener("click", handleDmPanelClick);
       elements.severityButtons.addEventListener("click", handleSeverityClick);
       elements.roomsList.addEventListener("click", handleRoomsListClick);
@@ -243,12 +240,8 @@
         generateAttack("Ranged", button);
       } else if (action === "defense") {
         generateDefense(button);
-      }
-
-      const skillAttr = button.dataset.skillAttr;
-      const skillName = button.dataset.skillName;
-      if (skillAttr && skillName) {
-        generateSkill(skillAttr, skillName, button);
+      } else if (button.dataset.skillAttr && button.dataset.skillName) {
+        generateSkill(button.dataset.skillAttr, button.dataset.skillName, button);
       }
     }
 
@@ -483,4 +476,7 @@
 
     function generateSkill(attr, skill, button) {
       const pool = getPoolSafe(state.data.Skill?.[attr]?.[skill]);
-      render(button,
+      render(button, pool, skill);
+    }
+
+    async function render(button, pool,
