@@ -181,8 +181,6 @@
 
     const DM_BADGE = " 👑";
     const ROLL_ANIMATION_DELAY = 400;
-    const PLAYER_ID_PREFIX = "P_";
-    const DM_ID_PREFIX = "DM_";
 
     const app = initializeApp(FIREBASE_CONFIG);
     const db = getDatabase(app);
@@ -328,7 +326,7 @@
         if (random <= 0) return item;
       }
 
-      return pool[pool.length - 1];
+      return pool[0];
     }
 
     function escapeHtml(text) {
@@ -354,7 +352,7 @@
 
       state.name = name;
       state.room = roomName;
-      state.myId = DM_ID_PREFIX + Date.now();
+      state.myId = "DM_" + Date.now();
       state.isDM = true;
 
       try {
@@ -430,7 +428,7 @@
 
         state.room = roomName;
         state.name = name;
-        state.myId = localStorage.getItem("myId") || PLAYER_ID_PREFIX + Date.now();
+        state.myId = localStorage.getItem("myId") || "P_" + Date.now();
         state.isDM = false;
 
         await set(ref(db, "rooms/" + state.room + "/players/" + state.myId), { name: state.name });
@@ -455,7 +453,7 @@
         `;
       } else {
         elements.playerPanel.classList.remove("hidden");
-        elements.roomNameDisplay.textContent = "Room: " + escapeHtml(state.room);
+        elements.roomNameDisplay.textContent = "Room: " + state.room;
         elements.topButtons.innerHTML = `
           <button id="logoutBtn">Logout</button>
         `;
@@ -467,4 +465,8 @@
       listenMessages();
     }
 
-    function
+    function setupTopButtonListeners() {
+      const deleteBtn = document.getElementById("deleteRoomBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      if (delete
