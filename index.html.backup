@@ -282,6 +282,36 @@
       }
     }
 
+    function buildSeverity() {
+      if (!state.data.Severity) return;
+      state.severityList = Object.keys(state.data.Severity);
+      const html = state.severityList
+        .map((sev) => `<button data-severity="${escapeHtml(sev)}">${escapeHtml(sev)}</button>`)
+        .join("");
+      elements.severityButtons.innerHTML = html;
+    }
+
+    function buildSkills() {
+      if (!state.data.Skill) return;
+      const html = Object.entries(state.data.Skill)
+        .map(([attr, skills]) => {
+          const skillButtons = Object.keys(skills)
+            .map((skill) => `<button data-skill-attr="${escapeHtml(attr)}" data-skill-name="${escapeHtml(skill)}">${escapeHtml(skill)}</button>`)
+            .join("");
+          return `<div><strong>${escapeHtml(attr)}</strong><div>${skillButtons}</div></div>`;
+        })
+        .join("");
+      elements.skills.innerHTML = html;
+    }
+
+    function setSeverity(severity) {
+      state.severity = severity;
+      const buttons = elements.severityButtons.querySelectorAll("button");
+      buttons.forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.severity === severity);
+      });
+    }
+
     function weightedRandom(pool) {
       if (!pool || pool.length === 0) return null;
 
@@ -297,6 +327,17 @@
       }
 
       return pool[0];
+    }
+
+    function escapeHtml(text) {
+      const map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      };
+      return text.replace(/[&<>"']/g, (char) => map[char]);
     }
 
     async function createRoom() {
@@ -329,6 +370,13 @@
         console.error("Error creating room:", error);
         alert("Nepodařilo se vytvořit místnost");
       }
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem("room", state.room);
+      localStorage.setItem("name", state.name);
+      localStorage.setItem("myId", state.myId);
+      localStorage.setItem("isDM", state.isDM);
     }
 
     function setupRoomListener() {
@@ -423,60 +471,4 @@
 
       if (deleteBtn) {
         deleteBtn.addEventListener("click", deleteRoom);
-      }
-      if (logoutBtn) {
-        logoutBtn.addEventListener("click", logout);
-      }
-    }
-
-    function setupDisconnectHandlers() {
-      const playerRef = ref(db, "rooms/" + state.room + "/players/" + state.myId);
-      onDisconnect(playerRef).remove();
-
-      if (state.isDM) {
-        const roomRef = ref(db, "rooms/" + state.room);
-        onDisconnect(roomRef).remove();
-      }
-    }
-
-    function setupPlayersListener() {
-      onValue(ref(db, "rooms/" + state.room + "/players"), (snapshot) => {
-        state.players = snapshot.val() || {};
-        const names = Object.values(state.players).map((player) => player.name);
-
-        elements.playersTop.textContent = names.join(" | ");
-
-        if (elements.playersList) {
-          elements.playersList.innerHTML = names
-            .map((name) => `<div>👤 ${escapeHtml(name)}</div>`)
-            .join("");
-        }
-      });
-    }
-
-    function getPoolSafe(source) {
-      if (!source) return [];
-      if (source[state.severity]?.length) return source[state.severity];
-
-      for (const key in source) {
-        if (source[key]?.length) return source[key];
-      }
-      return [];
-    }
-
-    function generateAttack(type, button) {
-      const pool = getPoolSafe(state.data["Útok"]?.[type]);
-      render(button, pool, "Útok");
-    }
-
-    function generateDefense(button) {
-      const pool = getPoolSafe(state.data["Obrana"]);
-      render(button, pool, "Obrana");
-    }
-
-    function generateSkill(attr, skill, button) {
-      const pool = getPoolSafe(state.data.Skill?.[attr]?.[skill]);
-      render(button, pool, skill);
-    }
-
-    async function render(button, pool,
+      
