@@ -242,14 +242,17 @@
       if (!button) return;
 
       const action = button.dataset.action;
+      const skillAttr = button.dataset.skillAttr;
+      const skillName = button.dataset.skillName;
+
       if (action === "melee") {
         generateAttack("Melee", button);
       } else if (action === "ranged") {
         generateAttack("Ranged", button);
       } else if (action === "defense") {
         generateDefense(button);
-      } else if (button.dataset.skillAttr && button.dataset.skillName) {
-        generateSkill(button.dataset.skillAttr, button.dataset.skillName, button);
+      } else if (skillAttr && skillName) {
+        generateSkill(skillAttr, skillName, button);
       }
     }
 
@@ -457,5 +460,4 @@
         elements.dmPanel.classList.remove("hidden");
         elements.topButtons.innerHTML = `
           <button id="deleteRoomBtn">🗑️</button>
-          <button id="logoutBtn">Logout</button>
-        
+          <button id="

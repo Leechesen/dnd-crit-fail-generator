@@ -183,6 +183,12 @@
     const ROLL_ANIMATION_DELAY = 400;
     const PLAYER_ID_PREFIX = "P_";
     const DM_ID_PREFIX = "DM_";
+    const STORAGE_KEYS = {
+      ROOM: "room",
+      NAME: "name",
+      MY_ID: "myId",
+      IS_DM: "isDM"
+    };
 
     const app = initializeApp(FIREBASE_CONFIG);
     const db = getDatabase(app);
@@ -260,12 +266,12 @@
     }
 
     function tryAutoReconnect() {
-      const savedRoom = localStorage.getItem("room");
+      const savedRoom = localStorage.getItem(STORAGE_KEYS.ROOM);
       if (savedRoom) {
         state.room = savedRoom;
-        state.name = localStorage.getItem("name") || "";
-        state.myId = localStorage.getItem("myId") || "";
-        state.isDM = localStorage.getItem("isDM") === "true";
+        state.name = localStorage.getItem(STORAGE_KEYS.NAME) || "";
+        state.myId = localStorage.getItem(STORAGE_KEYS.MY_ID) || "";
+        state.isDM = localStorage.getItem(STORAGE_KEYS.IS_DM) === "true";
         start();
       }
     }
@@ -375,10 +381,10 @@
     }
 
     function saveToLocalStorage() {
-      localStorage.setItem("room", state.room);
-      localStorage.setItem("name", state.name);
-      localStorage.setItem("myId", state.myId);
-      localStorage.setItem("isDM", state.isDM);
+      localStorage.setItem(STORAGE_KEYS.ROOM, state.room);
+      localStorage.setItem(STORAGE_KEYS.NAME, state.name);
+      localStorage.setItem(STORAGE_KEYS.MY_ID, state.myId);
+      localStorage.setItem(STORAGE_KEYS.IS_DM, state.isDM);
     }
 
     function setupRoomListener() {
@@ -430,7 +436,7 @@
 
         state.room = roomName;
         state.name = name;
-        state.myId = localStorage.getItem("myId") || PLAYER_ID_PREFIX + Date.now();
+        state.myId = localStorage.getItem(STORAGE_KEYS.MY_ID) || PLAYER_ID_PREFIX + Date.now();
         state.isDM = false;
 
         await set(ref(db, "rooms/" + state.room + "/players/" + state.myId), { name: state.name });
@@ -452,19 +458,4 @@
         elements.topButtons.innerHTML = `
           <button id="deleteRoomBtn">🗑️</button>
           <button id="logoutBtn">Logout</button>
-        `;
-      } else {
-        elements.playerPanel.classList.remove("hidden");
-        elements.roomNameDisplay.textContent = "Room: " + escapeHtml(state.room);
-        elements.topButtons.innerHTML = `
-          <button id="logoutBtn">Logout</button>
-        `;
-      }
-
-      setupTopButtonListeners();
-      setupDisconnectHandlers();
-      setupPlayersListener();
-      listenMessages();
-    }
-
-    function
+        
