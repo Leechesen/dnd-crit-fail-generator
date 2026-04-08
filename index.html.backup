@@ -337,7 +337,7 @@
         '"': "&quot;",
         "'": "&#039;"
       };
-      return text.replace(/[&<>"']/g, (char) => map[char]);
+      return String(text).replace(/[&<>"']/g, (char) => map[char]);
     }
 
     async function createRoom() {
@@ -471,4 +471,3 @@
 
       if (deleteBtn) {
         deleteBtn.addEventListener("click", deleteRoom);
-      
