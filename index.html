@@ -227,37 +227,41 @@
     function setupEventListeners() {
       elements.createRoomBtn.addEventListener("click", createRoom);
 
-      elements.dmPanel.addEventListener("click", (event) => {
-        const button = event.target.closest("button");
-        if (!button) return;
+      elements.dmPanel.addEventListener("click", handleDmPanelClick);
+      elements.severityButtons.addEventListener("click", handleSeverityClick);
+      elements.roomsList.addEventListener("click", handleRoomsListClick);
+    }
 
-        const action = button.dataset.action;
-        if (action === "melee") {
-          generateAttack("Melee", button);
-        } else if (action === "ranged") {
-          generateAttack("Ranged", button);
-        } else if (action === "defense") {
-          generateDefense(button);
-        }
+    function handleDmPanelClick(event) {
+      const button = event.target.closest("button");
+      if (!button) return;
 
-        const skillAttr = button.dataset.skillAttr;
-        const skillName = button.dataset.skillName;
-        if (skillAttr && skillName) {
-          generateSkill(skillAttr, skillName, button);
-        }
-      });
+      const action = button.dataset.action;
+      if (action === "melee") {
+        generateAttack("Melee", button);
+      } else if (action === "ranged") {
+        generateAttack("Ranged", button);
+      } else if (action === "defense") {
+        generateDefense(button);
+      }
 
-      elements.severityButtons.addEventListener("click", (event) => {
-        const button = event.target.closest("button");
-        if (!button || !button.dataset.severity) return;
-        setSeverity(button.dataset.severity);
-      });
+      const skillAttr = button.dataset.skillAttr;
+      const skillName = button.dataset.skillName;
+      if (skillAttr && skillName) {
+        generateSkill(skillAttr, skillName, button);
+      }
+    }
 
-      elements.roomsList.addEventListener("click", (event) => {
-        const button = event.target.closest("button");
-        if (!button || !button.dataset.room) return;
-        joinRoom(button.dataset.room);
-      });
+    function handleSeverityClick(event) {
+      const button = event.target.closest("button");
+      if (!button || !button.dataset.severity) return;
+      setSeverity(button.dataset.severity);
+    }
+
+    function handleRoomsListClick(event) {
+      const button = event.target.closest("button");
+      if (!button || !button.dataset.room) return;
+      joinRoom(button.dataset.room);
     }
 
     function tryAutoReconnect() {
@@ -479,9 +483,4 @@
 
     function generateSkill(attr, skill, button) {
       const pool = getPoolSafe(state.data.Skill?.[attr]?.[skill]);
-      render(button, pool, `Skill (${skill})`);
-    }
-
-    function render(button, pool, label) {
-      if (!pool.length) {
-        alert("Žádná data");
+      render(button,

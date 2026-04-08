@@ -1,441 +1,487 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="cs">
 <head>
-<meta charset="UTF-8">
-<title>KritFailer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KritFailer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-<style>
-body { margin:0; font-family:Arial; background:#0e0e0e; color:white; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0e0e0e;
+      color: white;
+    }
 
-header {
-  display:flex;
-  justify-content:space-between;
-  padding:12px;
-  background:#1a1a1a;
-}
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #1a1a1a;
+    }
 
-.title { color:#ff9800; font-weight:bold; }
+    .title {
+      color: #ff9800;
+      font-weight: bold;
+    }
 
-.container { padding:12px; }
+    .container {
+      padding: 12px;
+    }
 
-button {
-  margin:4px;
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  background:#222;
-  color:white;
-  cursor:pointer;
-}
+    input {
+      display: block;
+      margin: 8px 0;
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #222;
+      color: white;
+    }
 
-button:hover { background:#444; }
+    input::placeholder {
+      color: #888;
+    }
 
-.active { background:#ff9800 !important; }
+    button {
+      margin: 4px;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #222;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
 
-.card {
-  background:#1a1a1a;
-  padding:12px;
-  margin-top:8px;
-  border-radius:12px;
-}
+    button:hover {
+      background: #444;
+    }
 
-.meta { color:#aaa; font-size:12px; }
+    button:focus {
+      outline: 2px solid #ff9800;
+      outline-offset: 2px;
+    }
 
-/* hráči barvy */
-.player1 { background:#ef4444; }
-.player2 { background:#22c55e; }
-.player3 { background:#3b82f6; }
-.player4 { background:#eab308; }
-.player5 { background:#a855f7; }
+    .active {
+      background: #ff9800 !important;
+    }
 
-.room {
-  background:#1a1a1a;
-  padding:10px;
-  margin:5px 0;
-  border-radius:10px;
-}
+    .card {
+      background: #1a1a1a;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 12px;
+    }
 
-#playersList { margin-top:10px; }
+    .meta {
+      color: #aaa;
+      font-size: 12px;
+    }
 
-#playerResult .card {
-  border:1px solid #333;
-  box-shadow:0 0 10px rgba(0,0,0,0.5);
-}
-</style>
+    .player1 { background: #ef4444; }
+    .player2 { background: #22c55e; }
+    .player3 { background: #3b82f6; }
+    .player4 { background: #eab308; }
+    .player5 { background: #a855f7; }
+
+    .room {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1a1a1a;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 10px;
+    }
+
+    #playersList {
+      margin-top: 10px;
+    }
+
+    #playerResult .card {
+      border: 1px solid #333;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .roleplay-box {
+      background: #111;
+      padding: 10px;
+      border-radius: 8px;
+      border-left: 4px solid #ff9800;
+    }
+
+    .effect-text {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
+  <header>
+    <div class="title">🎲 KritFailer</div>
+    <div id="playersTop"></div>
+    <div id="topButtons"></div>
+  </header>
 
-<header>
-  <div class="title">🎲 KritFailer</div>
-  <div id="playersTop"></div>
-  <div id="topButtons"></div>
-</header>
+  <div id="setup" class="container">
+    <input id="name" placeholder="Jméno" autocomplete="off">
+    <input id="roomName" placeholder="Název místnosti" autocomplete="off">
+    <input id="roomPass" placeholder="Heslo (volitelné)" type="password" autocomplete="off">
+    <button id="createRoomBtn">🎲 Vytvořit místnost</button>
 
-<div id="setup" class="container">
-
-  <input id="name" placeholder="Jméno"><br>
-  <input id="roomName" placeholder="Název místnosti"><br>
-  <input id="roomPass" placeholder="Heslo (volitelné)"><br>
-
-  <button onclick="createRoom()">🎲 Vytvořit místnost</button>
-
-  <h3>Otevřené hry</h3>
-  <div id="roomsList"></div>
-
-</div>
-
-<div id="app" class="container" style="display:none;">
-
-  <div id="dmPanel" style="display:none;">
-    <div id="severityButtons"></div>
-
-    <h3>Akce</h3>
-    <button onclick="generateAttack('Melee', this)">⚔️ Melee</button>
-    <button onclick="generateAttack('Ranged', this)">🏹 Ranged</button>
-    <button onclick="generateDefense(this)">🛡️ Obrana</button>
-
-    <h3>🎲 Skilly</h3>
-    <div id="skills"></div>
+    <h3>Otevřené hry</h3>
+    <div id="roomsList"></div>
   </div>
 
-  <div id="playerPanel" style="display:none;">
-    <h3 id="roomNameDisplay"></h3>
-    <div id="playersList"></div>
-    <div id="playerResult">Čekám na výsledek...</div>
+  <div id="app" class="container hidden">
+    <div id="dmPanel" class="hidden">
+      <div id="severityButtons"></div>
+
+      <h3>Akce</h3>
+      <button data-action="melee">⚔️ Melee</button>
+      <button data-action="ranged">🏹 Ranged</button>
+      <button data-action="defense">🛡️ Obrana</button>
+
+      <h3>🎲 Skilly</h3>
+      <div id="skills"></div>
+    </div>
+
+    <div id="playerPanel" class="hidden">
+      <h3 id="roomNameDisplay"></h3>
+      <div id="playersList"></div>
+      <div id="playerResult">Čekám na výsledek...</div>
+    </div>
   </div>
 
-</div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      set,
+      onValue,
+      get,
+      remove,
+      onDisconnect
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-<script type="module">
+    const FIREBASE_CONFIG = {
+      apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
+      databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
+    };
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, onValue, get, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    const DM_BADGE = " 👑";
+    const ROLL_ANIMATION_DELAY = 400;
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
-  databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
-};
+    const app = initializeApp(FIREBASE_CONFIG);
+    const db = getDatabase(app);
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+    const state = {
+      room: "",
+      name: "",
+      myId: "",
+      isDM: false,
+      players: {},
+      data: {},
+      severityList: [],
+      severity: ""
+    };
 
-// ===== STATE =====
-let room="", name="", myId="", isDM=false;
-let players={}, data={};
-let severityList=[], severity="";
+    const elements = {
+      setup: document.getElementById("setup"),
+      app: document.getElementById("app"),
+      dmPanel: document.getElementById("dmPanel"),
+      playerPanel: document.getElementById("playerPanel"),
+      playersTop: document.getElementById("playersTop"),
+      topButtons: document.getElementById("topButtons"),
+      roomsList: document.getElementById("roomsList"),
+      playersList: document.getElementById("playersList"),
+      playerResult: document.getElementById("playerResult"),
+      roomNameDisplay: document.getElementById("roomNameDisplay"),
+      severityButtons: document.getElementById("severityButtons"),
+      skills: document.getElementById("skills"),
+      nameInput: document.getElementById("name"),
+      roomNameInput: document.getElementById("roomName"),
+      roomPassInput: document.getElementById("roomPass"),
+      createRoomBtn: document.getElementById("createRoomBtn")
+    };
 
-// ===== AUTO RECONNECT =====
-if(localStorage.room){
-  room = localStorage.room;
-  name = localStorage.name;
-  myId = localStorage.myId;
-  isDM = localStorage.isDM === "true";
-  start();
-}
-
-// ===== LOAD JSON =====
-fetch("crit_fails.json").then(r=>r.json()).then(j=>{
-  data=j;
-  buildSeverity();
-  buildSkills();
-});
-
-// ===== WEIGHT =====
-function weightedRandom(pool){
-  let total=0;
-  pool.forEach(p=> total += p.weight || 1);
-  let r=Math.random()*total;
-  for(let item of pool){
-    r -= item.weight || 1;
-    if(r<=0) return item;
-  }
-  return pool[0];
-}
-
-// ===== CREATE ROOM =====
-async function createRoom(){
-
-  name = val("name");
-  const roomName = val("roomName");
-  const password = val("roomPass");
-
-  if(!name || !roomName){
-    alert("Vyplň jméno a název místnosti");
-    return;
-  }
-
-  room = roomName;
-  myId = "DM_"+Date.now();
-  isDM = true;
-
-  await set(ref(db,"rooms/"+room),{
-    dm: myId,
-    password: password || null,
-    players:{
-      [myId]:{ name:name+" 👑" }
-    }
-  });
-
-  save();
-  start();
-}
-window.createRoom = createRoom;
-
-// ===== LOBBY =====
-onValue(ref(db,"rooms"), snap=>{
-  const rooms = snap.val() || {};
-  let html="";
-
-  Object.entries(rooms).forEach(([r,d])=>{
-    const count = d.players ? Object.keys(d.players).length : 0;
-
-    html += `
-      <div class="room">
-        🎲 ${r} (${count})
-        <button onclick="joinRoom('${r}')">Join</button>
-      </div>
-    `;
-  });
-
-  document.getElementById("roomsList").innerHTML = html;
-});
-
-// ===== JOIN =====
-async function joinRoom(r){
-
-  name = val("name");
-  if(!name){ alert("Zadej jméno"); return; }
-
-  const snap = await get(ref(db,"rooms/"+r));
-  const d = snap.val();
-
-  if(d.password){
-    const pass = prompt("Zadej heslo:");
-    if(pass !== d.password){
-      alert("Špatné heslo");
-      return;
-    }
-  }
-
-  room = r;
-  myId = localStorage.myId || "P_"+Date.now();
-  isDM = false;
-
-  await set(ref(db,"rooms/"+room+"/players/"+myId),{ name });
-
-  save();
-  start();
-}
-window.joinRoom = joinRoom;
-
-// ===== START =====
-function start(){
-
-  document.getElementById("setup").style.display="none";
-  document.getElementById("app").style.display="block";
-
-  if(isDM){
-    document.getElementById("dmPanel").style.display="block";
-    document.getElementById("topButtons").innerHTML =
-      `<button onclick="deleteRoom()">🗑️</button><button onclick="logout()">Logout</button>`;
-  } else {
-    document.getElementById("playerPanel").style.display="block";
-    document.getElementById("roomNameDisplay").innerText="Room: "+room;
-    document.getElementById("topButtons").innerHTML =
-      `<button onclick="logout()">Logout</button>`;
-  }
-
-  onDisconnect(ref(db,"rooms/"+room+"/players/"+myId)).remove();
-  if(isDM) onDisconnect(ref(db,"rooms/"+room)).remove();
-
-  onValue(ref(db,"rooms/"+room+"/players"), snap=>{
-    players = snap.val() || {};
-    const names = Object.values(players).map(p=>p.name);
-
-    document.getElementById("playersTop").innerText = names.join(" | ");
-
-    const listHTML = names.map(n=>`<div>👤 ${n}</div>`).join("");
-    const el = document.getElementById("playersList");
-    if(el) el.innerHTML = listHTML;
-  });
-
-  listenMessages();
-}
-
-// ===== GENERATE =====
-function getPoolSafe(s){
-  if(!s) return [];
-  if(s[severity]?.length) return s[severity];
-  for(const k in s){ if(s[k]?.length) return s[k]; }
-  return [];
-}
-
-function generateAttack(type,btn){
-  render(btn,getPoolSafe(data["Útok"]?.[type]),"Útok");
-}
-window.generateAttack = generateAttack;
-
-function generateDefense(btn){
-  render(btn,getPoolSafe(data["Obrana"]),"Obrana");
-}
-window.generateDefense = generateDefense;
-
-function generateSkill(attr,skill,btn){
-  render(btn,getPoolSafe(data.Skill?.[attr]?.[skill]),`Skill (${skill})`);
-}
-window.generateSkill = generateSkill;
-
-// ===== RENDER =====
-function render(btn,pool,label){
-
-  if(!pool.length){ alert("Žádná data"); return; }
-
-  const r = weightedRandom(pool);
-
-  btn.parentNode.querySelectorAll(".card").forEach(e=>e.remove());
-
-  const payload = {
-    severity,
-    label,
-    effect: r.effect,
-    roleplay: r.roleplay
-  };
-
-  let html="";
-  let i=1;
-
-  Object.entries(players).forEach(([id,p])=>{
-    if(!p.name.includes("👑")){
-      html += `<button class="player${i}" onclick='send("${id}", ${JSON.stringify(payload)})'>${p.name}</button>`;
-      i++;
-    }
-  });
-
-  const div=document.createElement("div");
-  div.className="card";
-  div.innerHTML="🎲 Rolling...";
-  btn.after(div);
-
-  setTimeout(()=>{
-    div.innerHTML=`
-      <div class="meta">${severity} | ${label}</div>
-      <b>${r.effect}</b><br><br>
-      ${r.roleplay.join("<br>")}
-    `;
-  },400);
-}
-
-// ===== FIREBASE =====
-function send(pid,data){
-  set(ref(db,"rooms/"+room+"/msg/"+pid),data);
-}
-window.send = send;
-
-function listenMessages(){
-  onValue(ref(db,"rooms/"+room+"/msg/"+myId),snap=>{
-    if(!snap.val()) return;
-
-    const data = snap.val();
-
-    if(typeof data === "string"){
-      document.getElementById("playerResult").innerText = data;
-      return;
+    function init() {
+      setupEventListeners();
+      loadGameData();
+      tryAutoReconnect();
+      setupRoomListener();
     }
 
-    document.getElementById("playerResult").innerHTML = `
-      <div class="card">
-        <div class="meta">🎯 ${data.severity} | ${data.label}</div>
+    function setupEventListeners() {
+      elements.createRoomBtn.addEventListener("click", createRoom);
 
-        <div style="font-size:18px; margin-bottom:10px;">
-          <b>${data.effect}</b>
-        </div>
+      elements.dmPanel.addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (!button) return;
 
-        <div style="
-          background:#111;
-          padding:10px;
-          border-radius:8px;
-          border-left:4px solid #ff9800;
-        ">
-          ${data.roleplay.join("<br>")}
-        </div>
-      </div>
-    `;
-  });
-}
+        const action = button.dataset.action;
+        if (action === "melee") {
+          generateAttack("Melee", button);
+        } else if (action === "ranged") {
+          generateAttack("Ranged", button);
+        } else if (action === "defense") {
+          generateDefense(button);
+        }
 
-// ===== HELPERS =====
-function val(id){ return document.getElementById(id).value; }
+        const skillAttr = button.dataset.skillAttr;
+        const skillName = button.dataset.skillName;
+        if (skillAttr && skillName) {
+          generateSkill(skillAttr, skillName, button);
+        }
+      });
 
-function save(){
-  localStorage.room=room;
-  localStorage.name=name;
-  localStorage.myId=myId;
-  localStorage.isDM=isDM ? "true" : "false";
-}
+      elements.severityButtons.addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (!button || !button.dataset.severity) return;
+        setSeverity(button.dataset.severity);
+      });
 
-function deleteRoom(){ remove(ref(db,"rooms/"+room)); }
-window.deleteRoom = deleteRoom;
+      elements.roomsList.addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (!button || !button.dataset.room) return;
+        joinRoom(button.dataset.room);
+      });
+    }
 
-function logout(){
-  localStorage.clear();
-  location.reload();
-}
-window.logout = logout;
+    function tryAutoReconnect() {
+      const savedRoom = localStorage.getItem("room");
+      if (savedRoom) {
+        state.room = savedRoom;
+        state.name = localStorage.getItem("name") || "";
+        state.myId = localStorage.getItem("myId") || "";
+        state.isDM = localStorage.getItem("isDM") === "true";
+        start();
+      }
+    }
 
-// ===== SKILLS =====
-function buildSkills(){
-  let html="";
-  Object.entries(data.Skill).forEach(([attr,skills])=>{
-    html+=`<h4>${attr}</h4>`;
-    Object.keys(skills).forEach(s=>{
-      html+=`<button onclick="generateSkill('${attr}','${s}',this)">${s}</button>`;
-    });
-  });
-  document.getElementById("skills").innerHTML=html;
-}
+    async function loadGameData() {
+      try {
+        const response = await fetch("crit_fails.json");
+        if (!response.ok) {
+          throw new Error("Failed to load game data");
+        }
+        state.data = await response.json();
+        buildSeverity();
+        buildSkills();
+      } catch (error) {
+        console.error("Error loading game data:", error);
+      }
+    }
 
-// ===== SEVERITY =====
-function buildSeverity(){
-  const set=new Set();
+    function weightedRandom(pool) {
+      if (!pool || pool.length === 0) return null;
 
-  ["Útok","Obrana","Skill"].forEach(t=>{
-    if(!data[t]) return;
-    if(t==="Skill"){
-      Object.values(data[t]).forEach(a=>{
-        Object.values(a).forEach(s=>{
-          Object.keys(s).forEach(sev=>set.add(sev));
+      let total = 0;
+      for (const item of pool) {
+        total += item.weight || 1;
+      }
+
+      let random = Math.random() * total;
+      for (const item of pool) {
+        random -= item.weight || 1;
+        if (random <= 0) return item;
+      }
+
+      return pool[0];
+    }
+
+    async function createRoom() {
+      const name = elements.nameInput.value.trim();
+      const roomName = elements.roomNameInput.value.trim();
+      const password = elements.roomPassInput.value;
+
+      if (!name || !roomName) {
+        alert("Vyplň jméno a název místnosti");
+        return;
+      }
+
+      state.name = name;
+      state.room = roomName;
+      state.myId = "DM_" + Date.now();
+      state.isDM = true;
+
+      try {
+        await set(ref(db, "rooms/" + state.room), {
+          dm: state.myId,
+          password: password || null,
+          players: {
+            [state.myId]: { name: state.name + DM_BADGE }
+          }
         });
-      });
-    }else if(t==="Útok"){
-      Object.values(data[t]).forEach(x=>{
-        Object.keys(x).forEach(sev=>set.add(sev));
-      });
-    }else{
-      Object.keys(data[t]).forEach(sev=>set.add(sev));
+
+        saveToLocalStorage();
+        start();
+      } catch (error) {
+        console.error("Error creating room:", error);
+        alert("Nepodařilo se vytvořit místnost");
+      }
     }
-  });
 
-  severityList=[...set];
-  severity=severityList[0];
+    function setupRoomListener() {
+      onValue(ref(db, "rooms"), (snapshot) => {
+        const rooms = snapshot.val() || {};
+        renderRoomsList(rooms);
+      });
+    }
 
-  let html="";
-  severityList.forEach(sev=>{
-    html+=`<button id="sev-${sev}" onclick="setSeverity('${sev}')">${sev}</button>`;
-  });
+    function renderRoomsList(rooms) {
+      const html = Object.entries(rooms)
+        .map(([roomName, roomData]) => {
+          const playerCount = roomData.players ? Object.keys(roomData.players).length : 0;
+          return `
+            <div class="room">
+              <span>🎲 ${escapeHtml(roomName)} (${playerCount})</span>
+              <button data-room="${escapeHtml(roomName)}">Join</button>
+            </div>
+          `;
+        })
+        .join("");
 
-  document.getElementById("severityButtons").innerHTML=html;
-  setSeverity(severity);
-}
+      elements.roomsList.innerHTML = html;
+    }
 
-function setSeverity(l){
-  severity=l;
-  document.querySelectorAll("#severityButtons button").forEach(b=>b.classList.remove("active"));
-  document.getElementById("sev-"+l)?.classList.add("active");
-}
-window.setSeverity = setSeverity;
+    async function joinRoom(roomName) {
+      const name = elements.nameInput.value.trim();
+      if (!name) {
+        alert("Zadej jméno");
+        return;
+      }
 
-</script>
+      try {
+        const snapshot = await get(ref(db, "rooms/" + roomName));
+        const roomData = snapshot.val();
 
-</body>
-</html>
+        if (!roomData) {
+          alert("Místnost neexistuje");
+          return;
+        }
+
+        if (roomData.password) {
+          const enteredPassword = prompt("Zadej heslo:");
+          if (enteredPassword !== roomData.password) {
+            alert("Špatné heslo");
+            return;
+          }
+        }
+
+        state.room = roomName;
+        state.name = name;
+        state.myId = localStorage.getItem("myId") || "P_" + Date.now();
+        state.isDM = false;
+
+        await set(ref(db, "rooms/" + state.room + "/players/" + state.myId), { name: state.name });
+
+        saveToLocalStorage();
+        start();
+      } catch (error) {
+        console.error("Error joining room:", error);
+        alert("Nepodařilo se připojit k místnosti");
+      }
+    }
+
+    function start() {
+      elements.setup.classList.add("hidden");
+      elements.app.classList.remove("hidden");
+
+      if (state.isDM) {
+        elements.dmPanel.classList.remove("hidden");
+        elements.topButtons.innerHTML = `
+          <button id="deleteRoomBtn">🗑️</button>
+          <button id="logoutBtn">Logout</button>
+        `;
+      } else {
+        elements.playerPanel.classList.remove("hidden");
+        elements.roomNameDisplay.textContent = "Room: " + state.room;
+        elements.topButtons.innerHTML = `
+          <button id="logoutBtn">Logout</button>
+        `;
+      }
+
+      setupTopButtonListeners();
+      setupDisconnectHandlers();
+      setupPlayersListener();
+      listenMessages();
+    }
+
+    function setupTopButtonListeners() {
+      const deleteBtn = document.getElementById("deleteRoomBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      if (deleteBtn) {
+        deleteBtn.addEventListener("click", deleteRoom);
+      }
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", logout);
+      }
+    }
+
+    function setupDisconnectHandlers() {
+      const playerRef = ref(db, "rooms/" + state.room + "/players/" + state.myId);
+      onDisconnect(playerRef).remove();
+
+      if (state.isDM) {
+        const roomRef = ref(db, "rooms/" + state.room);
+        onDisconnect(roomRef).remove();
+      }
+    }
+
+    function setupPlayersListener() {
+      onValue(ref(db, "rooms/" + state.room + "/players"), (snapshot) => {
+        state.players = snapshot.val() || {};
+        const names = Object.values(state.players).map((player) => player.name);
+
+        elements.playersTop.textContent = names.join(" | ");
+
+        if (elements.playersList) {
+          elements.playersList.innerHTML = names
+            .map((name) => `<div>👤 ${escapeHtml(name)}</div>`)
+            .join("");
+        }
+      });
+    }
+
+    function getPoolSafe(source) {
+      if (!source) return [];
+      if (source[state.severity]?.length) return source[state.severity];
+
+      for (const key in source) {
+        if (source[key]?.length) return source[key];
+      }
+      return [];
+    }
+
+    function generateAttack(type, button) {
+      const pool = getPoolSafe(state.data["Útok"]?.[type]);
+      render(button, pool, "Útok");
+    }
+
+    function generateDefense(button) {
+      const pool = getPoolSafe(state.data["Obrana"]);
+      render(button, pool, "Obrana");
+    }
+
+    function generateSkill(attr, skill, button) {
+      const pool = getPoolSafe(state.data.Skill?.[attr]?.[skill]);
+      render(button, pool, `Skill (${skill})`);
+    }
+
+    function render(button, pool, label) {
+      if (!pool.length) {
+        alert("Žádná data");
