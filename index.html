@@ -44,12 +44,7 @@
     flex-wrap: wrap;
   }
 
-  .logo {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: var(--accent);
-    white-space: nowrap;
-  }
+  .logo { font-size: 1.2rem; font-weight: bold; color: var(--accent); white-space: nowrap; }
 
   #playersTop {
     flex: 1;
@@ -80,18 +75,18 @@
   button:active { transform: scale(0.97); }
   button:disabled { opacity: 0.4; cursor: not-allowed; filter: none; }
 
-  .btn-primary  { background: var(--accent);  color: #fff; }
-  .btn-secondary{ background: var(--bg3);     color: var(--text); border: 1px solid var(--border); }
-  .btn-success  { background: var(--green);   color: #fff; }
-  .btn-warning  { background: var(--accent2); color: #fff; }
-  .btn-danger   { background: #c0392b;        color: #fff; }
-  .btn-info     { background: var(--blue);    color: #fff; }
-  .btn-purple   { background: var(--purple);  color: #fff; }
-  .btn-sm       { padding: 5px 10px; font-size: 0.78rem; }
+  .btn-primary   { background: var(--accent);  color: #fff; }
+  .btn-secondary { background: var(--bg3);     color: var(--text); border: 1px solid var(--border); }
+  .btn-success   { background: var(--green);   color: #fff; }
+  .btn-warning   { background: var(--accent2); color: #fff; }
+  .btn-danger    { background: #c0392b;        color: #fff; }
+  .btn-info      { background: var(--blue);    color: #fff; }
+  .btn-purple    { background: var(--purple);  color: #fff; }
+  .btn-sm        { padding: 5px 10px; font-size: 0.78rem; }
 
   .hidden { display: none !important; }
 
-  /* ── SETUP SCREEN ── */
+  /* ── SETUP ── */
   #setup {
     max-width: 480px;
     margin: 50px auto;
@@ -101,12 +96,7 @@
     border: 1px solid var(--border);
   }
 
-  #setup h2 {
-    text-align: center;
-    color: var(--accent);
-    margin-bottom: 22px;
-    font-size: 1.5rem;
-  }
+  #setup h2 { text-align: center; color: var(--accent); margin-bottom: 22px; font-size: 1.5rem; }
 
   .form-group { margin-bottom: 14px; }
   .form-group label { display: block; margin-bottom: 5px; color: var(--muted); font-size: 0.82rem; }
@@ -154,7 +144,6 @@
   .divider::after  { right: 0; }
 
   /* ── LOBBY ── */
-  #lobbyList { margin-top: 6px; }
   .room-item {
     display: flex;
     justify-content: space-between;
@@ -165,10 +154,10 @@
     margin-bottom: 7px;
     border: 1px solid var(--border);
   }
-  .room-name  { font-weight: bold; }
-  .room-meta  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .room-name { font-weight: bold; }
+  .room-meta { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
 
-  /* ── APP WRAPPER ── */
+  /* ── APP ── */
   #app { padding: 16px 20px; max-width: 1300px; margin: 0 auto; }
 
   #roomTitle {
@@ -180,7 +169,7 @@
     border-bottom: 1px solid var(--border);
   }
 
-  /* ── DM LAYOUT: two columns ── */
+  /* ── DM LAYOUT ── */
   .dm-layout {
     display: grid;
     grid-template-columns: 1fr 340px;
@@ -188,9 +177,7 @@
     align-items: start;
   }
 
-  @media (max-width: 800px) {
-    .dm-layout { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 800px) { .dm-layout { grid-template-columns: 1fr; } }
 
   /* ── CARDS ── */
   .card {
@@ -200,7 +187,6 @@
     border: 1px solid var(--border);
     margin-bottom: 14px;
   }
-
   .card h3 {
     color: var(--accent);
     font-size: 0.82rem;
@@ -211,8 +197,9 @@
     border-bottom: 1px solid var(--border);
   }
 
-  /* ── SEVERITY ── */
+  /* ── SEVERITY BUTTONS (dynamic) ── */
   .sev-row { display: flex; gap: 7px; flex-wrap: wrap; }
+
   .sev-btn {
     flex: 1;
     min-width: 70px;
@@ -225,24 +212,33 @@
     border: 2px solid transparent;
     transition: all 0.18s;
     user-select: none;
+    color: #fff;
   }
   .sev-btn:hover  { filter: brightness(1.2); }
-  .sev-btn.active { border-color: #fff; transform: scale(1.05); box-shadow: 0 0 8px rgba(255,255,255,0.2); }
-  .sev-lehky  { background: var(--green);   color: #fff; }
-  .sev-stredni{ background: var(--accent2); color: #fff; }
-  .sev-tezky  { background: #c0392b;        color: #fff; }
-  .sev-sranda { background: var(--purple);  color: #fff; }
+  .sev-btn.active {
+    border-color: #fff;
+    transform: scale(1.06);
+    box-shadow: 0 0 10px rgba(255,255,255,0.25);
+  }
+
+  /* Severity colour mapping */
+  .sev-color-0 { background: var(--green); }
+  .sev-color-1 { background: var(--accent2); }
+  .sev-color-2 { background: #c0392b; }
+  .sev-color-3 { background: var(--purple); }
+  .sev-color-4 { background: var(--blue); }
+  .sev-color-5 { background: #555; }
 
   /* ── GENERATOR ── */
-  .cat-block  { margin-bottom: 12px; }
-  .cat-title  { font-weight: bold; color: var(--text); margin-bottom: 7px; font-size: 0.9rem; }
-  .attr-label { font-size: 0.75rem; color: var(--muted); margin: 7px 0 4px; font-style: italic; }
+  .cat-block  { margin-bottom: 14px; }
+  .cat-title  { font-weight: bold; color: var(--text); margin-bottom: 8px; font-size: 0.92rem; }
+  .attr-label { font-size: 0.75rem; color: var(--muted); margin: 8px 0 4px; font-style: italic; }
   .btn-group  { display: flex; flex-wrap: wrap; gap: 5px; }
 
   /* ── RIGHT COLUMN ── */
-  .right-col { display: flex; flex-direction: column; gap: 0; }
+  .right-col { display: flex; flex-direction: column; }
 
-  /* ── PLAYER LIST (DM sidebar) ── */
+  /* ── PLAYER CHIP ── */
   .player-chip {
     padding: 7px 11px;
     background: var(--bg3);
@@ -263,7 +259,6 @@
     margin-bottom: 14px;
     background: var(--bg2);
   }
-
   .res-header {
     background: var(--accent);
     padding: 7px 12px;
@@ -272,9 +267,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
   }
-
   .res-body { padding: 12px; }
-
   .res-effect {
     background: #200a0a;
     border-left: 3px solid var(--accent);
@@ -286,7 +279,6 @@
     margin-bottom: 10px;
     line-height: 1.4;
   }
-
   .res-rp {
     background: #0a180a;
     border-left: 3px solid var(--green);
@@ -297,9 +289,7 @@
     line-height: 1.45;
     margin-bottom: 7px;
   }
-
   .res-rp:last-child { margin-bottom: 0; }
-
   .rp-label {
     font-size: 0.7rem;
     color: var(--green);
@@ -317,14 +307,7 @@
     margin-bottom: 7px;
     border: 1px solid var(--border);
   }
-
-  .target-name {
-    font-weight: bold;
-    font-size: 0.85rem;
-    margin-bottom: 7px;
-    color: var(--text);
-  }
-
+  .target-name { font-weight: bold; font-size: 0.85rem; margin-bottom: 7px; }
   .target-btns { display: flex; gap: 5px; flex-wrap: wrap; }
 
   /* ── PLAYER PANEL ── */
@@ -334,14 +317,7 @@
     gap: 16px;
     align-items: start;
   }
-
-  @media (max-width: 700px) {
-    .player-layout { grid-template-columns: 1fr; }
-  }
-
-  #playerResult {
-    min-height: 160px;
-  }
+  @media (max-width: 700px) { .player-layout { grid-template-columns: 1fr; } }
 
   .msg-effect {
     background: #200a0a;
@@ -354,7 +330,6 @@
     margin-bottom: 10px;
     line-height: 1.45;
   }
-
   .msg-rp {
     background: #0a180a;
     border-left: 3px solid var(--green);
@@ -364,13 +339,7 @@
     font-size: 0.9rem;
     line-height: 1.5;
   }
-
-  .waiting-text {
-    text-align: center;
-    color: var(--muted);
-    padding: 30px 10px;
-    font-size: 0.9rem;
-  }
+  .waiting-text { text-align: center; color: var(--muted); padding: 30px 10px; font-size: 0.9rem; }
 
   /* ── NOTIFICATION ── */
   #notif {
@@ -388,16 +357,12 @@
     transform: translateY(10px);
     transition: opacity 0.3s, transform 0.3s;
     pointer-events: none;
-    max-width: 280px;
+    max-width: 300px;
   }
   #notif.show { opacity: 1; transform: translateY(0); }
 
   /* ── LOADING ── */
-  #loading {
-    text-align: center;
-    padding: 80px 20px;
-    color: var(--muted);
-  }
+  #loading { text-align: center; padding: 80px 20px; color: var(--muted); }
   .spin {
     display: inline-block;
     width: 36px; height: 36px;
@@ -410,6 +375,15 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   .empty-note { color: var(--muted); font-size: 0.82rem; font-style: italic; }
+
+  /* current severity indicator */
+  #currentSev {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 8px;
+    text-align: center;
+  }
+  #currentSev span { color: var(--accent2); font-weight: bold; }
 </style>
 </head>
 <body>
@@ -422,7 +396,6 @@
 
 <div id="notif"></div>
 
-<!-- LOADING -->
 <div id="loading">
   <div class="spin"></div>
   <div>Načítám data…</div>
@@ -431,32 +404,27 @@
 <!-- SETUP -->
 <div id="setup" class="hidden">
   <h2>🎲 KritFailer</h2>
-
   <div class="form-group">
     <label>Tvoje jméno</label>
     <input id="nameInput" placeholder="Zadej jméno…" maxlength="30">
   </div>
-
   <div class="setup-actions">
     <button class="btn-primary" onclick="toggleCreate()">👑 Vytvořit místnost</button>
   </div>
-
   <div id="createRoomSection" class="hidden">
     <div class="form-group" style="margin-top:10px;">
       <label>Název místnosti</label>
       <input id="roomInput" placeholder="Název místnosti…" maxlength="30">
     </div>
-    <button class="btn-success" onclick="createRoom()" style="width:100%;padding:10px;margin-top:4px;">✅ Vytvořit</button>
+    <button class="btn-success" onclick="createRoom()" style="width:100%;padding:10px;margin-top:6px;">✅ Vytvořit</button>
   </div>
-
   <div class="divider">nebo se připoj k existující místnosti</div>
-
   <div id="lobbyList">
     <div class="empty-note" style="text-align:center;padding:16px;">Žádné místnosti…</div>
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 <div id="app" class="hidden">
   <h2 id="roomTitle"></h2>
 
@@ -464,16 +432,12 @@
   <div id="dmPanel" class="hidden">
     <div class="dm-layout">
 
-      <!-- LEFT: controls -->
+      <!-- LEFT -->
       <div id="dmLeft">
         <div class="card">
           <h3>🎯 Závažnost</h3>
-          <div class="sev-row">
-            <div class="sev-btn sev-lehky active"   onclick="setSev('Lehký',this)">Lehký</div>
-            <div class="sev-btn sev-stredni"         onclick="setSev('Střední',this)">Střední</div>
-            <div class="sev-btn sev-tezky"           onclick="setSev('Těžký',this)">Těžký</div>
-            <div class="sev-btn sev-sranda"          onclick="setSev('Sranda',this)">Sranda</div>
-          </div>
+          <div class="sev-row" id="severityBtns"></div>
+          <div id="currentSev">Vybraná závažnost: <span id="sevLabel">—</span></div>
         </div>
 
         <div class="card">
@@ -482,9 +446,8 @@
         </div>
       </div>
 
-      <!-- RIGHT: players → result → send -->
+      <!-- RIGHT -->
       <div class="right-col">
-
         <div class="card">
           <h3>👥 Hráči v místnosti</h3>
           <div id="dmPlayerList"><div class="empty-note">Žádní hráči</div></div>
@@ -509,7 +472,6 @@
           <h3>📨 Pošli hráči</h3>
           <div id="targets"><div class="empty-note">Nejprve vygeneruj výsledek</div></div>
         </div>
-
       </div>
     </div>
   </div>
@@ -541,24 +503,25 @@ import {
   getDatabase, ref, set, get, onValue, remove, update, onDisconnect
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// ─── Firebase ────────────────────────────────────────────────────────────────
+// ── Firebase ──────────────────────────────────────────────────────────────────
 const fbApp = initializeApp({
   apiKey: "AIzaSyBsomething",
   databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
 });
 const db = getDatabase(fbApp);
 
-// ─── State ───────────────────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────────────────
 let FAILS = {};
-let state = { room:"", name:"", id:"", isDM:false, severity:"Lehký", last:null };
+let ALL_SEVERITIES = [];   // discovered dynamically from JSON
+let state = { room:"", name:"", id:"", isDM:false, severity:"", last:null };
 let playersCache = {};
 
-// ─── Utility ─────────────────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const $   = id => document.getElementById(id);
 const dbr = (...p) => ref(db, p.join("/"));
 
 let notifTimer = null;
-function notif(msg, color="#e94560") {
+function notif(msg, color = "#e94560") {
   const el = $("notif");
   el.textContent = msg;
   el.style.background = color;
@@ -567,19 +530,237 @@ function notif(msg, color="#e94560") {
   notifTimer = setTimeout(() => el.classList.remove("show"), 3000);
 }
 
-// ─── Load JSON ────────────────────────────────────────────────────────────────
+// ── Collect all severity keys from the JSON ───────────────────────────────────
+// We scan "Útok", "Obrana", and "Skill" branches to find every severity name.
+function discoverSeverities(data) {
+  const found = new Set();
+
+  // From "Útok" → each attackType → keys
+  const utok = data["Útok"] || {};
+  Object.values(utok).forEach(sevMap => {
+    if (sevMap && typeof sevMap === "object") Object.keys(sevMap).forEach(k => found.add(k));
+  });
+
+  // From "Obrana" → keys
+  const obrana = data["Obrana"] || {};
+  Object.keys(obrana).forEach(k => found.add(k));
+
+  // From "Skill" → attr → skill → keys
+  const skill = data["Skill"] || {};
+  Object.values(skill).forEach(skills => {
+    Object.values(skills || {}).forEach(sevMap => {
+      if (sevMap && typeof sevMap === "object") Object.keys(sevMap).forEach(k => found.add(k));
+    });
+  });
+
+  // Preferred order; anything extra appended at end
+  const preferred = ["Lehký", "Střední", "Těžký", "Sranda"];
+  const ordered = preferred.filter(s => found.has(s));
+  found.forEach(s => { if (!ordered.includes(s)) ordered.push(s); });
+  return ordered;
+}
+
+// ── Severity colour class (cycles through defined colours) ────────────────────
+const SEV_COLORS = ["sev-color-0","sev-color-1","sev-color-2","sev-color-3","sev-color-4","sev-color-5"];
+function sevColorClass(index) { return SEV_COLORS[index % SEV_COLORS.length]; }
+
+// ── Build dynamic severity buttons ────────────────────────────────────────────
+function buildSeverityButtons() {
+  const container = $("severityBtns");
+  container.innerHTML = "";
+
+  ALL_SEVERITIES.forEach((sev, i) => {
+    const btn = document.createElement("div");
+    btn.className = `sev-btn ${sevColorClass(i)}`;
+    btn.textContent = sev;
+    btn.dataset.sev = sev;
+    if (sev === state.severity) btn.classList.add("active");
+    btn.onclick = () => setSev(sev, btn);
+    container.appendChild(btn);
+  });
+
+  $("sevLabel").textContent = state.severity || "—";
+}
+
+// ── Set Severity ──────────────────────────────────────────────────────────────
+function setSev(sev, el) {
+  state.severity = sev;
+  $("sevLabel").textContent = sev;
+  document.querySelectorAll(".sev-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+}
+window.setSev = setSev; // keep accessible from inline onclick
+
+// ── Safe pool getter ──────────────────────────────────────────────────────────
+// Returns the array of entries for a given path, or null if missing.
+function getPool(path, severity) {
+  // path: already the severity-map object  e.g. FAILS["Útok"]["Melee"]
+  if (!path || typeof path !== "object") return null;
+  const pool = path[severity];
+  if (!Array.isArray(pool) || pool.length === 0) return null;
+  return pool;
+}
+
+// ── Weighted random ───────────────────────────────────────────────────────────
+function weighted(pool) {
+  const total = pool.reduce((s, x) => s + (x.weight || 1), 0);
+  let r = Math.random() * total;
+  for (const item of pool) {
+    r -= (item.weight || 1);
+    if (r <= 0) return item;
+  }
+  return pool[0];
+}
+
+// ── Roll ──────────────────────────────────────────────────────────────────────
+function roll(sevMap, label) {
+  // sevMap  = the object whose keys are severity names, values are entry arrays
+  // e.g.  FAILS["Útok"]["Melee"]  or  FAILS["Obrana"]
+
+  if (!state.severity) { notif("❌ Vyber závažnost!"); return; }
+
+  const pool = getPool(sevMap, state.severity);
+
+  if (!pool) {
+    notif(`⚠️ „${state.severity}" neexistuje pro: ${label}`);
+    return;
+  }
+
+  const res = weighted(pool);
+  if (!res) { notif("❌ Chyba generování"); return; }
+
+  state.last = res;
+
+  // Show result
+  $("resultBox").classList.remove("hidden");
+  $("resEffect").textContent = "⚠️ " + (res.effect ?? "(bez efektu)");
+  $("resRp1").textContent    = res.roleplay?.[0] ?? "(prázdné)";
+  $("resRp2").textContent    = res.roleplay?.[1] ?? "(prázdné)";
+
+  renderTargets();
+  notif(`🎲 ${label} / ${state.severity}`, "#2a9d5c");
+  update(dbr("rooms", state.room), { lastActive: Date.now() });
+}
+
+// ── Build Generator UI (fully dynamic) ────────────────────────────────────────
+function buildGenerator() {
+  const gen = $("generator");
+  gen.innerHTML = "";
+
+  // ⚔️ Útok
+  const atkData = FAILS["Útok"];
+  if (atkData && typeof atkData === "object" && Object.keys(atkData).length) {
+    const block = document.createElement("div");
+    block.className = "cat-block";
+
+    const title = document.createElement("div");
+    title.className = "cat-title";
+    title.textContent = "⚔️ Útok";
+    block.appendChild(title);
+
+    const grp = document.createElement("div");
+    grp.className = "btn-group";
+
+    Object.entries(atkData).forEach(([type, sevMap]) => {
+      // sevMap = { "Lehký": [...], "Střední": [...], "Těžký": [...], "Sranda": [...] }
+      if (!sevMap || typeof sevMap !== "object") return;
+      const b = document.createElement("button");
+      b.className = "btn-secondary btn-sm";
+      b.textContent = type;
+      b.title = `Dostupné závažnosti: ${Object.keys(sevMap).join(", ")}`;
+      b.onclick = () => roll(sevMap, `Útok – ${type}`);
+      grp.appendChild(b);
+    });
+
+    block.appendChild(grp);
+    gen.appendChild(block);
+  }
+
+  // 🛡️ Obrana
+  const defData = FAILS["Obrana"];
+  if (defData && typeof defData === "object" && Object.keys(defData).length) {
+    // defData = { "Lehký": [...], "Střední": [...], "Těžký": [...], "Sranda": [...] }
+    const block = document.createElement("div");
+    block.className = "cat-block";
+
+    const title = document.createElement("div");
+    title.className = "cat-title";
+    title.textContent = "🛡️ Obrana";
+    block.appendChild(title);
+
+    const grp = document.createElement("div");
+    grp.className = "btn-group";
+
+    const b = document.createElement("button");
+    b.className = "btn-secondary btn-sm";
+    b.textContent = "Obrana";
+    b.title = `Dostupné závažnosti: ${Object.keys(defData).join(", ")}`;
+    // Pass defData directly – roll() will pick defData[state.severity]
+    b.onclick = () => roll(defData, "Obrana");
+    grp.appendChild(b);
+
+    block.appendChild(grp);
+    gen.appendChild(block);
+  }
+
+  // 🎯 Skill
+  const skillData = FAILS["Skill"];
+  if (skillData && typeof skillData === "object" && Object.keys(skillData).length) {
+    const block = document.createElement("div");
+    block.className = "cat-block";
+
+    const title = document.createElement("div");
+    title.className = "cat-title";
+    title.textContent = "🎯 Skilly";
+    block.appendChild(title);
+
+    Object.entries(skillData).forEach(([attr, skills]) => {
+      if (!skills || typeof skills !== "object") return;
+
+      const attrLbl = document.createElement("div");
+      attrLbl.className = "attr-label";
+      attrLbl.textContent = attr;
+      block.appendChild(attrLbl);
+
+      const grp = document.createElement("div");
+      grp.className = "btn-group";
+
+      Object.entries(skills).forEach(([skillName, sevMap]) => {
+        if (!sevMap || typeof sevMap !== "object") return;
+        const b = document.createElement("button");
+        b.className = "btn-secondary btn-sm";
+        b.textContent = skillName;
+        b.title = `Dostupné závažnosti: ${Object.keys(sevMap).join(", ")}`;
+        b.onclick = () => roll(sevMap, `${attr} – ${skillName}`);
+        grp.appendChild(b);
+      });
+
+      block.appendChild(grp);
+    });
+
+    gen.appendChild(block);
+  }
+}
+
+// ── Load JSON ─────────────────────────────────────────────────────────────────
 fetch("crit_fails.json")
-  .then(r => { if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+  .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
   .then(data => {
     FAILS = data;
+    ALL_SEVERITIES = discoverSeverities(data);
+
+    // Default severity = first discovered
+    if (ALL_SEVERITIES.length) state.severity = ALL_SEVERITIES[0];
+
     $("loading").classList.add("hidden");
     init();
   })
   .catch(err => {
-    $("loading").innerHTML = `<div style="color:#e94560">❌ Nelze načíst crit_fails.json<br><small>${err.message}</small></div>`;
+    $("loading").innerHTML =
+      `<div style="color:#e94560">❌ Nelze načíst crit_fails.json<br><small>${err.message}</small></div>`;
   });
 
-// ─── Init / Auto-reconnect ───────────────────────────────────────────────────
+// ── Init / Auto-reconnect ─────────────────────────────────────────────────────
 function init() {
   const saved = localStorage.getItem("kf_state");
   if (saved) {
@@ -588,6 +769,8 @@ function init() {
       get(dbr("rooms", s.room)).then(snap => {
         if (snap.exists()) {
           state = { ...s, last: null };
+          // Ensure severity is valid
+          if (!ALL_SEVERITIES.includes(state.severity)) state.severity = ALL_SEVERITIES[0] || "";
           const playerData = { name: state.name, isDM: state.isDM };
           set(dbr("rooms", state.room, "players", state.id), playerData)
             .then(() => { setupDisconnect(); startApp(); });
@@ -602,21 +785,23 @@ function init() {
   }
 }
 
-// ─── Setup screen ─────────────────────────────────────────────────────────────
 function showSetup() {
   $("setup").classList.remove("hidden");
   listenLobby();
 }
 
+// ── Lobby ─────────────────────────────────────────────────────────────────────
 function listenLobby() {
   onValue(dbr("rooms"), snap => {
     const data = snap.val() || {};
     const keys = Object.keys(data);
     const list = $("lobbyList");
+
     if (!keys.length) {
       list.innerHTML = `<div class="empty-note" style="text-align:center;padding:16px;">Žádné místnosti…</div>`;
       return;
     }
+
     list.innerHTML = keys.map(r => {
       const cnt = Object.keys(data[r].players || {}).length;
       return `
@@ -631,10 +816,9 @@ function listenLobby() {
   });
 }
 
-// ─── Toggle create form ───────────────────────────────────────────────────────
 window.toggleCreate = () => $("createRoomSection").classList.toggle("hidden");
 
-// ─── Create room ──────────────────────────────────────────────────────────────
+// ── Create room ───────────────────────────────────────────────────────────────
 window.createRoom = async () => {
   const name = $("nameInput").value.trim();
   const room = $("roomInput").value.trim();
@@ -642,7 +826,7 @@ window.createRoom = async () => {
   if (!room) { notif("❌ Zadej název místnosti!"); return; }
 
   const id = "DM_" + Date.now();
-  state = { room, name: name + " 👑", id, isDM: true, severity: "Lehký", last: null };
+  state = { room, name: name + " 👑", id, isDM: true, severity: ALL_SEVERITIES[0] || "Lehký", last: null };
 
   await set(dbr("rooms", room), {
     players: { [id]: { name: state.name, isDM: true } },
@@ -655,13 +839,13 @@ window.createRoom = async () => {
   startApp();
 };
 
-// ─── Join room ────────────────────────────────────────────────────────────────
+// ── Join room ─────────────────────────────────────────────────────────────────
 window._joinRoom = async (room) => {
   const name = $("nameInput").value.trim();
   if (!name) { notif("❌ Zadej jméno!"); return; }
 
   const id = "P_" + Date.now();
-  state = { room, name, id, isDM: false, severity: "Lehký", last: null };
+  state = { room, name, id, isDM: false, severity: ALL_SEVERITIES[0] || "Lehký", last: null };
 
   await set(dbr("rooms", room, "players", id), { name, isDM: false });
   await update(dbr("rooms", room), { lastActive: Date.now() });
@@ -671,7 +855,6 @@ window._joinRoom = async (room) => {
   startApp();
 };
 
-// ─── Save / clear state ───────────────────────────────────────────────────────
 function saveState() {
   localStorage.setItem("kf_state", JSON.stringify({ ...state, last: null }));
 }
@@ -680,7 +863,7 @@ function setupDisconnect() {
   onDisconnect(dbr("rooms", state.room, "players", state.id)).remove();
 }
 
-// ─── Start App ────────────────────────────────────────────────────────────────
+// ── Start App ─────────────────────────────────────────────────────────────────
 function startApp() {
   $("setup").classList.add("hidden");
   $("app").classList.remove("hidden");
@@ -693,6 +876,7 @@ function startApp() {
 
   if (state.isDM) {
     $("dmPanel").classList.remove("hidden");
+    buildSeverityButtons();
     buildGenerator();
     listenPlayers();
     startAutoDelete();
@@ -703,153 +887,40 @@ function startApp() {
   }
 }
 
-// ─── Build Generator UI ───────────────────────────────────────────────────────
-function buildGenerator() {
-  const gen = $("generator");
-  gen.innerHTML = "";
-
-  // ⚔️ Útok
-  const atkData = FAILS["Útok"] || {};
-  if (Object.keys(atkData).length) {
-    const block = document.createElement("div");
-    block.className = "cat-block";
-    block.innerHTML = `<div class="cat-title">⚔️ Útok</div><div class="btn-group" id="_atkBtns"></div>`;
-    gen.appendChild(block);
-    const g = block.querySelector("#_atkBtns");
-    Object.entries(atkData).forEach(([type, sevMap]) => {
-      const b = makeBtn(type, "btn-secondary btn-sm", () => roll(sevMap[state.severity], `Útok – ${type}`));
-      g.appendChild(b);
-    });
-  }
-
-  // 🛡️ Obrana
-  const defData = FAILS["Obrana"] || {};
-  if (Object.keys(defData).length) {
-    const block = document.createElement("div");
-    block.className = "cat-block";
-    block.innerHTML = `<div class="cat-title">🛡️ Obrana</div><div class="btn-group"></div>`;
-    gen.appendChild(block);
-    const g = block.querySelector(".btn-group");
-    const b = makeBtn("Obrana", "btn-secondary btn-sm", () => roll(defData[state.severity], "Obrana"));
-    g.appendChild(b);
-  }
-
-  // 🎯 Skill
-  const skillData = FAILS["Skill"] || {};
-  if (Object.keys(skillData).length) {
-    const block = document.createElement("div");
-    block.className = "cat-block";
-    block.innerHTML = `<div class="cat-title">🎯 Skilly</div>`;
-    gen.appendChild(block);
-
-    Object.entries(skillData).forEach(([attr, skills]) => {
-      const lbl = document.createElement("div");
-      lbl.className = "attr-label";
-      lbl.textContent = attr;
-      block.appendChild(lbl);
-
-      const grp = document.createElement("div");
-      grp.className = "btn-group";
-      block.appendChild(grp);
-
-      Object.entries(skills).forEach(([skillName, sevMap]) => {
-        const b = makeBtn(skillName, "btn-secondary btn-sm",
-          () => roll(sevMap[state.severity], `${attr} – ${skillName}`));
-        grp.appendChild(b);
-      });
-    });
-  }
-}
-
-function makeBtn(text, cls, handler) {
-  const b = document.createElement("button");
-  b.textContent = text;
-  b.className = cls;
-  b.onclick = handler;
-  return b;
-}
-
-// ─── Set severity ─────────────────────────────────────────────────────────────
-window.setSev = (sev, el) => {
-  state.severity = sev;
-  document.querySelectorAll(".sev-btn").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
-};
-
-// ─── Weighted random ──────────────────────────────────────────────────────────
-function weighted(pool) {
-  if (!pool || !pool.length) return null;
-  const total = pool.reduce((s, x) => s + (x.weight || 1), 0);
-  let r = Math.random() * total;
-  for (const item of pool) {
-    r -= (item.weight || 1);
-    if (r <= 0) return item;
-  }
-  return pool[0];
-}
-
-// ─── Roll ─────────────────────────────────────────────────────────────────────
-function roll(pool, label) {
-  if (!pool || !pool.length) {
-    notif(`⚠️ Žádná data pro: ${label} / ${state.severity}`);
-    return;
-  }
-  const res = weighted(pool);
-  if (!res) { notif("❌ Chyba generování"); return; }
-
-  state.last = res;
-
-  // Show result box
-  const box = $("resultBox");
-  box.classList.remove("hidden");
-  $("resEffect").textContent = "⚠️ " + res.effect;
-  $("resRp1").textContent  = res.roleplay?.[0] ?? "(prázdné)";
-  $("resRp2").textContent  = res.roleplay?.[1] ?? "(prázdné)";
-
-  // Refresh send buttons
-  renderTargets();
-  notif(`🎲 ${label}`, "#2a9d5c");
-
-  // Touch lastActive
-  update(dbr("rooms", state.room), { lastActive: Date.now() });
-}
-
-// ─── Listen players ───────────────────────────────────────────────────────────
+// ── Listen Players ────────────────────────────────────────────────────────────
 function listenPlayers() {
   onValue(dbr("rooms", state.room, "players"), snap => {
     const players = snap.val() || {};
     playersCache = players;
 
-    // Header
     $("playersTop").textContent = Object.values(players).map(p => p.name).join("  |  ");
 
     if (state.isDM) {
-      // DM player list
       const el = $("dmPlayerList");
       const entries = Object.entries(players);
-      if (!entries.length) {
-        el.innerHTML = `<div class="empty-note">Žádní hráči</div>`;
-      } else {
-        el.innerHTML = entries.map(([id, p]) =>
-          `<div class="player-chip">${p.isDM ? "👑" : "🧑"} ${p.name}</div>`
-        ).join("");
-      }
+      el.innerHTML = entries.length
+        ? entries.map(([id, p]) =>
+            `<div class="player-chip">${p.isDM ? "👑" : "🧑"} ${p.name}</div>`
+          ).join("")
+        : `<div class="empty-note">Žádní hráči</div>`;
+
       renderTargets();
     } else {
-      // Player list for player view
       const el = $("playerListPlayer");
       const entries = Object.entries(players);
-      el.innerHTML = entries.map(([id, p]) =>
-        `<div class="player-chip">
-          ${p.isDM ? "👑" : "🧑"} ${p.name}
-          ${id === state.id ? '<span style="color:var(--accent2);font-size:0.72rem;margin-left:4px;">(ty)</span>' : ""}
-        </div>`
-      ).join("") || `<div class="empty-note">Žádní hráči</div>`;
+      el.innerHTML = entries.length
+        ? entries.map(([id, p]) =>
+            `<div class="player-chip">
+              ${p.isDM ? "👑" : "🧑"} ${p.name}
+              ${id === state.id ? '<span style="color:var(--accent2);font-size:0.72rem;margin-left:4px;">(ty)</span>' : ""}
+            </div>`
+          ).join("")
+        : `<div class="empty-note">Žádní hráči</div>`;
     }
   });
 }
 
-// ─── Render send targets ──────────────────────────────────────────────────────
+// ── Render Send Targets ───────────────────────────────────────────────────────
 function renderTargets() {
   const el = $("targets");
   const hasResult = !!state.last;
@@ -864,15 +935,15 @@ function renderTargets() {
     <div class="target-row">
       <div class="target-name">🧑 ${p.name}</div>
       <div class="target-btns">
-        <button class="btn-success btn-sm"  ${!hasResult?"disabled":""} onclick="window._send('${id}','r1')">📜 Roleplay 1</button>
-        <button class="btn-info btn-sm"     ${!hasResult?"disabled":""} onclick="window._send('${id}','r2')">📜 Roleplay 2</button>
-        <button class="btn-warning btn-sm"  ${!hasResult?"disabled":""} onclick="window._send('${id}','all')">📦 Oba</button>
+        <button class="btn-success btn-sm"  ${!hasResult ? "disabled" : ""} onclick="window._send('${id}','r1')">📜 Roleplay 1</button>
+        <button class="btn-info btn-sm"     ${!hasResult ? "disabled" : ""} onclick="window._send('${id}','r2')">📜 Roleplay 2</button>
+        <button class="btn-warning btn-sm"  ${!hasResult ? "disabled" : ""} onclick="window._send('${id}','all')">📦 Oba</button>
       </div>
     </div>
   `).join("");
 }
 
-// ─── Send message ─────────────────────────────────────────────────────────────
+// ── Send Message ──────────────────────────────────────────────────────────────
 window._send = (playerId, type) => {
   if (!state.last) { notif("❌ Nejprve vygeneruj výsledek!"); return; }
 
@@ -894,15 +965,17 @@ window._send = (playerId, type) => {
   .catch(() => notif("❌ Chyba odesílání"));
 };
 
-// ─── Listen for message (player) ─────────────────────────────────────────────
+// ── Listen Message (Player) ───────────────────────────────────────────────────
 function listenMessage() {
   onValue(dbr("rooms", state.room, "msg", state.id), snap => {
     const data = snap.val();
     const box  = $("playerResult");
+
     if (!data) {
       box.innerHTML = `<div class="waiting-text">⏳ Čekám na výsledek od DM…</div>`;
       return;
     }
+
     box.innerHTML = `
       <div class="msg-effect">⚠️ ${data.effect}</div>
       ${data.roleplay
@@ -913,29 +986,27 @@ function listenMessage() {
   });
 }
 
-// ─── Auto delete: no players for 5 min ───────────────────────────────────────
+// ── Auto Delete ───────────────────────────────────────────────────────────────
 function startAutoDelete() {
   setInterval(() => {
     get(dbr("rooms", state.room)).then(snap => {
       if (!snap.exists()) return;
-      const d = snap.val();
+      const d   = snap.val();
       const cnt = Object.keys(d.players || {}).length;
-      const idle = Date.now() - (d.lastActive || 0);
-      if (cnt === 0 && idle > 5 * 60 * 1000) {
+      if (cnt === 0 && (Date.now() - (d.lastActive || 0)) > 5 * 60 * 1000) {
         remove(dbr("rooms", state.room));
       }
     });
   }, 60_000);
 }
 
-// ─── Logout ───────────────────────────────────────────────────────────────────
+// ── Logout / Delete ───────────────────────────────────────────────────────────
 window._logout = async () => {
   await remove(dbr("rooms", state.room, "players", state.id)).catch(() => {});
   localStorage.removeItem("kf_state");
   location.reload();
 };
 
-// ─── Delete room ──────────────────────────────────────────────────────────────
 window._deleteRoom = async () => {
   if (!confirm("Opravdu smazat místnost? Tím odpojíš všechny hráče.")) return;
   await remove(dbr("rooms", state.room)).catch(() => {});
