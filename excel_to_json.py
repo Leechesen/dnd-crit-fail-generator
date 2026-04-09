@@ -4,27 +4,14 @@ import json
 EXCEL_FILE = "crit_fails.xlsx"
 OUTPUT_JSON = "crit_fails.json"
 
-ALL_SEVERITIES = ["Lehký", "Střední", "Těžký", "Sranda"]
-
 
 def normalize_severity(s):
     if not s:
-        return "Lehký"
-    s = str(s).strip().lower()
-    if "leh" in s:
-        return "Lehký"
-    if "stř" in s or "str" in s:
-        return "Střední"
-    if "těž" in s or "tez" in s:
-        return "Těžký"
-    if "sranda" in s:
-        return "Sranda"
-    return "Lehký"
-
-
-def ensure_all_severities(container):
-    for sev in ALL_SEVERITIES:
-        container.setdefault(sev, [])
+        return None
+    s = str(s).strip()
+    if not s or s.lower() == "nan":
+        return None
+    return s.strip()
 
 
 def build_json_from_excel():
@@ -44,16 +31,22 @@ def build_json_from_excel():
             attack_type = str(row.get("attack_type", "")).strip()
             severity = normalize_severity(row.get("severity", ""))
 
+            if not severity:
+                continue
+
             effect = str(row.get("effect", "")).strip()
             roleplay_1 = str(row.get("roleplay_1", "")).strip()
             roleplay_2 = str(row.get("roleplay_2", "")).strip()
 
-            if not effect:
+            if not effect or effect.lower() == "nan":
                 continue
 
             entry = {
                 "effect": effect,
-                "roleplay": [roleplay_1, roleplay_2],
+                "roleplay": [
+                    roleplay_1 if roleplay_1.lower() != "nan" else "",
+                    roleplay_2 if roleplay_2.lower() != "nan" else ""
+                ],
                 "weight": int(row.get("weight", 1)) if not pd.isna(row.get("weight")) else 1
             }
 
@@ -61,36 +54,38 @@ def build_json_from_excel():
             # ÚTOK
             # =========================
             if action == "Útok":
-                if not attack_type:
+                if not attack_type or attack_type.lower() == "nan":
                     attack_type = "Melee"
 
                 data[action].setdefault(attack_type, {})
-                ensure_all_severities(data[action][attack_type])
+                data[action][attack_type].setdefault(severity, [])
                 data[action][attack_type][severity].append(entry)
 
             # =========================
             # SKILL
             # =========================
             elif action == "Skill":
-                if not attribute or not skill:
+                if not attribute or attribute.lower() == "nan":
+                    continue
+                if not skill or skill.lower() == "nan":
                     continue
 
                 data[action].setdefault(attribute, {})
                 data[action][attribute].setdefault(skill, {})
-                ensure_all_severities(data[action][attribute][skill])
+                data[action][attribute][skill].setdefault(severity, [])
                 data[action][attribute][skill][severity].append(entry)
 
             # =========================
             # OBRANA / OSTATNÍ
             # =========================
             else:
-                ensure_all_severities(data[action])
+                data[action].setdefault(severity, [])
                 data[action][severity].append(entry)
 
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print("✅ JSON má všechny severity")
+    print("✅ JSON vygenerován dynamicky ze všech severity nalezených v Excelu")
 
 
 if __name__ == "__main__":
