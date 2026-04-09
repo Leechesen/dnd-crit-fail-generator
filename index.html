@@ -353,36 +353,43 @@
     }
 
     async function createRoom() {
-      const name = elements.nameInput.value.trim();
-      const roomName = elements.roomNameInput.value.trim();
-      const password = elements.roomPassInput.value;
+  const name = elements.nameInput.value.trim();
+  const roomName = elements.roomNameInput.value.trim();
+  const password = elements.roomPassInput.value;
 
-      if (!name || !roomName) {
-        alert("Vyplň jméno a název místnosti");
-        return;
+  if (!name || !roomName) {
+    alert("Vyplň jméno a název místnosti");
+    return;
+  }
+
+  // 👉 kontrola jestli už room existuje
+  const existing = await get(ref(db, "rooms/" + roomName));
+  if (existing.exists()) {
+    alert("Místnost už existuje");
+    return;
+  }
+
+  state.name = name;
+  state.room = roomName;
+  state.myId = CONSTANTS.DM_ID_PREFIX + Date.now();
+  state.isDM = true;
+
+  try {
+    await set(ref(db, "rooms/" + state.room), {
+      dm: state.myId,
+      password: password || null,
+      players: {
+        [state.myId]: { name: state.name + CONSTANTS.DM_BADGE }
       }
+    });
 
-      state.name = name;
-      state.room = roomName;
-      state.myId = CONSTANTS.DM_ID_PREFIX + Date.now();
-      state.isDM = true;
-
-      try {
-        await set(ref(db, "rooms/" + state.room), {
-          dm: state.myId,
-          password: password || null,
-          players: {
-            [state.myId]: { name: state.name + CONSTANTS.DM_BADGE }
-          }
-        });
-
-        saveToLocalStorage();
-        start();
-      } catch (error) {
-        console.error("Error creating room:", error);
-        alert("Nepodařilo se vytvořit místnost");
-      }
-    }
+    saveToLocalStorage();
+    start();
+  } catch (error) {
+    console.error("Error creating room:", error);
+    alert("Nepodařilo se vytvořit místnost");
+  }
+}
 
     function saveToLocalStorage() {
       localStorage.setItem(CONSTANTS.STORAGE_KEYS.ROOM, state.room);
@@ -457,6 +464,10 @@
   elements.setup.classList.add("hidden");
   elements.app.classList.remove("hidden");
 
+  // 👉 reset panelů (DŮLEŽITÉ)
+  elements.dmPanel.classList.add("hidden");
+  elements.playerPanel.classList.add("hidden");
+
   if (state.isDM) {
     elements.dmPanel.classList.remove("hidden");
 
@@ -491,13 +502,11 @@
     };
   }
 
-  // disconnect při odchodu
   onDisconnect(ref(db, "rooms/" + state.room + "/players/" + state.myId)).remove();
 
   listenPlayers();
   listenMessages();
 }
-
 function listenPlayers() {
   onValue(ref(db, "rooms/" + state.room + "/players"), snap => {
     state.players = snap.val() || {};
