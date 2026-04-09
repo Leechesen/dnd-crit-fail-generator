@@ -153,8 +153,8 @@
     margin-bottom: 7px;
     border: 1px solid var(--border);
   }
-  .room-name { font-weight: bold; }
-  .room-meta { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .room-name   { font-weight: bold; }
+  .room-meta   { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
   .room-locked { font-size: 0.75rem; color: var(--accent2); margin-top: 2px; }
 
   /* ── APP ── */
@@ -221,9 +221,9 @@
   }
 
   /* ── GENERATOR ── */
-  .cat-block  { margin-bottom: 14px; }
-  .cat-title  { font-weight: bold; color: var(--text); margin-bottom: 8px; font-size: 0.92rem; }
-  .btn-group  { display: flex; flex-wrap: wrap; gap: 5px; }
+  .cat-block { margin-bottom: 14px; }
+  .cat-title { font-weight: bold; color: var(--text); margin-bottom: 8px; font-size: 0.92rem; }
+  .btn-group { display: flex; flex-wrap: wrap; gap: 5px; }
 
   /* ── ATTRIBUTE LABELS ── */
   .attr-label {
@@ -300,6 +300,8 @@
     letter-spacing: 1px;
   }
   .res-body { padding: 12px; }
+
+  /* normal result rows */
   .res-effect {
     background: #200a0a;
     border-left: 3px solid var(--accent);
@@ -329,6 +331,28 @@
     margin-bottom: 3px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+  }
+
+  /* ── NO-RESULT / error state inside result box ── */
+  .res-missing {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1c1208;
+    border: 1px dashed var(--accent2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: var(--accent2);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+  .res-missing .res-missing-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .res-missing .res-missing-detail {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 3px;
   }
 
   /* ── TARGETS ── */
@@ -467,9 +491,8 @@
       <input id="passwordInput" type="password" placeholder="Nechte prázdné pro veřejnou místnost…">
       <div class="hint">Hráči budou muset zadat heslo při vstupu.</div>
     </div>
-    <button class="btn-success" onclick="createRoom()" style="width:100%;padding:10px;margin-top:4px;">
-      ✅ Vytvořit
-    </button>
+    <button class="btn-success" onclick="createRoom()"
+      style="width:100%;padding:10px;margin-top:4px;">✅ Vytvořit</button>
   </div>
   <div class="divider">nebo se připoj k existující místnosti</div>
   <div id="lobbyList">
@@ -502,19 +525,10 @@
           <div id="dmPlayerList"><div class="empty-note">Žádní hráči</div></div>
         </div>
 
+        <!-- result box is always visible once opened; content swaps -->
         <div id="resultBox" class="hidden">
-          <div class="res-header">🎲 Výsledek</div>
-          <div class="res-body">
-            <div class="res-effect" id="resEffect"></div>
-            <div class="res-rp">
-              <div class="rp-label">🎭 Roleplay 1</div>
-              <div id="resRp1"></div>
-            </div>
-            <div class="res-rp">
-              <div class="rp-label">🎭 Roleplay 2</div>
-              <div id="resRp2"></div>
-            </div>
-          </div>
+          <div class="res-header" id="resHeader">🎲 Výsledek</div>
+          <div class="res-body" id="resBody"></div>
         </div>
 
         <div class="card">
@@ -553,40 +567,31 @@ import {
   onValue, remove, update, onDisconnect
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// ── Firebase config ───────────────────────────────────────────────────────────
+// ── Firebase ──────────────────────────────────────────────────────────────────
 const fbApp = initializeApp({
   apiKey:      "AIzaSyBsomething",
   databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
 });
 const db = getDatabase(fbApp);
 
-// ── Module-level state ────────────────────────────────────────────────────────
-let FAILS          = {};
-let ALL_SEVERITIES = [];
-let state = { room:"", name:"", id:"", isDM:false, severity:"", last:null };
-let playersCache   = {};
-
-// Track whether we've already attached persistent listeners so reconnects
-// don't stack duplicate onValue handlers.
+// ── State ─────────────────────────────────────────────────────────────────────
+let FAILS             = {};
+let ALL_SEVERITIES    = [];
+let state             = { room:"", name:"", id:"", isDM:false, severity:"", last:null };
+let playersCache      = {};
 let listenersAttached = false;
 
-// ── DOM helper ────────────────────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
+const $   = id => document.getElementById(id);
+const dbr = (...p) => ref(db, p.join("/"));
 
-// ── Firebase path helper ──────────────────────────────────────────────────────
-const dbr = (...parts) => ref(db, parts.join("/"));
-
-// ── localStorage keys ─────────────────────────────────────────────────────────
 const LS_KEY        = "kf_state";
 const LS_KICKED_KEY = "kf_kicked";
 
-// ════════════════════════════════════════════════════════════════════════════
-//  NOTIFICATION
-// ════════════════════════════════════════════════════════════════════════════
+// ── Notification ──────────────────────────────────────────────────────────────
 let notifTimer = null;
 function notif(msg, color = "#e94560") {
   const el = $("notif");
-  el.textContent    = msg;
+  el.textContent     = msg;
   el.style.background = color;
   el.classList.add("show");
   clearTimeout(notifTimer);
@@ -594,28 +599,23 @@ function notif(msg, color = "#e94560") {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  SEVERITY – fully dynamic from JSON
+//  SEVERITY
 // ════════════════════════════════════════════════════════════════════════════
 function discoverSeverities(data) {
   const found = new Set();
-
   function addFromSevMap(obj) {
     if (!obj || typeof obj !== "object") return;
     Object.keys(obj).forEach(k => { if (Array.isArray(obj[k])) found.add(k); });
   }
-
   const utok = data["Útok"];
   if (utok && typeof utok === "object") Object.values(utok).forEach(addFromSevMap);
-
   addFromSevMap(data["Obrana"]);
-
   const skill = data["Skill"];
   if (skill && typeof skill === "object")
     Object.values(skill).forEach(attrs => {
       if (attrs && typeof attrs === "object") Object.values(attrs).forEach(addFromSevMap);
     });
-
-  const PREFERRED = ["Lehký", "Střední", "Těžký", "Sranda"];
+  const PREFERRED = ["Lehký","Střední","Těžký","Sranda"];
   const ordered   = PREFERRED.filter(s => found.has(s));
   found.forEach(s => { if (!ordered.includes(s)) ordered.push(s); });
   return ordered;
@@ -651,55 +651,139 @@ function selectSeverity(sev) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  ROLL – safe, no crash on missing severity
+//  RESULT DISPLAY HELPERS
 // ════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Show a "combination does not exist" message inside the result box.
+ * No alert, no crash, layout preserved.
+ *
+ * @param {string} label  - human-readable action label (e.g. "Útok – Melee")
+ * @param {string} sev    - the severity that was requested
+ * @param {string[]} available - severity keys that DO exist for this action
+ */
+function showMissingResult(label, sev, available) {
+  const box = $("resultBox");
+  box.classList.remove("hidden");
+
+  $("resHeader").textContent = "⚠️ Kombinace neexistuje";
+
+  const avail = available.length
+    ? `Dostupné závažnosti pro „${label}": ${available.join(", ")}`
+    : `Pro „${label}" nejsou žádná data.`;
+
+  $("resBody").innerHTML = `
+    <div class="res-missing">
+      <div class="res-missing-icon">⚠️</div>
+      <div>
+        <div>Tato kombinace neexistuje</div>
+        <div class="res-missing-detail">
+          Závažnost „${sev}" není definována pro: <strong>${label}</strong>.<br>
+          ${avail}
+        </div>
+      </div>
+    </div>`;
+
+  // Clear last result so send buttons stay disabled
+  state.last = null;
+  renderTargets();
+}
+
+/**
+ * Show a successful roll result inside the result box.
+ */
+function showSuccessResult(res, label, sev) {
+  const box = $("resultBox");
+  box.classList.remove("hidden");
+
+  $("resHeader").textContent = `🎲 Výsledek — ${label} / ${sev}`;
+
+  $("resBody").innerHTML = `
+    <div class="res-effect">⚠️ ${res.effect ?? "(bez efektu)"}</div>
+    <div class="res-rp">
+      <div class="rp-label">🎭 Roleplay 1</div>
+      <div>${res.roleplay?.[0] ?? "(prázdné)"}</div>
+    </div>
+    <div class="res-rp">
+      <div class="rp-label">🎭 Roleplay 2</div>
+      <div>${res.roleplay?.[1] ?? "(prázdné)"}</div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  ROLL  ← strict: NO fallback, NO crash
+// ════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Attempt to generate a result for the currently selected severity.
+ *
+ * Rules (strict):
+ *  1. sevMap must be a non-null object.
+ *  2. sevMap[selectedSeverity] must exist AND be a non-empty array.
+ *  3. If either check fails → showMissingResult(), stop. No fallback.
+ *  4. Otherwise → weighted pick → showSuccessResult().
+ *
+ * @param {Object} sevMap  - object keyed by severity name, values are entry arrays
+ * @param {string} label   - human-readable label for display
+ */
 function roll(sevMap, label) {
-  if (!sevMap || typeof sevMap !== "object") {
-    notif(`⚠️ Tato kombinace neexistuje: ${label}`);
+  const sev = state.severity;
+
+  // ── Guard 1: sevMap must be a valid object ────────────────────────────────
+  if (!sevMap || typeof sevMap !== "object" || Array.isArray(sevMap)) {
+    showMissingResult(label, sev, []);
+    console.warn(`[roll] sevMap invalid for "${label}"`);
     return;
   }
 
+  // Collect all keys that have a non-empty array (for informational display only)
   const available = Object.entries(sevMap)
     .filter(([, pool]) => Array.isArray(pool) && pool.length > 0)
     .map(([key]) => key);
 
-  if (!available.length) {
-    notif(`⚠️ Tato kombinace neexistuje: ${label}`);
+  // ── Guard 2a: selected severity key must exist ────────────────────────────
+  if (!Object.prototype.hasOwnProperty.call(sevMap, sev)) {
+    showMissingResult(label, sev, available);
+    console.warn(`[roll] Severity "${sev}" not found in "${label}". Available:`, available);
     return;
   }
 
-  let chosenSev    = state.severity;
-  let usedFallback = false;
+  const pool = sevMap[sev];
 
-  if (!available.includes(chosenSev)) {
-    chosenSev    = available[Math.floor(Math.random() * available.length)];
-    usedFallback = true;
+  // ── Guard 2b: pool must be a non-empty array ──────────────────────────────
+  if (!Array.isArray(pool) || pool.length === 0) {
+    showMissingResult(label, sev, available);
+    console.warn(`[roll] Pool for "${sev}" in "${label}" is empty or not an array`);
+    return;
   }
 
-  const res = weighted(sevMap[chosenSev]);
-  if (!res) { notif("⚠️ Tato kombinace neexistuje"); return; }
+  // ── All guards passed → generate ─────────────────────────────────────────
+  const res = weighted(pool);
+
+  if (!res) {
+    // weighted() should never return null for a non-empty pool, but be safe
+    showMissingResult(label, sev, available);
+    console.error(`[roll] weighted() returned null for "${label}" / "${sev}"`);
+    return;
+  }
 
   state.last = res;
-
-  $("resultBox").classList.remove("hidden");
-  $("resEffect").textContent = "⚠️ " + (res.effect  ?? "(bez efektu)");
-  $("resRp1").textContent    = res.roleplay?.[0] ?? "(prázdné)";
-  $("resRp2").textContent    = res.roleplay?.[1] ?? "(prázdné)";
-
+  showSuccessResult(res, label, sev);
   renderTargets();
-
-  usedFallback
-    ? notif(`⚠️ „${state.severity}" chybí → použito „${chosenSev}" | ${label}`, "#e9a020")
-    : notif(`🎲 ${label} / ${chosenSev}`, "#2a9d5c");
+  notif(`🎲 ${label} / ${sev}`, "#2a9d5c");
 
   update(dbr("rooms", state.room), { lastActive: Date.now() }).catch(console.error);
 }
 
+// ── Weighted random pick ──────────────────────────────────────────────────────
 function weighted(pool) {
   const total = pool.reduce((s, x) => s + (x.weight || 1), 0);
   let r = Math.random() * total;
-  for (const item of pool) { r -= (item.weight || 1); if (r <= 0) return item; }
-  return pool[0];
+  for (const item of pool) {
+    r -= (item.weight || 1);
+    if (r <= 0) return item;
+  }
+  return pool[pool.length - 1]; // safety fallback within a valid pool
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -711,7 +795,6 @@ function attrColorClass(attrName) {
     .replace(/[ůú]/g,"u").replace(/ě/g,"e").replace(/š/g,"s")
     .replace(/č/g,"c").replace(/ř/g,"r").replace(/ž/g,"z")
     .replace(/ý/g,"y").replace(/ň/g,"n").replace(/ó/g,"o");
-
   if (/sila|sil|strength|str/.test(n))         return "attr-sila";
   if (/obratnost|obr|dexterity|dex/.test(n))   return "attr-obratnost";
   if (/odolnost|odo|constitution|con/.test(n)) return "attr-odolnost";
@@ -789,8 +872,7 @@ function mkBlock(title) {
   const d = document.createElement("div");
   d.className = "cat-block";
   const t = document.createElement("div");
-  t.className   = "cat-title";
-  t.textContent = title;
+  t.className = "cat-title"; t.textContent = title;
   d.appendChild(t);
   return d;
 }
@@ -800,28 +882,22 @@ function mkGroup() {
   return d;
 }
 function mkGenBtn(text, title, handler) {
-  const b       = document.createElement("button");
-  b.className   = "btn-secondary btn-sm";
-  b.textContent = text;
-  b.title       = title;
-  b.onclick     = handler;
+  const b = document.createElement("button");
+  b.className = "btn-secondary btn-sm";
+  b.textContent = text; b.title = title; b.onclick = handler;
   return b;
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  LOAD JSON  →  INIT
+//  LOAD JSON → INIT
 // ════════════════════════════════════════════════════════════════════════════
 fetch("crit_fails.json")
-  .then(r => {
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.json();
-  })
+  .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
   .then(data => {
     FAILS          = data;
     ALL_SEVERITIES = discoverSeverities(data);
     if (!ALL_SEVERITIES.length) throw new Error("Žádné severity nenalezeny");
     state.severity = ALL_SEVERITIES[0];
-
     console.log("[KritFailer] JSON loaded. Severities:", ALL_SEVERITIES);
     $("loading").classList.add("hidden");
     init();
@@ -838,7 +914,6 @@ fetch("crit_fails.json")
 function init() {
   console.log("[KritFailer] init()");
 
-  // Kicked flag → stay in lobby
   if (localStorage.getItem(LS_KICKED_KEY)) {
     localStorage.removeItem(LS_KICKED_KEY);
     localStorage.removeItem(LS_KEY);
@@ -848,85 +923,47 @@ function init() {
   }
 
   const saved = localStorage.getItem(LS_KEY);
-  if (!saved) {
-    console.log("[KritFailer] No saved session → showSetup");
-    showSetup();
-    return;
-  }
+  if (!saved) { showSetup(); return; }
 
   let s;
   try { s = JSON.parse(saved); }
-  catch (e) {
-    console.warn("[KritFailer] Bad localStorage data:", e);
-    localStorage.removeItem(LS_KEY);
-    showSetup();
-    return;
-  }
+  catch (e) { localStorage.removeItem(LS_KEY); showSetup(); return; }
 
-  console.log("[KritFailer] Restoring session:", s);
-
-  // Verify room still exists
   get(dbr("rooms", s.room))
     .then(snap => {
       if (!snap.exists()) {
-        console.warn("[KritFailer] Room gone → lobby");
         localStorage.removeItem(LS_KEY);
         showSetup();
         notif("⚠️ Místnost již neexistuje.");
         return;
       }
-
       state = { ...s, last: null };
       if (!ALL_SEVERITIES.includes(state.severity)) state.severity = ALL_SEVERITIES[0];
-
-      console.log("[KritFailer] Room exists, re-registering player");
-      set(dbr("rooms", state.room, "players", state.id), {
-        name:  state.name,
-        isDM:  state.isDM,
-      })
-      .then(() => {
-        console.log("[KritFailer] Player re-registered → startApp");
-        setupOnDisconnect();
-        startApp();
-      })
-      .catch(err => {
-        console.error("[KritFailer] Re-register failed:", err);
-        notif("❌ Chyba obnovení spojení.");
-        showSetup();
-      });
+      set(dbr("rooms", state.room, "players", state.id), { name: state.name, isDM: state.isDM })
+        .then(() => { setupOnDisconnect(); startApp(); })
+        .catch(err => { console.error(err); notif("❌ Chyba obnovení spojení."); showSetup(); });
     })
-    .catch(err => {
-      console.error("[KritFailer] Room check failed:", err);
-      showSetup();
-    });
+    .catch(() => showSetup());
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-//  SETUP SCREEN
-// ════════════════════════════════════════════════════════════════════════════
 function showSetup() {
-  // Reset panels so a re-entry is clean
   $("app").classList.add("hidden");
   $("dmPanel").classList.add("hidden");
   $("playerPanel").classList.add("hidden");
   listenersAttached = false;
-
   $("setup").classList.remove("hidden");
   listenLobby();
 }
 
-// Lobby list – live updates
 function listenLobby() {
   onValue(dbr("rooms"), snap => {
     const data = snap.val() || {};
     const keys = Object.keys(data);
     const list = $("lobbyList");
-
     if (!keys.length) {
       list.innerHTML = `<div class="empty-note" style="text-align:center;padding:16px;">Žádné místnosti…</div>`;
       return;
     }
-
     list.innerHTML = keys.map(r => {
       const cnt    = Object.keys(data[r].players || {}).length;
       const locked = !!(data[r].password);
@@ -946,39 +983,21 @@ function listenLobby() {
 window.toggleCreate = () => $("createRoomSection").classList.toggle("hidden");
 
 // ════════════════════════════════════════════════════════════════════════════
-//  CREATE ROOM
+//  CREATE / JOIN
 // ════════════════════════════════════════════════════════════════════════════
 window.createRoom = async () => {
-  console.log("[KritFailer] createRoom()");
-
   const name     = $("nameInput").value.trim();
   const room     = $("roomInput").value.trim();
   const password = $("passwordInput").value.trim();
-
   if (!name) { notif("❌ Zadej jméno!"); return; }
   if (!room) { notif("❌ Zadej název místnosti!"); return; }
-
-  // Guard: room must not already exist
   try {
     const existing = await get(dbr("rooms", room));
     if (existing.exists()) { notif("❌ Místnost s tímto názvem již existuje!"); return; }
-  } catch (e) {
-    console.error("[KritFailer] Existence check failed:", e);
-    notif("❌ Chyba Firebase. Zkus to znovu.");
-    return;
-  }
+  } catch (e) { notif("❌ Chyba Firebase. Zkus to znovu."); return; }
 
   const id = "DM_" + Date.now();
-
-  // Build state BEFORE writing to Firebase
-  state = {
-    room,
-    name:     name + " 👑",
-    id,
-    isDM:     true,
-    severity: ALL_SEVERITIES[0],
-    last:     null,
-  };
+  state = { room, name: name + " 👑", id, isDM: true, severity: ALL_SEVERITIES[0], last: null };
 
   const roomData = {
     players:    { [id]: { name: state.name, isDM: true } },
@@ -987,114 +1006,61 @@ window.createRoom = async () => {
   };
   if (password) roomData.password = password;
 
-  console.log("[KritFailer] Writing room to Firebase:", room);
-
   try {
     await set(dbr("rooms", room), roomData);
-    console.log("[KritFailer] Room written OK");
-  } catch (e) {
-    console.error("[KritFailer] Failed to write room:", e);
-    notif("❌ Nepodařilo se vytvořit místnost: " + e.message);
-    return;
-  }
+  } catch (e) { notif("❌ Nepodařilo se vytvořit místnost: " + e.message); return; }
 
-  saveState();
-  setupOnDisconnect();
-  startApp();          // ← always called synchronously after await resolves
+  saveState(); setupOnDisconnect(); startApp();
 };
 
-// ════════════════════════════════════════════════════════════════════════════
-//  JOIN ROOM
-// ════════════════════════════════════════════════════════════════════════════
 window._joinRoom = async (room) => {
-  console.log("[KritFailer] _joinRoom():", room);
-
   const name = $("nameInput").value.trim();
   if (!name) { notif("❌ Zadej jméno!"); return; }
 
-  // Fetch room data for password check
   let snap;
-  try {
-    snap = await get(dbr("rooms", room));
-  } catch (e) {
-    console.error("[KritFailer] Failed to fetch room:", e);
-    notif("❌ Chyba Firebase. Zkus to znovu.");
-    return;
-  }
-
+  try { snap = await get(dbr("rooms", room)); }
+  catch (e) { notif("❌ Chyba Firebase. Zkus to znovu."); return; }
   if (!snap.exists()) { notif("❌ Místnost neexistuje."); return; }
 
   const roomData = snap.val();
-
-  // Password guard
   if (roomData.password) {
     const entered = window.prompt(`🔒 Místnost „${room}" vyžaduje heslo:`);
-    if (entered === null) return;                          // user cancelled
-    if (entered.trim() !== roomData.password) {
-      notif("❌ Nesprávné heslo!");
-      return;
-    }
+    if (entered === null) return;
+    if (entered.trim() !== roomData.password) { notif("❌ Nesprávné heslo!"); return; }
   }
 
   const id = "P_" + Date.now();
-
-  state = {
-    room,
-    name,
-    id,
-    isDM:     false,
-    severity: ALL_SEVERITIES[0],
-    last:     null,
-  };
+  state = { room, name, id, isDM: false, severity: ALL_SEVERITIES[0], last: null };
 
   try {
     await set(dbr("rooms", room, "players", id), { name, isDM: false });
     await update(dbr("rooms", room), { lastActive: Date.now() });
-    console.log("[KritFailer] Joined room OK");
-  } catch (e) {
-    console.error("[KritFailer] Failed to join room:", e);
-    notif("❌ Nepodařilo se připojit: " + e.message);
-    return;
-  }
+  } catch (e) { notif("❌ Nepodařilo se připojit: " + e.message); return; }
 
-  saveState();
-  setupOnDisconnect();
-  startApp();          // ← always called synchronously after awaits resolve
+  saveState(); setupOnDisconnect(); startApp();
 };
 
-// ════════════════════════════════════════════════════════════════════════════
-//  PERSIST SESSION
-// ════════════════════════════════════════════════════════════════════════════
 function saveState() {
   localStorage.setItem(LS_KEY, JSON.stringify({ ...state, last: null }));
-  console.log("[KritFailer] State saved:", state);
 }
-
 function setupOnDisconnect() {
   onDisconnect(dbr("rooms", state.room, "players", state.id)).remove();
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  START APP  ← single definition, no duplication
+//  START APP
 // ════════════════════════════════════════════════════════════════════════════
 function startApp() {
   console.log("[KritFailer] startApp() isDM:", state.isDM);
-
-  // Switch screens
   $("setup").classList.add("hidden");
   $("app").classList.remove("hidden");
-
-  $("roomTitle").textContent =
-    (state.isDM ? "👑" : "🧑") + " Místnost: " + state.room;
+  $("roomTitle").textContent = (state.isDM ? "👑" : "🧑") + " Místnost: " + state.room;
 
   $("topBtns").innerHTML = `
     <button class="btn-secondary btn-sm" onclick="window._logout()">🚪 Odejít</button>
-    ${state.isDM
-      ? `<button class="btn-danger btn-sm" onclick="window._deleteRoom()">🗑️ Smazat místnost</button>`
-      : ""}
+    ${state.isDM ? `<button class="btn-danger btn-sm" onclick="window._deleteRoom()">🗑️ Smazat místnost</button>` : ""}
   `;
 
-  // Show correct panel
   if (state.isDM) {
     $("dmPanel").classList.remove("hidden");
     $("playerPanel").classList.add("hidden");
@@ -1105,7 +1071,6 @@ function startApp() {
     $("dmPanel").classList.add("hidden");
   }
 
-  // Attach Firebase listeners only once per session
   if (!listenersAttached) {
     listenersAttached = true;
     listenPlayers();
@@ -1116,71 +1081,48 @@ function startApp() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  REAL-TIME PLAYER LIST
+//  PLAYERS
 // ════════════════════════════════════════════════════════════════════════════
 function listenPlayers() {
-  console.log("[KritFailer] listenPlayers() attached");
-
   onValue(dbr("rooms", state.room, "players"), snap => {
     const players = snap.val() || {};
     playersCache  = players;
 
-    console.log("[KritFailer] Players update:", Object.keys(players));
+    if (!state.isDM && !players[state.id]) { handleKicked(); return; }
 
-    // Kicked detection for non-DM
-    if (!state.isDM && !players[state.id]) {
-      handleKicked();
-      return;
-    }
+    $("playersTop").textContent = Object.values(players).map(p => p.name).join("  |  ");
 
-    $("playersTop").textContent =
-      Object.values(players).map(p => p.name).join("  |  ");
-
-    if (state.isDM) {
-      renderDMPlayerList(players);
-      renderTargets();
-    } else {
-      renderPlayerList(players);
-    }
+    if (state.isDM) { renderDMPlayerList(players); renderTargets(); }
+    else              renderPlayerList(players);
   });
 }
 
 function renderDMPlayerList(players) {
   const el      = $("dmPlayerList");
   const entries = Object.entries(players);
-
-  if (!entries.length) {
-    el.innerHTML = `<div class="empty-note">Žádní hráči</div>`;
-    return;
-  }
-
+  if (!entries.length) { el.innerHTML = `<div class="empty-note">Žádní hráči</div>`; return; }
   el.innerHTML = "";
   entries.forEach(([id, p]) => {
     const chip = document.createElement("div");
     chip.className = "player-chip";
-
-    const nameSpan       = document.createElement("span");
+    const nameSpan = document.createElement("span");
     nameSpan.className   = "player-chip-name";
     nameSpan.textContent = (p.isDM ? "👑 " : "🧑 ") + p.name;
     chip.appendChild(nameSpan);
-
     if (!p.isDM && id !== state.id) {
-      const kickBtn       = document.createElement("button");
-      kickBtn.className   = "btn-kick btn-sm";
-      kickBtn.textContent = "❌ Kick";
-      kickBtn.title       = `Vyhodit ${p.name}`;
-      kickBtn.onclick     = () => kickPlayer(id, p.name);
-      chip.appendChild(kickBtn);
+      const kb = document.createElement("button");
+      kb.className   = "btn-kick btn-sm";
+      kb.textContent = "❌ Kick";
+      kb.onclick     = () => kickPlayer(id, p.name);
+      chip.appendChild(kb);
     }
-
     el.appendChild(chip);
   });
 }
 
 function renderPlayerList(players) {
-  const el      = $("playerListPlayer");
   const entries = Object.entries(players);
-  el.innerHTML  = entries.length
+  $("playerListPlayer").innerHTML = entries.length
     ? entries.map(([id, p]) => `
         <div class="player-chip">
           <span class="player-chip-name">
@@ -1189,8 +1131,7 @@ function renderPlayerList(players) {
               ? '<span style="color:var(--accent2);font-size:0.72rem;margin-left:4px;">(ty)</span>'
               : ""}
           </span>
-        </div>`
-      ).join("")
+        </div>`).join("")
     : `<div class="empty-note">Žádní hráči</div>`;
 }
 
@@ -1199,130 +1140,87 @@ function renderPlayerList(players) {
 // ════════════════════════════════════════════════════════════════════════════
 async function kickPlayer(playerId, playerName) {
   if (!confirm(`Opravdu vyhodit hráče „${playerName}"?`)) return;
-
   try {
-    // Write kicked flag first so client detects it
     await set(dbr("rooms", state.room, "msg", playerId), {
-      kicked:   true,
-      effect:   "Byl/a jsi vyhozen/a z místnosti.",
-      roleplay: "",
-      ts:       Date.now(),
+      kicked: true, effect: "Byl/a jsi vyhozen/a z místnosti.", roleplay: "", ts: Date.now()
     });
     await remove(dbr("rooms", state.room, "players", playerId));
     notif(`✅ Hráč „${playerName}" byl vyhozen.`, "#2a9d5c");
-  } catch (e) {
-    console.error("[KritFailer] Kick failed:", e);
-    notif("❌ Kick selhal: " + e.message);
-  }
+  } catch (e) { notif("❌ Kick selhal: " + e.message); }
 }
 
 function handleKicked() {
   localStorage.setItem(LS_KICKED_KEY, "1");
   localStorage.removeItem(LS_KEY);
-
   const box = $("playerResult");
-  if (box) {
-    box.innerHTML = `
-      <div class="msg-kicked">
-        ❌ Byl/a jsi vyhozen/a z místnosti.<br><br>
-        <button class="btn-primary" onclick="location.reload()">Zpět do lobby</button>
-      </div>`;
-  }
+  if (box) box.innerHTML = `
+    <div class="msg-kicked">
+      ❌ Byl/a jsi vyhozen/a z místnosti.<br><br>
+      <button class="btn-primary" onclick="location.reload()">Zpět do lobby</button>
+    </div>`;
   notif("❌ Byl/a jsi vyhozen/a z místnosti.", "#c0392b");
   setTimeout(() => location.reload(), 4000);
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  SEND TARGETS
+//  SEND
 // ════════════════════════════════════════════════════════════════════════════
 function renderTargets() {
   const el        = $("targets");
   const hasResult = !!state.last;
-  const others    = Object.entries(playersCache)
-    .filter(([id, p]) => id !== state.id && !p.isDM);
-
+  const others    = Object.entries(playersCache).filter(([id, p]) => id !== state.id && !p.isDM);
   if (!others.length) {
     el.innerHTML = `<div class="empty-note">Žádní hráči k dispozici</div>`;
     return;
   }
-
   el.innerHTML = others.map(([id, p]) => `
     <div class="target-row">
       <div class="target-name">🧑 ${p.name}</div>
       <div class="target-btns">
-        <button class="btn-success btn-sm"
-          ${!hasResult ? "disabled" : ""}
-          onclick="window._send('${id}','r1')">📜 Roleplay 1</button>
-        <button class="btn-info btn-sm"
-          ${!hasResult ? "disabled" : ""}
-          onclick="window._send('${id}','r2')">📜 Roleplay 2</button>
-        <button class="btn-warning btn-sm"
-          ${!hasResult ? "disabled" : ""}
-          onclick="window._send('${id}','all')">📦 Oba</button>
+        <button class="btn-success btn-sm" ${!hasResult?"disabled":""} onclick="window._send('${id}','r1')">📜 Roleplay 1</button>
+        <button class="btn-info    btn-sm" ${!hasResult?"disabled":""} onclick="window._send('${id}','r2')">📜 Roleplay 2</button>
+        <button class="btn-warning btn-sm" ${!hasResult?"disabled":""} onclick="window._send('${id}','all')">📦 Oba</button>
       </div>
-    </div>`
-  ).join("");
+    </div>`).join("");
 }
 
 window._send = (playerId, type) => {
   if (!state.last) { notif("❌ Nejprve vygeneruj výsledek!"); return; }
-
   const { effect, roleplay } = state.last;
   const rp0    = roleplay?.[0] ?? "";
   const rp1    = roleplay?.[1] ?? "";
-  const rpText = type === "r1"  ? rp0
-               : type === "r2"  ? rp1
-               : [rp0, rp1].filter(Boolean).join("\n\n");
-
-  set(dbr("rooms", state.room, "msg", playerId), {
-    effect, roleplay: rpText, ts: Date.now()
-  })
-  .then(()  => notif("✅ Odesláno!", "#2a9d5c"))
-  .catch(e  => { console.error(e); notif("❌ Chyba odesílání"); });
+  const rpText = type==="r1" ? rp0 : type==="r2" ? rp1 : [rp0,rp1].filter(Boolean).join("\n\n");
+  set(dbr("rooms", state.room, "msg", playerId), { effect, roleplay: rpText, ts: Date.now() })
+    .then(()  => notif("✅ Odesláno!", "#2a9d5c"))
+    .catch(e  => { console.error(e); notif("❌ Chyba odesílání"); });
 };
 
 // ════════════════════════════════════════════════════════════════════════════
-//  LISTEN MESSAGE  (player side)
+//  MESSAGE LISTENER (player)
 // ════════════════════════════════════════════════════════════════════════════
 function listenMessage() {
-  console.log("[KritFailer] listenMessage() attached for", state.id);
-
   onValue(dbr("rooms", state.room, "msg", state.id), snap => {
     const data = snap.val();
     const box  = $("playerResult");
-
-    if (!data) {
-      box.innerHTML = `<div class="waiting-text">⏳ Čekám na výsledek od DM…</div>`;
-      return;
-    }
-
+    if (!data) { box.innerHTML = `<div class="waiting-text">⏳ Čekám na výsledek od DM…</div>`; return; }
     if (data.kicked) { handleKicked(); return; }
-
     box.innerHTML = `
       <div class="msg-effect">⚠️ ${data.effect}</div>
       ${data.roleplay
-        ? `<div class="msg-rp">🎭 ${data.roleplay.replace(/\n/g, "<br>")}</div>`
+        ? `<div class="msg-rp">🎭 ${data.roleplay.replace(/\n/g,"<br>")}</div>`
         : ""}`;
-
     notif("📬 Nový výsledek od DM!");
   });
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  WATCH ROOM DELETED (all clients)
+//  WATCH ROOM DELETED
 // ════════════════════════════════════════════════════════════════════════════
 function watchRoomDeleted() {
-  // Use get() first so we know the room EXISTS at attach time.
-  // Then onValue will only fire a redirect on actual removal.
   let initialLoad = true;
-
   onValue(dbr("rooms", state.room), snap => {
-    if (initialLoad) {
-      initialLoad = false;   // skip first emission (room exists, we just joined)
-      return;
-    }
+    if (initialLoad) { initialLoad = false; return; }
     if (!snap.exists()) {
-      console.warn("[KritFailer] Room deleted externally → reload");
       localStorage.removeItem(LS_KEY);
       notif("⚠️ Místnost byla smazána.");
       setTimeout(() => location.reload(), 2500);
@@ -1331,7 +1229,7 @@ function watchRoomDeleted() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  AUTO DELETE  (DM side – no players for 5 min)
+//  AUTO DELETE
 // ════════════════════════════════════════════════════════════════════════════
 function startAutoDelete() {
   setInterval(() => {
@@ -1339,27 +1237,22 @@ function startAutoDelete() {
       if (!snap.exists()) return;
       const d   = snap.val();
       const cnt = Object.keys(d.players || {}).length;
-      if (cnt === 0 && (Date.now() - (d.lastActive || 0)) > 5 * 60 * 1000) {
-        console.log("[KritFailer] Auto-deleting idle room");
+      if (cnt === 0 && (Date.now() - (d.lastActive || 0)) > 5 * 60 * 1000)
         remove(dbr("rooms", state.room));
-      }
     }).catch(console.error);
   }, 60_000);
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  LOGOUT / DELETE ROOM
+//  LOGOUT / DELETE
 // ════════════════════════════════════════════════════════════════════════════
 window._logout = async () => {
-  console.log("[KritFailer] _logout()");
   await remove(dbr("rooms", state.room, "players", state.id)).catch(console.error);
   localStorage.removeItem(LS_KEY);
   location.reload();
 };
-
 window._deleteRoom = async () => {
   if (!confirm("Opravdu smazat místnost? Tím odpojíš všechny hráče.")) return;
-  console.log("[KritFailer] _deleteRoom()");
   await remove(dbr("rooms", state.room)).catch(console.error);
   localStorage.removeItem(LS_KEY);
   location.reload();
