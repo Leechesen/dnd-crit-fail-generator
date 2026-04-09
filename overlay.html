@@ -1,163 +1,294 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overlay</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KritFailer Overlay</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      background: transparent;
-      font-family: Arial, sans-serif;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 48px;
-      overflow: hidden;
-    }
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    overflow: hidden;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
 
-    #overlay-card {
-      background: #1e1e1e;
-      border: 2px solid #ff9800;
-      border-radius: 14px;
-      padding: 20px 28px;
-      max-width: 600px;
-      width: 90%;
-      box-shadow:
-        0 0 18px rgba(255, 152, 0, 0.45),
-        0 4px 24px rgba(0, 0, 0, 0.7);
-      opacity: 0;
-      transform: translateY(20px);
-      transition:
-        opacity 0.6s ease,
-        transform 0.6s ease;
-      pointer-events: none;
-    }
+  #overlay-wrapper {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 680px;
+    max-width: 95vw;
+    pointer-events: none;
+    z-index: 9999;
+  }
 
-    #overlay-card.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  #overlay-card {
+    background: rgba(22, 33, 62, 0.97);
+    border: 2px solid #e94560;
+    border-radius: 18px;
+    box-shadow:
+      0 8px 40px rgba(0, 0, 0, 0.85),
+      0 0 0 1px rgba(233, 69, 96, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    padding: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+    transition:
+      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
 
-    #overlay-card.hidden {
-      opacity: 0;
-      transform: translateY(20px);
-    }
+  #overlay-card.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 
-    .overlay-player {
-      font-size: 13px;
-      font-weight: bold;
-      color: #ff9800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
+  #overlay-card.hiding {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+    transition:
+      opacity 0.6s ease-in,
+      transform 0.6s ease-in;
+  }
 
-    .overlay-effect {
-      font-size: 20px;
-      font-weight: bold;
-      color: #ffffff;
-      margin-bottom: 10px;
-      line-height: 1.3;
-    }
+  .ov-header {
+    background: linear-gradient(135deg, #e94560 0%, #c0392b 100%);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
 
-    .overlay-roleplay {
-      font-size: 14px;
-      color: #cccccc;
-      font-style: italic;
-      line-height: 1.5;
-    }
+  .ov-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-    .overlay-divider {
-      height: 1px;
-      background: rgba(255, 152, 0, 0.3);
-      margin: 10px 0;
-    }
-  </style>
+  .ov-icon {
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+
+  .ov-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #fff;
+    opacity: 0.92;
+  }
+
+  .ov-player {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+  }
+
+  .ov-body {
+    padding: 14px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ov-effect {
+    background: rgba(32, 10, 10, 0.8);
+    border-left: 4px solid #e94560;
+    border-radius: 0 10px 10px 0;
+    padding: 10px 14px;
+    color: #ff9090;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .ov-effect-label {
+    font-size: 0.68rem;
+    color: #e94560;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    opacity: 0.85;
+  }
+
+  .ov-rp {
+    background: rgba(10, 24, 10, 0.8);
+    border-left: 4px solid #2a9d5c;
+    border-radius: 0 10px 10px 0;
+    padding: 10px 14px;
+    color: #90e890;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .ov-rp-label {
+    font-size: 0.68rem;
+    color: #2a9d5c;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    opacity: 0.85;
+  }
+
+  .ov-footer {
+    background: rgba(15, 52, 96, 0.6);
+    padding: 6px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .ov-timer-bar-wrap {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .ov-timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #e94560, #e9a020);
+    border-radius: 2px;
+    transform-origin: left center;
+    transition: transform linear;
+  }
+
+  .ov-footer-text {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.3);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+</style>
 </head>
 <body>
 
+<div id="overlay-wrapper">
   <div id="overlay-card">
-    <div class="overlay-player" id="overlay-player"></div>
-    <div class="overlay-effect" id="overlay-effect"></div>
-    <div class="overlay-divider"></div>
-    <div class="overlay-roleplay" id="overlay-roleplay"></div>
+    <div class="ov-header">
+      <div class="ov-header-left">
+        <span class="ov-icon">🎲</span>
+        <span class="ov-title">Kritický neúspěch</span>
+      </div>
+      <span class="ov-player" id="ov-player"></span>
+    </div>
+    <div class="ov-body">
+      <div class="ov-effect">
+        <div class="ov-effect-label">⚠️ Efekt</div>
+        <div id="ov-effect"></div>
+      </div>
+      <div class="ov-rp" id="ov-rp-wrap">
+        <div class="ov-rp-label">🎭 Roleplay</div>
+        <div id="ov-roleplay"></div>
+      </div>
+    </div>
+    <div class="ov-footer">
+      <div class="ov-timer-bar-wrap">
+        <div class="ov-timer-bar" id="ov-timer-bar"></div>
+      </div>
+      <span class="ov-footer-text">KritFailer</span>
+    </div>
   </div>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDummyKeyReplaceWithYours",
-      authDomain: "your-app.firebaseapp.com",
-      databaseURL: "https://your-app-default-rtdb.firebaseio.com",
-      projectId: "your-app",
-      storageBucket: "your-app.appspot.com",
-      messagingSenderId: "000000000000",
-      appId: "1:000000000000:web:abcdef1234567890"
-    };
+const fbApp = initializeApp({
+  apiKey:      "AIzaSyBsomething",
+  databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
+});
+const db = getDatabase(fbApp);
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+const DISPLAY_DURATION = 60_000;
 
-    const params = new URLSearchParams(window.location.search);
-    const room = params.get("room");
+const card       = document.getElementById("overlay-card");
+const elPlayer   = document.getElementById("ov-player");
+const elEffect   = document.getElementById("ov-effect");
+const elRoleplay = document.getElementById("ov-roleplay");
+const elRpWrap   = document.getElementById("ov-rp-wrap");
+const elTimerBar = document.getElementById("ov-timer-bar");
 
-    if (!room) {
-      console.warn("No room param provided.");
-    } else {
-      const card = document.getElementById("overlay-card");
-      const playerEl = document.getElementById("overlay-player");
-      const effectEl = document.getElementById("overlay-effect");
-      const roleplayEl = document.getElementById("overlay-roleplay");
+let hideTimer      = null;
+let lastTimestamp  = null;
+let animationFrame = null;
 
-      let hideTimer = null;
+function getRoom() {
+  const params = new URLSearchParams(window.location.search);
+  return (params.get("room") || "").trim();
+}
 
-      function showCard(data) {
-        playerEl.textContent = data.player || "";
-        effectEl.textContent = data.effect || "";
-        roleplayEl.textContent = data.roleplay || "";
+function showCard(data) {
+  elPlayer.textContent   = data.player   || "";
+  elEffect.textContent   = data.effect   || "";
 
-        card.classList.remove("hidden");
-        void card.offsetWidth;
-        card.classList.add("visible");
+  const rp = (data.roleplay || "").replace(/\n/g, "<br>");
+  if (rp) {
+    elRoleplay.innerHTML  = rp;
+    elRpWrap.style.display = "";
+  } else {
+    elRpWrap.style.display = "none";
+  }
 
-        if (hideTimer) {
-          clearTimeout(hideTimer);
-        }
+  card.classList.remove("hiding");
+  card.classList.add("visible");
 
-        hideTimer = setTimeout(() => {
-          hideCard();
-        }, 60000);
-      }
+  clearTimeout(hideTimer);
+  cancelAnimationFrame(animationFrame);
 
-      function hideCard() {
-        card.classList.remove("visible");
-        card.classList.add("hidden");
-        if (hideTimer) {
-          clearTimeout(hideTimer);
-          hideTimer = null;
-        }
-      }
+  const startTime = performance.now();
+  elTimerBar.style.transition = "none";
+  elTimerBar.style.transform  = "scaleX(1)";
 
-      const overlayRef = ref(db, `rooms/${room}/lastOverlay`);
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      elTimerBar.style.transition = `transform ${DISPLAY_DURATION}ms linear`;
+      elTimerBar.style.transform  = "scaleX(0)";
+    });
+  });
 
-      onValue(overlayRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data && data.player && data.effect) {
-          showCard(data);
-        }
-      });
-    }
-  </script>
+  hideTimer = setTimeout(() => hideCard(), DISPLAY_DURATION);
+}
 
+function hideCard() {
+  clearTimeout(hideTimer);
+  card.classList.remove("visible");
+  card.classList.add("hiding");
+}
+
+const room = getRoom();
+if (room) {
+  const overlayRef = ref(db, `rooms/${room}/lastOverlay`);
+  onValue(overlayRef, snap => {
+    if (!snap.exists()) return;
+    const data = snap.val();
+    if (!data) return;
+
+    const ts = data.ts || 0;
+    if (ts === lastTimestamp) return;
+    lastTimestamp = ts;
+
+    showCard(data);
+  });
+}
+</script>
 </body>
 </html>
