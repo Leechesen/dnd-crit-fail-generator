@@ -2,62 +2,34 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<title>KritFailer</title>
+<title>KritFailer FINAL</title>
 
 <style>
 body {
   margin: 0;
   font-family: Arial;
   background: #ffffff;
-  color: #111;
 }
 
 header {
   display: flex;
   justify-content: space-between;
-  padding: 12px;
-  background: #f3f3f3;
-}
-
-.title {
-  color: orange;
-  font-weight: bold;
-}
-
-.container {
-  padding: 12px;
-}
-
-input {
-  width: 100%;
   padding: 10px;
-  margin: 5px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  background: #f3f3f3;
 }
 
 button {
   padding: 10px;
+  margin: 5px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  margin: 4px;
 }
 
 .primary { background: orange; color: white; }
-.danger { background: #ef4444; color: white; }
-.active { background: #ff9800 !important; }
+.active { background: #ff9800; }
 
-.hidden { display: none; }
-
-.room {
-  display: flex;
-  justify-content: space-between;
-  margin: 5px 0;
-  background: #eee;
-  padding: 10px;
-  border-radius: 8px;
-}
+.container { padding: 12px; }
 
 .card {
   background: #f5f5f5;
@@ -65,166 +37,158 @@ button {
   border-radius: 10px;
   margin-top: 10px;
 }
+
+.hidden { display: none; }
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="title">🎲 KritFailer</div>
-  <div id="topPlayers"></div>
-  <div id="topButtons"></div>
+  <div>🎲 KritFailer</div>
+  <div id="playersTop"></div>
+  <div id="topBtns"></div>
 </header>
 
 <div id="setup" class="container">
   <input id="name" placeholder="Jméno">
-  <input id="roomName" placeholder="Název místnosti">
-  <button class="primary" id="createRoomBtn">Vytvořit místnost</button>
+  <input id="roomName" placeholder="Místnost">
+  <button class="primary" onclick="createRoom()">Vytvořit</button>
 
   <h3>Lobby</h3>
-  <div id="roomsList"></div>
+  <div id="rooms"></div>
 </div>
 
 <div id="app" class="container hidden">
+
   <h3 id="roomTitle"></h3>
 
+  <!-- DM -->
   <div id="dmPanel" class="hidden">
 
-    <h3>Typ akce</h3>
-    <button onclick="setAttack('Melee')">⚔️ Melee</button>
-    <button onclick="setAttack('Ranged')">🏹 Ranged</button>
+    <h3>Typ</h3>
+    <button onclick="setType('attack')">⚔️ Útok</button>
+    <button onclick="setType('defense')">🛡️ Obrana</button>
+
+    <h3>Attack type</h3>
+    <button onclick="setAttack('Melee')">Melee</button>
+    <button onclick="setAttack('Ranged')">Ranged</button>
 
     <h3>Severity</h3>
-    <div id="severityBtns"></div>
+    <div id="severity"></div>
 
-    <button class="primary" onclick="rollFail()">🎲 Hodit</button>
+    <button class="primary" onclick="roll()">🎲 GENERUJ</button>
 
     <div id="resultBox" class="card hidden"></div>
 
-    <h3>📤 Poslat hráči</h3>
-    <div id="playerTargets"></div>
+    <h3>Pošli hráči</h3>
+    <div id="targets"></div>
 
   </div>
 
+  <!-- PLAYER -->
   <div id="playerPanel" class="hidden">
+    <h3>Hráči</h3>
     <div id="playersList"></div>
-    <h3>📩 Výsledek</h3>
-    <div id="result" class="card">Čekám...</div>
+
+    <h3>Výsledek</h3>
+    <div id="playerResult" class="card">Čekám...</div>
   </div>
+
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-  getDatabase, ref, set, onValue, remove, onDisconnect
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const app = initializeApp({
   apiKey: "AIzaSy...",
   databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
 });
-
 const db = getDatabase(app);
 
+// ===== STATE =====
 let FAIL_DATA = {};
-
 let state = {
-  room: "",
-  name: "",
-  id: "",
-  isDM: false,
-  attackType: "Melee",
-  severity: "Lehký",
-  lastResult: ""
-};
-
-const el = {
-  setup: document.getElementById("setup"),
-  app: document.getElementById("app"),
-  playersList: document.getElementById("playersList"),
-  roomsList: document.getElementById("roomsList"),
-  dmPanel: document.getElementById("dmPanel"),
-  playerPanel: document.getElementById("playerPanel"),
-  topPlayers: document.getElementById("topPlayers"),
-  topButtons: document.getElementById("topButtons"),
-  result: document.getElementById("result"),
-  resultBox: document.getElementById("resultBox"),
-  playerTargets: document.getElementById("playerTargets"),
-  severityBtns: document.getElementById("severityBtns"),
-  roomTitle: document.getElementById("roomTitle")
+  room:"",
+  name:"",
+  id:"",
+  isDM:false,
+  type:"attack",
+  attack:"Melee",
+  severity:"Lehký",
+  last:""
 };
 
 // ===== LOAD JSON =====
-async function loadFails() {
+async function loadJSON(){
   const res = await fetch("crit_fails.json");
   FAIL_DATA = await res.json();
-  console.log("✅ JSON loaded", FAIL_DATA);
-
   buildSeverity();
 }
+loadJSON();
 
-// ===== BUILD SEVERITY =====
-function buildSeverity() {
+// ===== UI =====
+function buildSeverity(){
   const list = ["Lehký","Střední","Těžký","Sranda"];
-  el.severityBtns.innerHTML = list.map(s =>
-    `<button onclick="setSeverity('${s}')">${s}</button>`
-  ).join("");
+  document.getElementById("severity").innerHTML =
+    list.map(s=>`<button onclick="setSeverity('${s}')">${s}</button>`).join("");
 }
 
-// ===== SETTERS =====
-window.setAttack = (type) => state.attackType = type;
+window.setType = t => state.type = t;
+window.setAttack = a => state.attack = a;
+window.setSeverity = s => state.severity = s;
 
-window.setSeverity = (sev) => {
-  state.severity = sev;
-};
-
-// ===== WEIGHT RANDOM =====
-function weightedRandom(pool) {
-  let total = pool.reduce((sum, p) => sum + (p.weight || 1), 0);
-  let r = Math.random() * total;
-
-  for (let p of pool) {
-    r -= (p.weight || 1);
-    if (r <= 0) return p;
+// ===== RANDOM =====
+function weighted(pool){
+  let sum = pool.reduce((a,b)=>a+(b.weight||1),0);
+  let r = Math.random()*sum;
+  for(let p of pool){
+    r -= (p.weight||1);
+    if(r<=0) return p;
   }
-
   return pool[0];
 }
 
-// ===== ROLL =====
-window.rollFail = () => {
-  const pool = FAIL_DATA["Útok"]?.[state.attackType]?.[state.severity];
+// ===== CORE =====
+window.roll = () => {
 
-  if (!pool || pool.length === 0) {
-    alert("Žádná data");
+  let pool;
+
+  if(state.type==="attack"){
+    pool = FAIL_DATA["Útok"]?.[state.attack]?.[state.severity];
+  }
+
+  if(state.type==="defense"){
+    pool = FAIL_DATA["Obrana"]?.[state.severity];
+  }
+
+  if(!pool || pool.length===0){
+    alert("Nic v JSON");
     return;
   }
 
-  const result = weightedRandom(pool);
+  const r = weighted(pool);
 
-  state.lastResult = result.effect;
+  state.last =
+    "⚠️ " + r.effect +
+    "\n\n🎭 " + r.roleplay.join(" | ");
 
-  el.resultBox.innerText = result.effect;
-  el.resultBox.classList.remove("hidden");
+  const box = document.getElementById("resultBox");
+  box.innerText = state.last;
+  box.classList.remove("hidden");
 };
 
-// ===== SEND =====
-window.sendTo = async (id) => {
-  if (!state.lastResult) return alert("Nejdřív hoď");
-
-  await set(ref(db, "rooms/" + state.room + "/messages/" + id), state.lastResult);
-};
-
-// ===== FIREBASE ROOM =====
-document.getElementById("createRoomBtn").onclick = async () => {
+// ===== FIREBASE =====
+window.createRoom = async () => {
   const name = document.getElementById("name").value;
   const room = document.getElementById("roomName").value;
 
-  state = { ...state, room, name, id: "DM_" + Date.now(), isDM: true };
+  state = {...state, room, name, id:"DM_"+Date.now(), isDM:true};
 
-  await set(ref(db, "rooms/" + room), {
-    players: {
-      [state.id]: { name: name + " 👑" }
+  await set(ref(db,"rooms/"+room),{
+    players:{
+      [state.id]:{name:name+" 👑"}
     }
   });
 
@@ -233,63 +197,67 @@ document.getElementById("createRoomBtn").onclick = async () => {
 
 window.joinRoom = async (room) => {
   const name = document.getElementById("name").value;
-  const id = "P_" + Date.now();
+  const id = "P_"+Date.now();
 
-  await set(ref(db, "rooms/" + room + "/players/" + id), { name });
+  await set(ref(db,"rooms/"+room+"/players/"+id),{name});
 
-  state = { ...state, room, name, id, isDM: false };
+  state = {...state, room, name, id, isDM:false};
 
   start();
 };
 
-// ===== START =====
-function start() {
-  el.setup.classList.add("hidden");
-  el.app.classList.remove("hidden");
+function start(){
+  document.getElementById("setup").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
 
-  el.roomTitle.innerText = "Room: " + state.room;
+  document.getElementById("roomTitle").innerText = state.room;
 
-  el.dmPanel.classList.toggle("hidden", !state.isDM);
-  el.playerPanel.classList.toggle("hidden", state.isDM);
+  document.getElementById("dmPanel").classList.toggle("hidden",!state.isDM);
+  document.getElementById("playerPanel").classList.toggle("hidden",state.isDM);
 
   listenPlayers();
 
-  if (!state.isDM) {
-    onValue(ref(db, "rooms/" + state.room + "/messages/" + state.id), snap => {
-      if (snap.val()) el.result.innerText = snap.val();
+  if(!state.isDM){
+    onValue(ref(db,"rooms/"+state.room+"/msg/"+state.id),snap=>{
+      if(snap.val()){
+        document.getElementById("playerResult").innerText = snap.val();
+      }
     });
   }
 }
 
-// ===== PLAYERS =====
-function listenPlayers() {
-  onValue(ref(db, "rooms/" + state.room + "/players"), snap => {
-    const players = snap.val() || {};
+function listenPlayers(){
+  onValue(ref(db,"rooms/"+state.room+"/players"),snap=>{
+    const players = snap.val()||{};
 
-    el.topPlayers.innerText = Object.values(players).map(p => p.name).join(" | ");
+    document.getElementById("playersTop").innerText =
+      Object.values(players).map(p=>p.name).join(" | ");
 
-    el.playersList.innerHTML = Object.values(players)
-      .map(p => `<div>${p.name}</div>`)
-      .join("");
+    document.getElementById("playersList").innerHTML =
+      Object.values(players).map(p=>`<div>${p.name}</div>`).join("");
 
-    el.playerTargets.innerHTML = Object.entries(players)
-      .filter(([id]) => !id.startsWith("DM_"))
-      .map(([id, p]) => `<button onclick="sendTo('${id}')">${p.name}</button>`)
+    document.getElementById("targets").innerHTML =
+      Object.entries(players)
+      .filter(([id])=>!id.startsWith("DM_"))
+      .map(([id,p])=>`<button onclick="send('${id}')">${p.name}</button>`)
       .join("");
   });
 }
 
-// ===== LOBBY =====
-onValue(ref(db, "rooms"), snap => {
-  const data = snap.val() || {};
+window.send = async (id)=>{
+  if(!state.last) return alert("Nejdřív generuj");
 
-  el.roomsList.innerHTML = Object.keys(data)
-    .map(r => `<div class="room">${r} <button onclick="joinRoom('${r}')">Join</button></div>`)
+  await set(ref(db,"rooms/"+state.room+"/msg/"+id),state.last);
+};
+
+// ===== LOBBY =====
+onValue(ref(db,"rooms"),snap=>{
+  const data = snap.val()||{};
+  document.getElementById("rooms").innerHTML =
+    Object.keys(data)
+    .map(r=>`<div>${r} <button onclick="joinRoom('${r}')">Join</button></div>`)
     .join("");
 });
-
-// INIT
-loadFails();
 </script>
 
 </body>
