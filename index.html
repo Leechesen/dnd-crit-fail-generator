@@ -2,335 +2,966 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KritFailer FINAL</title>
-
 <style>
-body { font-family: Arial; margin:0; background:#fff; }
-header { display:flex; justify-content:space-between; padding:10px; background:#eee; }
-button { margin:4px; padding:8px; border:none; border-radius:8px; cursor:pointer; }
-.primary{ background:orange; color:white;}
-.danger{ background:red; color:white;}
-.card{ background:#f5f5f5; padding:10px; border-radius:10px; margin-top:10px;}
-.hidden{ display:none;}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #16213e;
+    border-bottom: 2px solid #e94560;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  header .logo {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #e94560;
+  }
+
+  #playersTop {
+    font-size: 0.85rem;
+    color: #a0a0c0;
+    flex: 1;
+    text-align: center;
+    padding: 0 10px;
+  }
+
+  #topBtns { display: flex; gap: 6px; }
+
+  button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  button:hover { opacity: 0.85; transform: scale(1.02); }
+  button:active { transform: scale(0.98); }
+
+  .btn-primary { background: #e94560; color: white; font-weight: bold; }
+  .btn-secondary { background: #0f3460; color: #e0e0e0; border: 1px solid #e94560; }
+  .btn-success { background: #2a9d5c; color: white; }
+  .btn-warning { background: #e9a020; color: white; }
+  .btn-danger { background: #c0392b; color: white; }
+  .btn-info { background: #2980b9; color: white; }
+  .btn-purple { background: #8e44ad; color: white; }
+  .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+
+  .hidden { display: none !important; }
+
+  /* ===== SETUP SCREEN ===== */
+  #setup {
+    max-width: 500px;
+    margin: 60px auto;
+    padding: 30px;
+    background: #16213e;
+    border-radius: 16px;
+    border: 1px solid #0f3460;
+  }
+
+  #setup h2 {
+    text-align: center;
+    color: #e94560;
+    margin-bottom: 24px;
+    font-size: 1.6rem;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #a0a0c0;
+    font-size: 0.9rem;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 10px 14px;
+    background: #0f3460;
+    border: 1px solid #1a4a8a;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input:focus { border-color: #e94560; }
+
+  .setup-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .setup-actions button { flex: 1; padding: 12px; font-size: 1rem; }
+
+  .divider {
+    text-align: center;
+    margin: 20px 0;
+    color: #555;
+    position: relative;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #333;
+  }
+
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+
+  /* ===== LOBBY ===== */
+  #lobbyList { margin-top: 10px; }
+
+  .room-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #0f3460;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #1a4a8a;
+  }
+
+  .room-item .room-name {
+    font-weight: bold;
+    color: #e0e0e0;
+  }
+
+  .room-item .room-players {
+    font-size: 0.8rem;
+    color: #a0a0c0;
+  }
+
+  /* ===== MAIN APP ===== */
+  #app {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  #roomTitle {
+    text-align: center;
+    font-size: 1.4rem;
+    color: #e94560;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333;
+  }
+
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .panel-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ===== DM PANEL ===== */
+  .section-card {
+    background: #16213e;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #0f3460;
+  }
+
+  .section-card h3 {
+    color: #e94560;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #0f3460;
+    padding-bottom: 8px;
+  }
+
+  /* Severity buttons */
+  #severityBtns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .sev-btn {
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+  }
+
+  .sev-btn.active { border-color: white; transform: scale(1.05); }
+  .sev-lehky { background: #2a9d5c; color: white; }
+  .sev-stredni { background: #e9a020; color: white; }
+  .sev-tezky { background: #c0392b; color: white; }
+  .sev-sranda { background: #8e44ad; color: white; }
+
+  /* Generator categories */
+  #generator { }
+
+  .cat-section { margin-bottom: 12px; }
+
+  .cat-section h4 {
+    color: #a0a0c0;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .cat-section .attr-label {
+    color: #7a7aaa;
+    font-size: 0.8rem;
+    margin: 8px 0 4px;
+    font-style: italic;
+  }
+
+  .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* Result box */
+  #resultBox {
+    background: #0f1f3d;
+    border: 1px solid #e94560;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .result-effect {
+    background: #1a0a0a;
+    border-left: 3px solid #e94560;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 12px;
+    font-weight: bold;
+    color: #ff8080;
+  }
+
+  .result-roleplay {
+    background: #0a1a0a;
+    border-left: 3px solid #2a9d5c;
+    padding: 8px 14px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 8px;
+    color: #80ff80;
+    font-size: 0.9rem;
+  }
+
+  .result-roleplay .rp-label {
+    font-size: 0.75rem;
+    color: #2a9d5c;
+    margin-bottom: 4px;
+    font-weight: bold;
+  }
+
+  /* Targets */
+  .target-card {
+    background: #0f3460;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #1a4a8a;
+  }
+
+  .target-name {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #e0e0e0;
+  }
+
+  .target-btns {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  /* ===== PLAYER PANEL SIDEBAR ===== */
+  #playerListSidebar .player-item {
+    padding: 8px 12px;
+    background: #0f3460;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    border: 1px solid #1a4a8a;
+  }
+
+  /* ===== PLAYER MAIN PANEL ===== */
+  #playerResult {
+    background: #0f1f3d;
+    border: 1px solid #2a9d5c;
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 200px;
+  }
+
+  #playerResult .waiting {
+    text-align: center;
+    color: #555;
+    padding: 40px;
+  }
+
+  #playerResult .msg-effect {
+    background: #1a0a0a;
+    border-left: 3px solid #e94560;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 12px;
+    font-weight: bold;
+    color: #ff8080;
+  }
+
+  #playerResult .msg-roleplay {
+    background: #0a1a0a;
+    border-left: 3px solid #2a9d5c;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    color: #80ff80;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* Notification */
+  #notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #e94560;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    z-index: 1000;
+    transition: opacity 0.5s;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #notification.show { opacity: 1; }
+
+  /* Loading */
+  #loading {
+    text-align: center;
+    padding: 60px;
+    color: #555;
+    font-size: 1.2rem;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #333;
+    border-top-color: #e94560;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .no-result {
+    text-align: center;
+    padding: 30px;
+    color: #555;
+  }
+
+  .dm-badge { color: #e9a020; }
 </style>
 </head>
-
 <body>
 
 <header>
-<div>🎲 KritFailer</div>
-<div id="playersTop"></div>
-<div id="topBtns"></div>
+  <div class="logo">🎲 KritFailer</div>
+  <div id="playersTop"></div>
+  <div id="topBtns"></div>
 </header>
 
-<div id="setup">
-<input id="name" placeholder="Jméno">
-<input id="room" placeholder="Místnost">
-<button onclick="createRoom()">Vytvořit</button>
-<div id="rooms"></div>
+<div id="notification"></div>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <div>Načítám data...</div>
+</div>
+
+<div id="setup" class="hidden">
+  <h2>🎲 KritFailer</h2>
+
+  <div class="form-group">
+    <label>Tvé jméno</label>
+    <input id="nameInput" placeholder="Zadej jméno..." maxlength="30">
+  </div>
+
+  <div class="setup-actions">
+    <button class="btn-primary" onclick="openCreateRoom()">👑 Vytvořit místnost</button>
+  </div>
+
+  <div id="createRoomSection" class="hidden" style="margin-top:16px;">
+    <div class="form-group">
+      <label>Název místnosti</label>
+      <input id="roomInput" placeholder="Název místnosti..." maxlength="30">
+    </div>
+    <button class="btn-success" onclick="createRoom()" style="width:100%;padding:12px;">✅ Vytvořit</button>
+  </div>
+
+  <div class="divider">nebo se připoj</div>
+
+  <div id="lobbyList">
+    <div style="text-align:center;color:#555;padding:20px;">Žádné místnosti nenalezeny</div>
+  </div>
 </div>
 
 <div id="app" class="hidden">
-<h3 id="roomTitle"></h3>
+  <h2 id="roomTitle"></h2>
 
-<div id="dmPanel" class="hidden">
-<h3>Severity</h3>
-<div id="severity"></div>
+  <!-- DM PANEL -->
+  <div id="dmPanel" class="hidden">
+    <div class="panel-grid">
+      <div id="dmLeft">
 
-<div id="generator"></div>
+        <!-- SEVERITY -->
+        <div class="section-card">
+          <h3>🎯 Závažnost</h3>
+          <div id="severityBtns">
+            <div class="sev-btn sev-lehky active" onclick="setSeverity('Lehký', this)">Lehký</div>
+            <div class="sev-btn sev-stredni" onclick="setSeverity('Střední', this)">Střední</div>
+            <div class="sev-btn sev-tezky" onclick="setSeverity('Těžký', this)">Těžký</div>
+            <div class="sev-btn sev-sranda" onclick="setSeverity('Sranda', this)">Sranda</div>
+          </div>
+        </div>
 
-<div id="resultBox" class="card hidden"></div>
+        <!-- GENERATOR -->
+        <div class="section-card">
+          <h3>🎲 Generátor</h3>
+          <div id="generator"></div>
+        </div>
 
-<h3>Pošli hráči</h3>
-<div id="targets"></div>
-</div>
+        <!-- RESULT -->
+        <div id="resultBox" class="hidden">
+          <div class="result-effect" id="resEffect"></div>
+          <div class="result-roleplay">
+            <div class="rp-label">🎭 Roleplay 1</div>
+            <div id="resRp1"></div>
+          </div>
+          <div class="result-roleplay">
+            <div class="rp-label">🎭 Roleplay 2</div>
+            <div id="resRp2"></div>
+          </div>
+        </div>
 
-<div id="playerPanel" class="hidden">
-<h3>Hráči</h3>
-<div id="players"></div>
+      </div>
 
-<h3>Výsledek</h3>
-<div id="result" class="card">Čekám...</div>
-</div>
+      <div id="dmRight">
+        <!-- PLAYERS SIDEBAR -->
+        <div class="section-card">
+          <h3>👥 Hráči</h3>
+          <div id="playerListSidebar"></div>
+        </div>
+
+        <!-- SEND TO PLAYER -->
+        <div class="section-card">
+          <h3>📨 Pošli výsledek</h3>
+          <div id="targets">
+            <div style="color:#555;font-size:0.85rem;">Nejprve vygeneruj výsledek</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYER PANEL -->
+  <div id="playerPanel" class="hidden">
+    <div class="panel-grid">
+      <div>
+        <div class="section-card">
+          <h3>📬 Tvůj výsledek</h3>
+          <div id="playerResult">
+            <div class="waiting">⏳ Čekám na výsledek od DM...</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-card">
+          <h3>👥 Hráči v místnosti</h3>
+          <div id="playerListPlayer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, set, onValue, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import {
+  getDatabase, ref, set, get, onValue, remove, push, onDisconnect, update, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const app = initializeApp({
-  apiKey:"AIzaSy...",
-  databaseURL:"https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
+// ── Firebase config ──────────────────────────────────────────────────────────
+const firebaseApp = initializeApp({
+  apiKey: "AIzaSyBsomething",
+  databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
 });
-const db = getDatabase(app);
+const db = getDatabase(firebaseApp);
 
+// ── State ────────────────────────────────────────────────────────────────────
 let FAIL_DATA = {};
 let state = {
-  room:"",
-  name:"",
-  id:"",
-  isDM:false,
-  severity:"Lehký",
-  last:null
+  room: "",
+  name: "",
+  id: "",
+  isDM: false,
+  severity: "Lehký",
+  last: null
 };
 
-// =====================
-// AUTO RECONNECT
-// =====================
-if(localStorage.room){
-  state = JSON.parse(localStorage.state);
-  start();
+let playersCache = {};
+let autoDeleteTimer = null;
+let playerListeners = [];
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function showNotif(msg) {
+  const n = document.getElementById("notification");
+  n.textContent = msg;
+  n.classList.add("show");
+  setTimeout(() => n.classList.remove("show"), 3000);
 }
 
-// =====================
-// LOAD JSON
-// =====================
-fetch("crit_fails.json").then(r=>r.json()).then(data=>{
-  FAIL_DATA = data;
-  buildUI();
-});
+function dbRef(...parts) {
+  return ref(db, parts.join("/"));
+}
 
-// =====================
-// UI BUILD
-// =====================
-function buildUI(){
-
-  // severity
-  ["Lehký","Střední","Těžký","Sranda"].forEach(s=>{
-    const b=document.createElement("button");
-    b.innerText=s;
-    b.onclick=()=>state.severity=s;
-    severity.appendChild(b);
+// ── Load JSON ────────────────────────────────────────────────────────────────
+fetch("crit_fails.json")
+  .then(r => r.json())
+  .then(data => {
+    FAIL_DATA = data;
+    document.getElementById("loading").classList.add("hidden");
+    init();
+  })
+  .catch(err => {
+    document.getElementById("loading").innerHTML =
+      `<div style="color:#e94560">❌ Chyba načítání crit_fails.json</div>`;
+    console.error(err);
   });
 
+// ── Init: auto reconnect or show setup ───────────────────────────────────────
+function init() {
+  const saved = localStorage.getItem("kf_state");
+  if (saved) {
+    try {
+      const s = JSON.parse(saved);
+      // Verify room still exists
+      get(dbRef("rooms", s.room)).then(snap => {
+        if (snap.exists()) {
+          state = s;
+          state.last = null;
+          // Re-register player in DB
+          const playerData = { name: s.name + (s.isDM ? " 👑" : ""), isDM: s.isDM };
+          set(dbRef("rooms", s.room, "players", s.id), playerData).then(() => {
+            setupOnDisconnect();
+            startApp();
+          });
+        } else {
+          localStorage.removeItem("kf_state");
+          showSetup();
+        }
+      }).catch(() => showSetup());
+    } catch (e) {
+      localStorage.removeItem("kf_state");
+      showSetup();
+    }
+  } else {
+    showSetup();
+  }
+}
+
+function showSetup() {
+  document.getElementById("setup").classList.remove("hidden");
+  startLobbyListener();
+}
+
+// ── Lobby listener ────────────────────────────────────────────────────────────
+function startLobbyListener() {
+  onValue(dbRef("rooms"), snap => {
+    const data = snap.val() || {};
+    const list = document.getElementById("lobbyList");
+    const rooms = Object.entries(data);
+
+    if (rooms.length === 0) {
+      list.innerHTML = `<div style="text-align:center;color:#555;padding:20px;">Žádné místnosti nenalezeny</div>`;
+      return;
+    }
+
+    list.innerHTML = rooms.map(([roomId, roomData]) => {
+      const players = Object.values(roomData.players || {});
+      const count = players.length;
+      return `
+        <div class="room-item">
+          <div>
+            <div class="room-name">🚪 ${roomId}</div>
+            <div class="room-players">👥 ${count} hráč${count === 1 ? '' : count < 5 ? 'i' : 'ů'}</div>
+          </div>
+          <button class="btn-secondary btn-sm" onclick="window.joinRoom('${roomId}')">Připojit</button>
+        </div>`;
+    }).join("");
+  });
+}
+
+// ── Open create room form ─────────────────────────────────────────────────────
+window.openCreateRoom = () => {
+  document.getElementById("createRoomSection").classList.toggle("hidden");
+};
+
+// ── Create room ───────────────────────────────────────────────────────────────
+window.createRoom = async () => {
+  const name = document.getElementById("nameInput").value.trim();
+  const room = document.getElementById("roomInput").value.trim();
+
+  if (!name) return alert("Zadej své jméno!");
+  if (!room) return alert("Zadej název místnosti!");
+
+  const id = "DM_" + Date.now();
+  state = { room, name: name + " 👑", id, isDM: true, severity: "Lehký", last: null };
+
+  await set(dbRef("rooms", room), {
+    players: { [id]: { name: state.name, isDM: true } },
+    createdAt: Date.now(),
+    lastActive: Date.now()
+  });
+
+  saveState();
+  setupOnDisconnect();
+  startApp();
+};
+
+// ── Join room ─────────────────────────────────────────────────────────────────
+window.joinRoom = async (room) => {
+  const name = document.getElementById("nameInput").value.trim();
+  if (!name) return alert("Zadej své jméno!");
+
+  const id = "P_" + Date.now();
+  state = { room, name, id, isDM: false, severity: "Lehký", last: null };
+
+  await set(dbRef("rooms", room, "players", id), { name, isDM: false });
+  await update(dbRef("rooms", room), { lastActive: Date.now() });
+
+  saveState();
+  setupOnDisconnect();
+  startApp();
+};
+
+// ── Save state ────────────────────────────────────────────────────────────────
+function saveState() {
+  const toSave = { ...state, last: null };
+  localStorage.setItem("kf_state", JSON.stringify(toSave));
+}
+
+// ── onDisconnect cleanup ──────────────────────────────────────────────────────
+function setupOnDisconnect() {
+  onDisconnect(dbRef("rooms", state.room, "players", state.id)).remove();
+}
+
+// ── Start App ─────────────────────────────────────────────────────────────────
+function startApp() {
+  document.getElementById("setup").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+
+  document.getElementById("roomTitle").textContent =
+    `${state.isDM ? "👑" : "🧑"} Místnost: ${state.room}`;
+
+  // Top buttons
+  document.getElementById("topBtns").innerHTML = `
+    <button class="btn-secondary btn-sm" onclick="window.logout()">🚪 Odejít</button>
+    ${state.isDM ? `<button class="btn-danger btn-sm" onclick="window.deleteRoom()">🗑️ Smazat místnost</button>` : ""}
+  `;
+
+  if (state.isDM) {
+    document.getElementById("dmPanel").classList.remove("hidden");
+    buildGeneratorUI();
+    listenPlayers();
+    startAutoDeleteCheck();
+  } else {
+    document.getElementById("playerPanel").classList.remove("hidden");
+    listenPlayers();
+    listenForMessage();
+  }
+}
+
+// ── Build Generator UI ────────────────────────────────────────────────────────
+function buildGeneratorUI() {
   const gen = document.getElementById("generator");
+  gen.innerHTML = "";
 
-  // ÚTOK
-  const atk = document.createElement("div");
-  atk.innerHTML="<h3>⚔️ Útok</h3>";
-
-  Object.entries(FAIL_DATA["Útok"]||{}).forEach(([type, sev])=>{
-    const b=document.createElement("button");
-    b.innerText=type;
-    b.onclick=()=>roll(sev[state.severity],`Útok ${type}`);
-    atk.appendChild(b);
-  });
-
-  gen.appendChild(atk);
-
-  // OBRANA
-  const def = document.createElement("div");
-  def.innerHTML="<h3>🛡️ Obrana</h3>";
-
-  const b=document.createElement("button");
-  b.innerText="Obrana";
-  b.onclick=()=>roll(FAIL_DATA["Obrana"]?.[state.severity],"Obrana");
-  def.appendChild(b);
-
-  gen.appendChild(def);
-
-  // SKILLY
-  const sk = document.createElement("div");
-  sk.innerHTML="<h3>🎯 Skilly</h3>";
-
-  Object.entries(FAIL_DATA["Skill"]||{}).forEach(([attr,skills])=>{
-    const t=document.createElement("h4");
-    t.innerText=attr;
-    sk.appendChild(t);
-
-    Object.entries(skills).forEach(([name,data])=>{
-      const b=document.createElement("button");
-      b.innerText=name;
-      b.onclick=()=>roll(data[state.severity],`${attr} ${name}`);
-      sk.appendChild(b);
+  // ⚔️ Útok
+  const atkData = FAIL_DATA["Útok"] || {};
+  if (Object.keys(atkData).length > 0) {
+    const sec = document.createElement("div");
+    sec.className = "cat-section";
+    sec.innerHTML = `<h4>⚔️ Útok</h4><div class="btn-group" id="atkBtns"></div>`;
+    const btnGroup = sec.querySelector("#atkBtns");
+    Object.entries(atkData).forEach(([type, sevData]) => {
+      const b = document.createElement("button");
+      b.className = "btn-secondary btn-sm";
+      b.textContent = type;
+      b.onclick = () => roll(sevData[state.severity], `Útok – ${type}`);
+      btnGroup.appendChild(b);
     });
-  });
+    gen.appendChild(sec);
+  }
 
-  gen.appendChild(sk);
+  // 🛡️ Obrana
+  const defData = FAIL_DATA["Obrana"] || {};
+  if (Object.keys(defData).length > 0) {
+    const sec = document.createElement("div");
+    sec.className = "cat-section";
+    sec.innerHTML = `<h4>🛡️ Obrana</h4><div class="btn-group"></div>`;
+    const btnGroup = sec.querySelector(".btn-group");
+    const b = document.createElement("button");
+    b.className = "btn-secondary btn-sm";
+    b.textContent = "Obrana";
+    b.onclick = () => roll(defData[state.severity], "Obrana");
+    btnGroup.appendChild(b);
+    gen.appendChild(sec);
+  }
+
+  // 🎯 Skill
+  const skillData = FAIL_DATA["Skill"] || {};
+  if (Object.keys(skillData).length > 0) {
+    const sec = document.createElement("div");
+    sec.className = "cat-section";
+    sec.innerHTML = `<h4>🎯 Skilly</h4>`;
+
+    Object.entries(skillData).forEach(([attr, skills]) => {
+      const attrLabel = document.createElement("div");
+      attrLabel.className = "attr-label";
+      attrLabel.textContent = attr;
+      sec.appendChild(attrLabel);
+
+      const btnGroup = document.createElement("div");
+      btnGroup.className = "btn-group";
+
+      Object.entries(skills).forEach(([skillName, sevData]) => {
+        const b = document.createElement("button");
+        b.className = "btn-secondary btn-sm";
+        b.textContent = skillName;
+        b.onclick = () => roll(sevData[state.severity], `${attr} – ${skillName}`);
+        btnGroup.appendChild(b);
+      });
+
+      sec.appendChild(btnGroup);
+    });
+
+    gen.appendChild(sec);
+  }
 }
 
-// =====================
-// RANDOM
-// =====================
-function weighted(pool){
-  let sum = pool.reduce((a,b)=>a+(b.weight||1),0);
-  let r = Math.random()*sum;
-  for(let p of pool){
-    r -= p.weight||1;
-    if(r<=0) return p;
+// ── Set Severity ──────────────────────────────────────────────────────────────
+window.setSeverity = (sev, el) => {
+  state.severity = sev;
+  document.querySelectorAll(".sev-btn").forEach(b => b.classList.remove("active"));
+  el.classList.add("active");
+};
+
+// ── Weighted Random ───────────────────────────────────────────────────────────
+function weighted(pool) {
+  if (!pool || pool.length === 0) return null;
+  const total = pool.reduce((a, b) => a + (b.weight || 1), 0);
+  let r = Math.random() * total;
+  for (const item of pool) {
+    r -= (item.weight || 1);
+    if (r <= 0) return item;
   }
   return pool[0];
 }
 
-// =====================
-// ROLL
-// =====================
-function roll(pool,label){
-
-  if(!pool || pool.length===0){
-    alert("Žádná data");
+// ── Roll ──────────────────────────────────────────────────────────────────────
+function roll(pool, label) {
+  if (!pool || pool.length === 0) {
+    showNotif("⚠️ Žádná data pro tuto kombinaci!");
     return;
   }
 
-  const r = weighted(pool);
-  state.last = r;
+  const result = weighted(pool);
+  if (!result) { showNotif("❌ Chyba při generování"); return; }
 
-  resultBox.innerHTML=`
-  <div>⚠️ ${r.effect}</div>
-  <div>🎭 ${r.roleplay[0]}</div>
-  <div>🎭 ${r.roleplay[1]}</div>
-  `;
-  resultBox.classList.remove("hidden");
+  state.last = result;
+
+  // Show result box
+  const box = document.getElementById("resultBox");
+  box.classList.remove("hidden");
+
+  document.getElementById("resEffect").textContent = "⚠️ " + result.effect;
+  document.getElementById("resRp1").textContent = result.roleplay?.[0] ?? "(žádný)";
+  document.getElementById("resRp2").textContent = result.roleplay?.[1] ?? "(žádný)";
+
+  // Update send buttons (they may already be rendered)
+  renderTargets();
+
+  showNotif("🎲 " + label);
 }
 
-// =====================
-// SEND
-// =====================
-window.send=(id,type)=>{
-  if(!state.last) return;
+// ── Listen Players ────────────────────────────────────────────────────────────
+function listenPlayers() {
+  onValue(dbRef("rooms", state.room, "players"), snap => {
+    const players = snap.val() || {};
+    playersCache = players;
 
-  let msg="⚠️ "+state.last.effect+"\n";
+    // Header players list
+    const names = Object.values(players).map(p => p.name).join(" | ");
+    document.getElementById("playersTop").textContent = names;
 
-  if(type==="r1") msg+=state.last.roleplay[0];
-  if(type==="r2") msg+=state.last.roleplay[1];
-  if(type==="all") msg+=state.last.roleplay.join(" | ");
+    if (state.isDM) {
+      // DM sidebar
+      const sidebar = document.getElementById("playerListSidebar");
+      sidebar.innerHTML = Object.entries(players).map(([id, p]) =>
+        `<div class="player-item">${p.isDM ? "👑" : "🧑"} ${p.name}</div>`
+      ).join("") || `<div style="color:#555;font-size:0.85rem;">Žádní hráči</div>`;
 
-  set(ref(db,"rooms/"+state.room+"/msg/"+id),msg);
-};
+      renderTargets();
 
-// =====================
-// CREATE ROOM
-// =====================
-window.createRoom=async()=>{
-  const roomName=document.getElementById("room").value.trim();
-  const playerName=document.getElementById("name").value.trim();
+      // Auto delete check: if only DM or empty
+      update(dbRef("rooms", state.room), { lastActive: Date.now() });
 
-  if(!roomName||!playerName)return alert("Vyplň vše");
-
-  state={
-    room:roomName,
-    name:playerName,
-    id:"DM_"+Date.now(),
-    isDM:true,
-    severity:"Lehký"
-  };
-
-  localStorage.state=JSON.stringify(state);
-  localStorage.room=roomName;
-
-  await set(ref(db,"rooms/"+roomName),{
-    players:{[state.id]:{name:playerName+" 👑"}},
-    lastActive:Date.now()
+    } else {
+      // Player sees list
+      const list = document.getElementById("playerListPlayer");
+      list.innerHTML = Object.entries(players).map(([id, p]) =>
+        `<div class="player-item">${p.isDM ? "👑" : "🧑"} ${p.name}${id === state.id ? " <span style='color:#e9a020;font-size:0.75rem;'>(ty)</span>" : ""}</div>`
+      ).join("") || `<div style="color:#555">Žádní hráči</div>`;
+    }
   });
+}
 
-  start();
-};
+// ── Render Send Targets ───────────────────────────────────────────────────────
+function renderTargets() {
+  const targets = document.getElementById("targets");
+  const others = Object.entries(playersCache).filter(([id]) => id !== state.id);
 
-// =====================
-// JOIN
-// =====================
-window.joinRoom=async(r)=>{
-  const name=document.getElementById("name").value.trim();
-  if(!name)return alert("Zadej jméno");
-
-  const id="P_"+Date.now();
-
-  await set(ref(db,"rooms/"+r+"/players/"+id),{name});
-
-  state={room:r,name,id,isDM:false,severity:"Lehký"};
-
-  localStorage.state=JSON.stringify(state);
-  localStorage.room=r;
-
-  start();
-};
-
-// =====================
-// START
-// =====================
-function start(){
-
-  setup.classList.add("hidden");
-  app.classList.remove("hidden");
-
-  roomTitle.innerText=state.room;
-
-  dmPanel.classList.toggle("hidden",!state.isDM);
-  playerPanel.classList.toggle("hidden",state.isDM);
-
-  topBtns.innerHTML=`
-  <button onclick="logout()">🚪</button>
-  ${state.isDM?'<button onclick="deleteRoom()">🗑️</button>':''}
-  `;
-
-  onDisconnect(ref(db,"rooms/"+state.room+"/players/"+state.id)).remove();
-
-  listenPlayers();
-
-  if(!state.isDM){
-    onValue(ref(db,"rooms/"+state.room+"/msg/"+state.id),snap=>{
-      if(snap.val()) result.innerText=snap.val();
-    });
+  if (others.length === 0) {
+    targets.innerHTML = `<div style="color:#555;font-size:0.85rem;">Žádní hráči k dispozici</div>`;
+    return;
   }
 
-  // auto delete
-  setInterval(()=>{
-    onValue(ref(db,"rooms/"+state.room+"/players"),snap=>{
-      if(!snap.val()){
-        remove(ref(db,"rooms/"+state.room));
-      }
-    });
-  },300000);
+  const hasResult = !!state.last;
+
+  targets.innerHTML = others.map(([id, p]) => `
+    <div class="target-card">
+      <div class="target-name">🧑 ${p.name}</div>
+      <div class="target-btns">
+        <button class="btn-success btn-sm" ${!hasResult ? "disabled" : ""} onclick="window.sendMsg('${id}', 'r1')">📜 Roleplay 1</button>
+        <button class="btn-info btn-sm" ${!hasResult ? "disabled" : ""} onclick="window.sendMsg('${id}', 'r2')">📜 Roleplay 2</button>
+        <button class="btn-warning btn-sm" ${!hasResult ? "disabled" : ""} onclick="window.sendMsg('${id}', 'all')">📦 Oba</button>
+      </div>
+    </div>
+  `).join("");
 }
 
-// =====================
-// PLAYERS
-// =====================
-function listenPlayers(){
-  onValue(ref(db,"rooms/"+state.room+"/players"),snap=>{
-    const p=snap.val()||{};
+// ── Send Message ──────────────────────────────────────────────────────────────
+window.sendMsg = (playerId, type) => {
+  if (!state.last) { showNotif("❌ Nejprve vygeneruj výsledek!"); return; }
 
-    playersTop.innerText=Object.values(p).map(x=>x.name).join(" | ");
+  const { effect, roleplay } = state.last;
+  const rp0 = roleplay?.[0] ?? "";
+  const rp1 = roleplay?.[1] ?? "";
 
-    players.innerHTML=Object.values(p).map(x=>`<div>${x.name}</div>`).join("");
+  let rpText = "";
+  if (type === "r1") rpText = rp0;
+  else if (type === "r2") rpText = rp1;
+  else if (type === "all") rpText = [rp0, rp1].filter(Boolean).join("\n\n");
 
-    targets.innerHTML=Object.entries(p)
-    .filter(([id])=>id!==state.id)
-    .map(([id,x])=>`
-    <div>
-    ${x.name}
-    <button onclick="send('${id}','r1')">R1</button>
-    <button onclick="send('${id}','r2')">R2</button>
-    <button onclick="send('${id}','all')">ALL</button>
-    </div>
-    `).join("");
+  const msg = { effect, roleplay: rpText, timestamp: Date.now() };
+
+  set(dbRef("rooms", state.room, "msg", playerId), msg)
+    .then(() => showNotif("✅ Odesláno!"))
+    .catch(() => showNotif("❌ Chyba odesílání"));
+};
+
+// ── Listen for Message (Player) ───────────────────────────────────────────────
+function listenForMessage() {
+  onValue(dbRef("rooms", state.room, "msg", state.id), snap => {
+    const data = snap.val();
+    const box = document.getElementById("playerResult");
+
+    if (!data) {
+      box.innerHTML = `<div class="waiting">⏳ Čekám na výsledek od DM...</div>`;
+      return;
+    }
+
+    box.innerHTML = `
+      <div class="msg-effect">⚠️ ${data.effect}</div>
+      ${data.roleplay ? `<div class="msg-roleplay">🎭 ${data.roleplay.replace(/\n/g, '<br>')}</div>` : ""}
+    `;
+    showNotif("📬 Nový výsledek od DM!");
   });
 }
 
-// =====================
-// LOBBY
-// =====================
-onValue(ref(db,"rooms"),snap=>{
-  const d=snap.val()||{};
-  rooms.innerHTML=Object.keys(d)
-  .map(r=>`<div>${r}<button onclick="joinRoom('${r}')">Join</button></div>`)
-  .join("");
-});
+// ── Auto Delete Check ─────────────────────────────────────────────────────────
+function startAutoDeleteCheck() {
+  // Check every minute if room has been inactive for 5+ minutes
+  setInterval(() => {
+    get(dbRef("rooms", state.room)).then(snap => {
+      if (!snap.exists()) return;
+      const data = snap.val();
+      const players = data.players || {};
+      const playerCount = Object.keys(players).length;
+      const lastActive = data.lastActive || 0;
+      const now = Date.now();
 
-// =====================
-// ACTIONS
-// =====================
-window.logout=()=>{
-  localStorage.clear();
+      // If no players for 5 min → delete
+      if (playerCount === 0 && (now - lastActive) > 5 * 60 * 1000) {
+        remove(dbRef("rooms", state.room));
+      }
+    });
+  }, 60 * 1000);
+}
+
+// ── Logout ────────────────────────────────────────────────────────────────────
+window.logout = async () => {
+  // Remove player from room
+  await remove(dbRef("rooms", state.room, "players", state.id)).catch(() => {});
+  localStorage.removeItem("kf_state");
   location.reload();
 };
 
-window.deleteRoom=()=>{
-  remove(ref(db,"rooms/"+state.room));
-  logout();
+// ── Delete Room ───────────────────────────────────────────────────────────────
+window.deleteRoom = async () => {
+  if (!confirm("Opravdu smazat místnost? Tím odpojíš všechny hráče.")) return;
+  await remove(dbRef("rooms", state.room)).catch(() => {});
+  localStorage.removeItem("kf_state");
+  location.reload();
 };
-
 </script>
-
 </body>
 </html>
