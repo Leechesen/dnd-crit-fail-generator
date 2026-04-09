@@ -46,7 +46,7 @@ button {
 
 .primary { background: orange; color: white; }
 .danger { background: #ef4444; color: white; }
-.playerBtn { color: white; }
+.active { background: #ff9800 !important; }
 
 .hidden { display: none; }
 
@@ -89,19 +89,25 @@ button {
   <h3 id="roomTitle"></h3>
 
   <div id="dmPanel" class="hidden">
-    <h3>🎲 Generátor failu</h3>
-    <button id="rollBtn" class="primary">Hodit fail</button>
+
+    <h3>Typ akce</h3>
+    <button onclick="setAttack('Melee')">⚔️ Melee</button>
+    <button onclick="setAttack('Ranged')">🏹 Ranged</button>
+
+    <h3>Severity</h3>
+    <div id="severityBtns"></div>
+
+    <button class="primary" onclick="rollFail()">🎲 Hodit</button>
 
     <div id="resultBox" class="card hidden"></div>
 
     <h3>📤 Poslat hráči</h3>
     <div id="playerTargets"></div>
+
   </div>
 
   <div id="playerPanel" class="hidden">
-    <h3>Hráči</h3>
     <div id="playersList"></div>
-
     <h3>📩 Výsledek</h3>
     <div id="result" class="card">Čekám...</div>
   </div>
@@ -110,39 +116,31 @@ button {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
-  getDatabase, ref, set, get, onValue, remove, onDisconnect
+  getDatabase, ref, set, onValue, remove, onDisconnect
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const app = initializeApp({
-  apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
+  apiKey: "AIzaSy...",
   databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
 });
 
 const db = getDatabase(app);
+
+let FAIL_DATA = {};
 
 let state = {
   room: "",
   name: "",
   id: "",
   isDM: false,
-  players: {},
+  attackType: "Melee",
+  severity: "Lehký",
   lastResult: ""
 };
-
-const FAILS = [
-  "Upustíš zbraň",
-  "Zakopneš a spadneš",
-  "Zasáhneš spojence",
-  "Zlomíš si zbraň",
-  "Ztratíš rovnováhu",
-  "Netrefíš vůbec nic",
-  "Zraníš sám sebe"
-];
 
 const el = {
   setup: document.getElementById("setup"),
   app: document.getElementById("app"),
-  roomTitle: document.getElementById("roomTitle"),
   playersList: document.getElementById("playersList"),
   roomsList: document.getElementById("roomsList"),
   dmPanel: document.getElementById("dmPanel"),
@@ -151,64 +149,98 @@ const el = {
   topButtons: document.getElementById("topButtons"),
   result: document.getElementById("result"),
   resultBox: document.getElementById("resultBox"),
-  playerTargets: document.getElementById("playerTargets")
+  playerTargets: document.getElementById("playerTargets"),
+  severityBtns: document.getElementById("severityBtns"),
+  roomTitle: document.getElementById("roomTitle")
 };
 
-// ===== CREATE ROOM =====
+// ===== LOAD JSON =====
+async function loadFails() {
+  const res = await fetch("crit_fails.json");
+  FAIL_DATA = await res.json();
+  console.log("✅ JSON loaded", FAIL_DATA);
+
+  buildSeverity();
+}
+
+// ===== BUILD SEVERITY =====
+function buildSeverity() {
+  const list = ["Lehký","Střední","Těžký","Sranda"];
+  el.severityBtns.innerHTML = list.map(s =>
+    `<button onclick="setSeverity('${s}')">${s}</button>`
+  ).join("");
+}
+
+// ===== SETTERS =====
+window.setAttack = (type) => state.attackType = type;
+
+window.setSeverity = (sev) => {
+  state.severity = sev;
+};
+
+// ===== WEIGHT RANDOM =====
+function weightedRandom(pool) {
+  let total = pool.reduce((sum, p) => sum + (p.weight || 1), 0);
+  let r = Math.random() * total;
+
+  for (let p of pool) {
+    r -= (p.weight || 1);
+    if (r <= 0) return p;
+  }
+
+  return pool[0];
+}
+
+// ===== ROLL =====
+window.rollFail = () => {
+  const pool = FAIL_DATA["Útok"]?.[state.attackType]?.[state.severity];
+
+  if (!pool || pool.length === 0) {
+    alert("Žádná data");
+    return;
+  }
+
+  const result = weightedRandom(pool);
+
+  state.lastResult = result.effect;
+
+  el.resultBox.innerText = result.effect;
+  el.resultBox.classList.remove("hidden");
+};
+
+// ===== SEND =====
+window.sendTo = async (id) => {
+  if (!state.lastResult) return alert("Nejdřív hoď");
+
+  await set(ref(db, "rooms/" + state.room + "/messages/" + id), state.lastResult);
+};
+
+// ===== FIREBASE ROOM =====
 document.getElementById("createRoomBtn").onclick = async () => {
-  const name = document.getElementById("name").value.trim();
-  const room = document.getElementById("roomName").value.trim();
+  const name = document.getElementById("name").value;
+  const room = document.getElementById("roomName").value;
 
-  if (!name || !room) return alert("Vyplň vše");
-
-  state = {
-    room,
-    name,
-    id: "DM_" + Date.now(),
-    isDM: true
-  };
+  state = { ...state, room, name, id: "DM_" + Date.now(), isDM: true };
 
   await set(ref(db, "rooms/" + room), {
-    dm: state.id,
     players: {
       [state.id]: { name: name + " 👑" }
     }
   });
 
-  save();
   start();
 };
 
-// ===== JOIN ROOM =====
 window.joinRoom = async (room) => {
-  const name = document.getElementById("name").value.trim();
-  if (!name) return alert("Zadej jméno");
-
+  const name = document.getElementById("name").value;
   const id = "P_" + Date.now();
 
   await set(ref(db, "rooms/" + room + "/players/" + id), { name });
 
-  state = { room, name, id, isDM: false };
+  state = { ...state, room, name, id, isDM: false };
 
-  save();
   start();
 };
-
-// ===== LOBBY =====
-onValue(ref(db, "rooms"), snap => {
-  const data = snap.val() || {};
-  let html = "";
-
-  Object.keys(data).forEach(r => {
-    html += `
-      <div class="room">
-        <span>${r}</span>
-        <button onclick="joinRoom('${r}')">Join</button>
-      </div>`;
-  });
-
-  el.roomsList.innerHTML = html;
-});
 
 // ===== START =====
 function start() {
@@ -220,108 +252,44 @@ function start() {
   el.dmPanel.classList.toggle("hidden", !state.isDM);
   el.playerPanel.classList.toggle("hidden", state.isDM);
 
-  el.topButtons.innerHTML = `
-    <button onclick="logout()">🚪</button>
-    ${state.isDM ? `<button class="danger" onclick="deleteRoom()">🗑️</button>` : ""}
-  `;
-
-  onDisconnect(ref(db, "rooms/" + state.room + "/players/" + state.id)).remove();
-
   listenPlayers();
 
   if (!state.isDM) {
     onValue(ref(db, "rooms/" + state.room + "/messages/" + state.id), snap => {
-      if (snap.val()) {
-        el.result.innerText = snap.val();
-      }
+      if (snap.val()) el.result.innerText = snap.val();
     });
   }
-
-  document.getElementById("rollBtn")?.addEventListener("click", rollFail);
 }
 
 // ===== PLAYERS =====
 function listenPlayers() {
   onValue(ref(db, "rooms/" + state.room + "/players"), snap => {
-    state.players = snap.val() || {};
+    const players = snap.val() || {};
 
-    el.topPlayers.innerText = Object.values(state.players).map(p => p.name).join(" | ");
+    el.topPlayers.innerText = Object.values(players).map(p => p.name).join(" | ");
 
-    let html = "";
-    let targets = "";
+    el.playersList.innerHTML = Object.values(players)
+      .map(p => `<div>${p.name}</div>`)
+      .join("");
 
-    let i = 1;
-
-    Object.entries(state.players).forEach(([id, p]) => {
-      html += `<button class="playerBtn" style="background:${getColor(i)}">${p.name}</button>`;
-
-      if (state.isDM && !id.startsWith("DM_")) {
-        targets += `<button onclick="sendTo('${id}')">${p.name}</button>`;
-      }
-
-      i++;
-    });
-
-    el.playersList.innerHTML = html;
-    el.playerTargets.innerHTML = targets;
+    el.playerTargets.innerHTML = Object.entries(players)
+      .filter(([id]) => !id.startsWith("DM_"))
+      .map(([id, p]) => `<button onclick="sendTo('${id}')">${p.name}</button>`)
+      .join("");
   });
 }
 
-// ===== FAIL =====
-function rollFail() {
-  const fail = FAILS[Math.floor(Math.random() * FAILS.length)];
+// ===== LOBBY =====
+onValue(ref(db, "rooms"), snap => {
+  const data = snap.val() || {};
 
-  state.lastResult = fail;
+  el.roomsList.innerHTML = Object.keys(data)
+    .map(r => `<div class="room">${r} <button onclick="joinRoom('${r}')">Join</button></div>`)
+    .join("");
+});
 
-  el.resultBox.innerText = fail;
-  el.resultBox.classList.remove("hidden");
-}
-
-// ===== SEND =====
-window.sendTo = async (playerId) => {
-  if (!state.lastResult) return alert("Nejdřív hoď fail");
-
-  await set(ref(db, "rooms/" + state.room + "/messages/" + playerId), state.lastResult);
-};
-
-// ===== COLORS =====
-function getColor(i) {
-  const colors = ["#ef4444","#22c55e","#3b82f6","#eab308","#a855f7"];
-  return colors[(i-1)%colors.length];
-}
-
-// ===== STORAGE =====
-function save() {
-  localStorage.setItem("room", state.room);
-  localStorage.setItem("name", state.name);
-  localStorage.setItem("id", state.id);
-  localStorage.setItem("isDM", state.isDM);
-}
-
-// ===== LOGOUT =====
-window.logout = () => {
-  localStorage.clear();
-  location.reload();
-};
-
-// ===== DELETE =====
-window.deleteRoom = async () => {
-  await remove(ref(db, "rooms/" + state.room));
-  localStorage.clear();
-  location.reload();
-};
-
-// ===== AUTO =====
-const savedRoom = localStorage.getItem("room");
-if (savedRoom) {
-  state = {
-    room: savedRoom,
-    name: localStorage.getItem("name"),
-    id: localStorage.getItem("id"),
-    isDM: localStorage.getItem("isDM") === "true"
-  };
-  start();
-}
+// INIT
+loadFails();
 </script>
 
 </body>
