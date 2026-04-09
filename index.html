@@ -3,95 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <title>KritFailer</title>
+  <style>
+    body { font-family: Arial; background: #fff; color: #000; }
+    button { padding: 10px; margin: 5px; }
+    .hidden { display: none; }
+  </style>
 </head>
 
 <body>
 
-<input id="name" placeholder="Jméno">
-<input id="roomName" placeholder="Room">
-<button id="createRoomBtn">Vytvořit</button>
+<h2>🎲 KritFailer</h2>
 
-<div id="roomsList"></div>
+<div id="setup">
+  <input id="name" placeholder="Jméno">
+  <input id="roomName" placeholder="Název místnosti">
+  <button id="createRoomBtn">Vytvořit místnost</button>
 
-<div id="app" style="display:none">
-  <div id="dmPanel" style="display:none">DM PANEL</div>
-  <div id="playerPanel" style="display:none">
+  <h3>Lobby</h3>
+  <div id="roomsList"></div>
+</div>
+
+<div id="app" class="hidden">
+  <div id="topButtons"></div>
+  <h3 id="roomTitle"></h3>
+
+  <div id="dmPanel" class="hidden">
+    <h3>DM</h3>
+  </div>
+
+  <div id="playerPanel" class="hidden">
+    <h3>Hráči</h3>
     <div id="playersList"></div>
-    <div id="playerResult"></div>
+    <div id="result"></div>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
-  getDatabase, ref, set, onValue, get, remove, onDisconnect
+  getDatabase, ref, set, get, onValue, remove, onDisconnect
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const app = initializeApp({
-  apiKey: "xxx",
-  databaseURL: "xxx"
+  apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
+  databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
 });
+
 const db = getDatabase(app);
 
 let state = {
   room: "",
   name: "",
-  myId: "",
-  isDM: false,
-  players: {}
+  id: "",
+  isDM: false
 };
 
-// CREATE ROOM
+// ===== CREATE ROOM =====
 document.getElementById("createRoomBtn").onclick = async () => {
-  const name = document.getElementById("name").value;
-  const room = document.getElementById("roomName").value;
+  const name = document.getElementById("name").value.trim();
+  const room = document.getElementById("roomName").value.trim();
 
   if (!name || !room) return alert("Vyplň vše");
-
-  const existing = await get(ref(db, "rooms/" + room));
-  if (existing.exists()) return alert("Room existuje");
 
   state = {
     room,
     name,
-    myId: "DM_" + Date.now(),
+    id: "DM_" + Date.now(),
     isDM: true
   };
 
   await set(ref(db, "rooms/" + room), {
     players: {
-      [state.myId]: { name: name + " 👑" }
+      [state.id]: { name: name + " 👑" }
     }
   });
 
-  localStorage.setItem("room", room);
-  localStorage.setItem("name", name);
-  localStorage.setItem("id", state.myId);
-  localStorage.setItem("isDM", "true");
-
+  save();
   start();
 };
 
-// JOIN ROOM
+// ===== JOIN ROOM =====
 window.joinRoom = async (room) => {
-  const name = document.getElementById("name").value;
+  const name = document.getElementById("name").value.trim();
   if (!name) return alert("Zadej jméno");
 
   const id = "P_" + Date.now();
 
   await set(ref(db, "rooms/" + room + "/players/" + id), { name });
 
-  state = { room, name, myId: id, isDM: false };
+  state = { room, name, id, isDM: false };
 
-  localStorage.setItem("room", room);
-  localStorage.setItem("name", name);
-  localStorage.setItem("id", id);
-  localStorage.setItem("isDM", "false");
-
+  save();
   start();
 };
 
-// ROOM LIST
+// ===== ROOM LIST =====
 onValue(ref(db, "rooms"), snap => {
   const data = snap.val() || {};
   let html = "";
@@ -103,14 +109,22 @@ onValue(ref(db, "rooms"), snap => {
   document.getElementById("roomsList").innerHTML = html;
 });
 
-// START
+// ===== START =====
 function start() {
-  document.getElementById("app").style.display = "block";
+  document.getElementById("setup").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
 
-  document.getElementById("dmPanel").style.display = state.isDM ? "block" : "none";
-  document.getElementById("playerPanel").style.display = state.isDM ? "none" : "block";
+  document.getElementById("roomTitle").innerText = "Room: " + state.room;
 
-  onDisconnect(ref(db, "rooms/" + state.room + "/players/" + state.myId)).remove();
+  document.getElementById("dmPanel").classList.toggle("hidden", !state.isDM);
+  document.getElementById("playerPanel").classList.toggle("hidden", state.isDM);
+
+  document.getElementById("topButtons").innerHTML = `
+    <button onclick="logout()">🚪 Logout</button>
+    ${state.isDM ? `<button onclick="deleteRoom()">🗑️ Smazat room</button>` : ""}
+  `;
+
+  onDisconnect(ref(db, "rooms/" + state.room + "/players/" + state.id)).remove();
 
   onValue(ref(db, "rooms/" + state.room + "/players"), snap => {
     const players = snap.val() || {};
@@ -124,13 +138,34 @@ function start() {
   });
 }
 
-// AUTO RECONNECT
+// ===== STORAGE =====
+function save() {
+  localStorage.setItem("room", state.room);
+  localStorage.setItem("name", state.name);
+  localStorage.setItem("id", state.id);
+  localStorage.setItem("isDM", state.isDM);
+}
+
+// ===== LOGOUT =====
+window.logout = () => {
+  localStorage.clear();
+  location.reload();
+};
+
+// ===== DELETE ROOM =====
+window.deleteRoom = async () => {
+  await remove(ref(db, "rooms/" + state.room));
+  localStorage.clear();
+  location.reload();
+};
+
+// ===== AUTO RECONNECT =====
 const savedRoom = localStorage.getItem("room");
 if (savedRoom) {
   state = {
     room: savedRoom,
     name: localStorage.getItem("name"),
-    myId: localStorage.getItem("id"),
+    id: localStorage.getItem("id"),
     isDM: localStorage.getItem("isDM") === "true"
   };
   start();
