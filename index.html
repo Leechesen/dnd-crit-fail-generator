@@ -3,402 +3,413 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KritFailer FINAL</title>
+<title>KritFailer</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: #1a1a2e;
-    color: #e0e0e0;
-    min-height: 100vh;
+  :root {
+    --bg: #1a1a2e;
+    --bg2: #16213e;
+    --bg3: #0f3460;
+    --accent: #e94560;
+    --accent2: #e9a020;
+    --green: #2a9d5c;
+    --blue: #2980b9;
+    --purple: #8e44ad;
+    --text: #e0e0e0;
+    --muted: #7a7a9a;
+    --border: #1e3a6a;
   }
 
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── HEADER ── */
   header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
-    background: #16213e;
-    border-bottom: 2px solid #e94560;
+    padding: 10px 20px;
+    background: var(--bg2);
+    border-bottom: 2px solid var(--accent);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 10px;
     flex-wrap: wrap;
-    gap: 8px;
   }
 
-  header .logo {
-    font-size: 1.4rem;
+  .logo {
+    font-size: 1.2rem;
     font-weight: bold;
-    color: #e94560;
+    color: var(--accent);
+    white-space: nowrap;
   }
 
   #playersTop {
-    font-size: 0.85rem;
-    color: #a0a0c0;
     flex: 1;
     text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
     padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  #topBtns { display: flex; gap: 6px; }
+  #topBtns { display: flex; gap: 6px; flex-shrink: 0; }
 
+  /* ── BUTTONS ── */
   button {
-    padding: 8px 14px;
+    padding: 7px 13px;
     border: none;
-    border-radius: 8px;
+    border-radius: 7px;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: opacity 0.2s, transform 0.1s;
+    font-size: 0.85rem;
+    font-family: inherit;
+    font-weight: 600;
+    transition: filter 0.15s, transform 0.1s;
+    white-space: nowrap;
   }
+  button:hover  { filter: brightness(1.15); }
+  button:active { transform: scale(0.97); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; filter: none; }
 
-  button:hover { opacity: 0.85; transform: scale(1.02); }
-  button:active { transform: scale(0.98); }
-
-  .btn-primary { background: #e94560; color: white; font-weight: bold; }
-  .btn-secondary { background: #0f3460; color: #e0e0e0; border: 1px solid #e94560; }
-  .btn-success { background: #2a9d5c; color: white; }
-  .btn-warning { background: #e9a020; color: white; }
-  .btn-danger { background: #c0392b; color: white; }
-  .btn-info { background: #2980b9; color: white; }
-  .btn-purple { background: #8e44ad; color: white; }
-  .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+  .btn-primary  { background: var(--accent);  color: #fff; }
+  .btn-secondary{ background: var(--bg3);     color: var(--text); border: 1px solid var(--border); }
+  .btn-success  { background: var(--green);   color: #fff; }
+  .btn-warning  { background: var(--accent2); color: #fff; }
+  .btn-danger   { background: #c0392b;        color: #fff; }
+  .btn-info     { background: var(--blue);    color: #fff; }
+  .btn-purple   { background: var(--purple);  color: #fff; }
+  .btn-sm       { padding: 5px 10px; font-size: 0.78rem; }
 
   .hidden { display: none !important; }
 
-  /* ===== SETUP SCREEN ===== */
+  /* ── SETUP SCREEN ── */
   #setup {
-    max-width: 500px;
-    margin: 60px auto;
-    padding: 30px;
-    background: #16213e;
+    max-width: 480px;
+    margin: 50px auto;
+    padding: 28px;
+    background: var(--bg2);
     border-radius: 16px;
-    border: 1px solid #0f3460;
+    border: 1px solid var(--border);
   }
 
   #setup h2 {
     text-align: center;
-    color: #e94560;
-    margin-bottom: 24px;
-    font-size: 1.6rem;
+    color: var(--accent);
+    margin-bottom: 22px;
+    font-size: 1.5rem;
   }
 
-  .form-group {
-    margin-bottom: 16px;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 6px;
-    color: #a0a0c0;
-    font-size: 0.9rem;
-  }
-
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; margin-bottom: 5px; color: var(--muted); font-size: 0.82rem; }
   .form-group input {
     width: 100%;
-    padding: 10px 14px;
-    background: #0f3460;
-    border: 1px solid #1a4a8a;
-    border-radius: 8px;
-    color: #e0e0e0;
-    font-size: 1rem;
+    padding: 9px 13px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    color: var(--text);
+    font-size: 0.95rem;
     outline: none;
+    font-family: inherit;
     transition: border-color 0.2s;
   }
+  .form-group input:focus { border-color: var(--accent); }
 
-  .form-group input:focus { border-color: #e94560; }
+  .setup-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .setup-actions button { flex: 1; padding: 11px; font-size: 0.95rem; }
 
-  .setup-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
+  #createRoomSection {
+    margin-top: 14px;
+    padding: 14px;
+    background: var(--bg3);
+    border-radius: 10px;
+    border: 1px solid var(--border);
   }
-
-  .setup-actions button { flex: 1; padding: 12px; font-size: 1rem; }
 
   .divider {
     text-align: center;
-    margin: 20px 0;
-    color: #555;
+    margin: 18px 0;
+    color: var(--muted);
+    font-size: 0.8rem;
     position: relative;
   }
-
   .divider::before, .divider::after {
     content: '';
     position: absolute;
     top: 50%;
-    width: 40%;
+    width: 38%;
     height: 1px;
-    background: #333;
+    background: var(--border);
   }
-
   .divider::before { left: 0; }
-  .divider::after { right: 0; }
+  .divider::after  { right: 0; }
 
-  /* ===== LOBBY ===== */
-  #lobbyList { margin-top: 10px; }
-
+  /* ── LOBBY ── */
+  #lobbyList { margin-top: 6px; }
   .room-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 16px;
-    background: #0f3460;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    border: 1px solid #1a4a8a;
+    padding: 10px 14px;
+    background: var(--bg3);
+    border-radius: 9px;
+    margin-bottom: 7px;
+    border: 1px solid var(--border);
   }
+  .room-name  { font-weight: bold; }
+  .room-meta  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
 
-  .room-item .room-name {
-    font-weight: bold;
-    color: #e0e0e0;
-  }
-
-  .room-item .room-players {
-    font-size: 0.8rem;
-    color: #a0a0c0;
-  }
-
-  /* ===== MAIN APP ===== */
-  #app {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px;
-  }
+  /* ── APP WRAPPER ── */
+  #app { padding: 16px 20px; max-width: 1300px; margin: 0 auto; }
 
   #roomTitle {
     text-align: center;
-    font-size: 1.4rem;
-    color: #e94560;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #333;
-  }
-
-  .panel-grid {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 20px;
-  }
-
-  @media (max-width: 768px) {
-    .panel-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ===== DM PANEL ===== */
-  .section-card {
-    background: #16213e;
-    border-radius: 12px;
-    padding: 16px;
+    font-size: 1.2rem;
+    color: var(--accent);
     margin-bottom: 16px;
-    border: 1px solid #0f3460;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
   }
 
-  .section-card h3 {
-    color: #e94560;
-    margin-bottom: 12px;
-    font-size: 1rem;
+  /* ── DM LAYOUT: two columns ── */
+  .dm-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 16px;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .dm-layout { grid-template-columns: 1fr; }
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg2);
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+  }
+
+  .card h3 {
+    color: var(--accent);
+    font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    border-bottom: 1px solid #0f3460;
-    padding-bottom: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--border);
   }
 
-  /* Severity buttons */
-  #severityBtns {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
+  /* ── SEVERITY ── */
+  .sev-row { display: flex; gap: 7px; flex-wrap: wrap; }
   .sev-btn {
     flex: 1;
-    min-width: 80px;
+    min-width: 70px;
     text-align: center;
-    padding: 10px;
+    padding: 9px 6px;
     border-radius: 8px;
-    border: 2px solid transparent;
     cursor: pointer;
     font-weight: bold;
-    transition: all 0.2s;
+    font-size: 0.85rem;
+    border: 2px solid transparent;
+    transition: all 0.18s;
+    user-select: none;
   }
+  .sev-btn:hover  { filter: brightness(1.2); }
+  .sev-btn.active { border-color: #fff; transform: scale(1.05); box-shadow: 0 0 8px rgba(255,255,255,0.2); }
+  .sev-lehky  { background: var(--green);   color: #fff; }
+  .sev-stredni{ background: var(--accent2); color: #fff; }
+  .sev-tezky  { background: #c0392b;        color: #fff; }
+  .sev-sranda { background: var(--purple);  color: #fff; }
 
-  .sev-btn.active { border-color: white; transform: scale(1.05); }
-  .sev-lehky { background: #2a9d5c; color: white; }
-  .sev-stredni { background: #e9a020; color: white; }
-  .sev-tezky { background: #c0392b; color: white; }
-  .sev-sranda { background: #8e44ad; color: white; }
+  /* ── GENERATOR ── */
+  .cat-block  { margin-bottom: 12px; }
+  .cat-title  { font-weight: bold; color: var(--text); margin-bottom: 7px; font-size: 0.9rem; }
+  .attr-label { font-size: 0.75rem; color: var(--muted); margin: 7px 0 4px; font-style: italic; }
+  .btn-group  { display: flex; flex-wrap: wrap; gap: 5px; }
 
-  /* Generator categories */
-  #generator { }
+  /* ── RIGHT COLUMN ── */
+  .right-col { display: flex; flex-direction: column; gap: 0; }
 
-  .cat-section { margin-bottom: 12px; }
-
-  .cat-section h4 {
-    color: #a0a0c0;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-  }
-
-  .cat-section .attr-label {
-    color: #7a7aaa;
-    font-size: 0.8rem;
-    margin: 8px 0 4px;
-    font-style: italic;
-  }
-
-  .btn-group {
+  /* ── PLAYER LIST (DM sidebar) ── */
+  .player-chip {
+    padding: 7px 11px;
+    background: var(--bg3);
+    border-radius: 7px;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    border: 1px solid var(--border);
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
     gap: 6px;
   }
 
-  /* Result box */
+  /* ── RESULT BOX ── */
   #resultBox {
-    background: #0f1f3d;
-    border: 1px solid #e94560;
+    border: 1px solid var(--accent);
     border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 16px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    background: var(--bg2);
   }
 
-  .result-effect {
-    background: #1a0a0a;
-    border-left: 3px solid #e94560;
-    padding: 10px 14px;
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 12px;
-    font-weight: bold;
-    color: #ff8080;
-  }
-
-  .result-roleplay {
-    background: #0a1a0a;
-    border-left: 3px solid #2a9d5c;
-    padding: 8px 14px;
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 8px;
-    color: #80ff80;
-    font-size: 0.9rem;
-  }
-
-  .result-roleplay .rp-label {
+  .res-header {
+    background: var(--accent);
+    padding: 7px 12px;
     font-size: 0.75rem;
-    color: #2a9d5c;
-    margin-bottom: 4px;
     font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
-  /* Targets */
-  .target-card {
-    background: #0f3460;
-    border-radius: 10px;
-    padding: 12px;
+  .res-body { padding: 12px; }
+
+  .res-effect {
+    background: #200a0a;
+    border-left: 3px solid var(--accent);
+    padding: 9px 12px;
+    border-radius: 0 7px 7px 0;
+    color: #ff9090;
+    font-weight: bold;
+    font-size: 0.9rem;
     margin-bottom: 10px;
-    border: 1px solid #1a4a8a;
+    line-height: 1.4;
+  }
+
+  .res-rp {
+    background: #0a180a;
+    border-left: 3px solid var(--green);
+    padding: 8px 12px;
+    border-radius: 0 7px 7px 0;
+    color: #90e890;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin-bottom: 7px;
+  }
+
+  .res-rp:last-child { margin-bottom: 0; }
+
+  .rp-label {
+    font-size: 0.7rem;
+    color: var(--green);
+    font-weight: bold;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── TARGETS ── */
+  .target-row {
+    padding: 10px;
+    background: var(--bg3);
+    border-radius: 9px;
+    margin-bottom: 7px;
+    border: 1px solid var(--border);
   }
 
   .target-name {
     font-weight: bold;
-    margin-bottom: 8px;
-    color: #e0e0e0;
+    font-size: 0.85rem;
+    margin-bottom: 7px;
+    color: var(--text);
   }
 
-  .target-btns {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
+  .target-btns { display: flex; gap: 5px; flex-wrap: wrap; }
+
+  /* ── PLAYER PANEL ── */
+  .player-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 16px;
+    align-items: start;
   }
 
-  /* ===== PLAYER PANEL SIDEBAR ===== */
-  #playerListSidebar .player-item {
-    padding: 8px 12px;
-    background: #0f3460;
-    border-radius: 8px;
-    margin-bottom: 6px;
-    font-size: 0.9rem;
-    border: 1px solid #1a4a8a;
+  @media (max-width: 700px) {
+    .player-layout { grid-template-columns: 1fr; }
   }
 
-  /* ===== PLAYER MAIN PANEL ===== */
   #playerResult {
-    background: #0f1f3d;
-    border: 1px solid #2a9d5c;
-    border-radius: 12px;
-    padding: 20px;
-    min-height: 200px;
+    min-height: 160px;
   }
 
-  #playerResult .waiting {
-    text-align: center;
-    color: #555;
-    padding: 40px;
-  }
-
-  #playerResult .msg-effect {
-    background: #1a0a0a;
-    border-left: 3px solid #e94560;
-    padding: 10px 14px;
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 12px;
+  .msg-effect {
+    background: #200a0a;
+    border-left: 3px solid var(--accent);
+    padding: 10px 13px;
+    border-radius: 0 7px 7px 0;
+    color: #ff9090;
     font-weight: bold;
-    color: #ff8080;
+    font-size: 0.92rem;
+    margin-bottom: 10px;
+    line-height: 1.45;
   }
 
-  #playerResult .msg-roleplay {
-    background: #0a1a0a;
-    border-left: 3px solid #2a9d5c;
-    padding: 10px 14px;
-    border-radius: 0 8px 8px 0;
-    color: #80ff80;
-    font-size: 0.95rem;
+  .msg-rp {
+    background: #0a180a;
+    border-left: 3px solid var(--green);
+    padding: 10px 13px;
+    border-radius: 0 7px 7px 0;
+    color: #90e890;
+    font-size: 0.9rem;
     line-height: 1.5;
   }
 
-  /* Notification */
-  #notification {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #e94560;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-weight: bold;
-    z-index: 1000;
-    transition: opacity 0.5s;
-    opacity: 0;
-    pointer-events: none;
+  .waiting-text {
+    text-align: center;
+    color: var(--muted);
+    padding: 30px 10px;
+    font-size: 0.9rem;
   }
 
-  #notification.show { opacity: 1; }
+  /* ── NOTIFICATION ── */
+  #notif {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 9px;
+    font-weight: bold;
+    font-size: 0.88rem;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+    max-width: 280px;
+  }
+  #notif.show { opacity: 1; transform: translateY(0); }
 
-  /* Loading */
+  /* ── LOADING ── */
   #loading {
     text-align: center;
-    padding: 60px;
-    color: #555;
-    font-size: 1.2rem;
+    padding: 80px 20px;
+    color: var(--muted);
   }
-
-  .spinner {
+  .spin {
     display: inline-block;
-    width: 40px;
-    height: 40px;
-    border: 3px solid #333;
-    border-top-color: #e94560;
+    width: 36px; height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-bottom: 16px;
+    animation: spin 0.7s linear infinite;
+    margin-bottom: 14px;
   }
-
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .no-result {
-    text-align: center;
-    padding: 30px;
-    color: #555;
-  }
-
-  .dm-badge { color: #e9a020; }
+  .empty-note { color: var(--muted); font-size: 0.82rem; font-style: italic; }
 </style>
 </head>
 <body>
@@ -409,113 +420,115 @@
   <div id="topBtns"></div>
 </header>
 
-<div id="notification"></div>
+<div id="notif"></div>
 
+<!-- LOADING -->
 <div id="loading">
-  <div class="spinner"></div>
-  <div>Načítám data...</div>
+  <div class="spin"></div>
+  <div>Načítám data…</div>
 </div>
 
+<!-- SETUP -->
 <div id="setup" class="hidden">
   <h2>🎲 KritFailer</h2>
 
   <div class="form-group">
-    <label>Tvé jméno</label>
-    <input id="nameInput" placeholder="Zadej jméno..." maxlength="30">
+    <label>Tvoje jméno</label>
+    <input id="nameInput" placeholder="Zadej jméno…" maxlength="30">
   </div>
 
   <div class="setup-actions">
-    <button class="btn-primary" onclick="openCreateRoom()">👑 Vytvořit místnost</button>
+    <button class="btn-primary" onclick="toggleCreate()">👑 Vytvořit místnost</button>
   </div>
 
-  <div id="createRoomSection" class="hidden" style="margin-top:16px;">
-    <div class="form-group">
+  <div id="createRoomSection" class="hidden">
+    <div class="form-group" style="margin-top:10px;">
       <label>Název místnosti</label>
-      <input id="roomInput" placeholder="Název místnosti..." maxlength="30">
+      <input id="roomInput" placeholder="Název místnosti…" maxlength="30">
     </div>
-    <button class="btn-success" onclick="createRoom()" style="width:100%;padding:12px;">✅ Vytvořit</button>
+    <button class="btn-success" onclick="createRoom()" style="width:100%;padding:10px;margin-top:4px;">✅ Vytvořit</button>
   </div>
 
-  <div class="divider">nebo se připoj</div>
+  <div class="divider">nebo se připoj k existující místnosti</div>
 
   <div id="lobbyList">
-    <div style="text-align:center;color:#555;padding:20px;">Žádné místnosti nenalezeny</div>
+    <div class="empty-note" style="text-align:center;padding:16px;">Žádné místnosti…</div>
   </div>
 </div>
 
+<!-- MAIN APP -->
 <div id="app" class="hidden">
   <h2 id="roomTitle"></h2>
 
   <!-- DM PANEL -->
   <div id="dmPanel" class="hidden">
-    <div class="panel-grid">
-      <div id="dmLeft">
+    <div class="dm-layout">
 
-        <!-- SEVERITY -->
-        <div class="section-card">
+      <!-- LEFT: controls -->
+      <div id="dmLeft">
+        <div class="card">
           <h3>🎯 Závažnost</h3>
-          <div id="severityBtns">
-            <div class="sev-btn sev-lehky active" onclick="setSeverity('Lehký', this)">Lehký</div>
-            <div class="sev-btn sev-stredni" onclick="setSeverity('Střední', this)">Střední</div>
-            <div class="sev-btn sev-tezky" onclick="setSeverity('Těžký', this)">Těžký</div>
-            <div class="sev-btn sev-sranda" onclick="setSeverity('Sranda', this)">Sranda</div>
+          <div class="sev-row">
+            <div class="sev-btn sev-lehky active"   onclick="setSev('Lehký',this)">Lehký</div>
+            <div class="sev-btn sev-stredni"         onclick="setSev('Střední',this)">Střední</div>
+            <div class="sev-btn sev-tezky"           onclick="setSev('Těžký',this)">Těžký</div>
+            <div class="sev-btn sev-sranda"          onclick="setSev('Sranda',this)">Sranda</div>
           </div>
         </div>
 
-        <!-- GENERATOR -->
-        <div class="section-card">
+        <div class="card">
           <h3>🎲 Generátor</h3>
           <div id="generator"></div>
         </div>
-
-        <!-- RESULT -->
-        <div id="resultBox" class="hidden">
-          <div class="result-effect" id="resEffect"></div>
-          <div class="result-roleplay">
-            <div class="rp-label">🎭 Roleplay 1</div>
-            <div id="resRp1"></div>
-          </div>
-          <div class="result-roleplay">
-            <div class="rp-label">🎭 Roleplay 2</div>
-            <div id="resRp2"></div>
-          </div>
-        </div>
-
       </div>
 
-      <div id="dmRight">
-        <!-- PLAYERS SIDEBAR -->
-        <div class="section-card">
-          <h3>👥 Hráči</h3>
-          <div id="playerListSidebar"></div>
+      <!-- RIGHT: players → result → send -->
+      <div class="right-col">
+
+        <div class="card">
+          <h3>👥 Hráči v místnosti</h3>
+          <div id="dmPlayerList"><div class="empty-note">Žádní hráči</div></div>
         </div>
 
-        <!-- SEND TO PLAYER -->
-        <div class="section-card">
-          <h3>📨 Pošli výsledek</h3>
-          <div id="targets">
-            <div style="color:#555;font-size:0.85rem;">Nejprve vygeneruj výsledek</div>
+        <div id="resultBox" class="hidden">
+          <div class="res-header">🎲 Výsledek</div>
+          <div class="res-body">
+            <div class="res-effect" id="resEffect"></div>
+            <div class="res-rp">
+              <div class="rp-label">🎭 Roleplay 1</div>
+              <div id="resRp1"></div>
+            </div>
+            <div class="res-rp">
+              <div class="rp-label">🎭 Roleplay 2</div>
+              <div id="resRp2"></div>
+            </div>
           </div>
         </div>
+
+        <div class="card">
+          <h3>📨 Pošli hráči</h3>
+          <div id="targets"><div class="empty-note">Nejprve vygeneruj výsledek</div></div>
+        </div>
+
       </div>
     </div>
   </div>
 
   <!-- PLAYER PANEL -->
   <div id="playerPanel" class="hidden">
-    <div class="panel-grid">
+    <div class="player-layout">
       <div>
-        <div class="section-card">
+        <div class="card">
           <h3>📬 Tvůj výsledek</h3>
           <div id="playerResult">
-            <div class="waiting">⏳ Čekám na výsledek od DM...</div>
+            <div class="waiting-text">⏳ Čekám na výsledek od DM…</div>
           </div>
         </div>
       </div>
       <div>
-        <div class="section-card">
+        <div class="card">
           <h3>👥 Hráči v místnosti</h3>
-          <div id="playerListPlayer"></div>
+          <div id="playerListPlayer"><div class="empty-note">Načítám…</div></div>
         </div>
       </div>
     </div>
@@ -525,279 +538,248 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
-  getDatabase, ref, set, get, onValue, remove, push, onDisconnect, update, serverTimestamp
+  getDatabase, ref, set, get, onValue, remove, update, onDisconnect
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// ── Firebase config ──────────────────────────────────────────────────────────
-const firebaseApp = initializeApp({
+// ─── Firebase ────────────────────────────────────────────────────────────────
+const fbApp = initializeApp({
   apiKey: "AIzaSyBsomething",
   databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
 });
-const db = getDatabase(firebaseApp);
+const db = getDatabase(fbApp);
 
-// ── State ────────────────────────────────────────────────────────────────────
-let FAIL_DATA = {};
-let state = {
-  room: "",
-  name: "",
-  id: "",
-  isDM: false,
-  severity: "Lehký",
-  last: null
-};
-
+// ─── State ───────────────────────────────────────────────────────────────────
+let FAILS = {};
+let state = { room:"", name:"", id:"", isDM:false, severity:"Lehký", last:null };
 let playersCache = {};
-let autoDeleteTimer = null;
-let playerListeners = [];
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-function showNotif(msg) {
-  const n = document.getElementById("notification");
-  n.textContent = msg;
-  n.classList.add("show");
-  setTimeout(() => n.classList.remove("show"), 3000);
+// ─── Utility ─────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const dbr = (...p) => ref(db, p.join("/"));
+
+let notifTimer = null;
+function notif(msg, color="#e94560") {
+  const el = $("notif");
+  el.textContent = msg;
+  el.style.background = color;
+  el.classList.add("show");
+  clearTimeout(notifTimer);
+  notifTimer = setTimeout(() => el.classList.remove("show"), 3000);
 }
 
-function dbRef(...parts) {
-  return ref(db, parts.join("/"));
-}
-
-// ── Load JSON ────────────────────────────────────────────────────────────────
+// ─── Load JSON ────────────────────────────────────────────────────────────────
 fetch("crit_fails.json")
-  .then(r => r.json())
+  .then(r => { if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
   .then(data => {
-    FAIL_DATA = data;
-    document.getElementById("loading").classList.add("hidden");
+    FAILS = data;
+    $("loading").classList.add("hidden");
     init();
   })
   .catch(err => {
-    document.getElementById("loading").innerHTML =
-      `<div style="color:#e94560">❌ Chyba načítání crit_fails.json</div>`;
-    console.error(err);
+    $("loading").innerHTML = `<div style="color:#e94560">❌ Nelze načíst crit_fails.json<br><small>${err.message}</small></div>`;
   });
 
-// ── Init: auto reconnect or show setup ───────────────────────────────────────
+// ─── Init / Auto-reconnect ───────────────────────────────────────────────────
 function init() {
   const saved = localStorage.getItem("kf_state");
   if (saved) {
     try {
       const s = JSON.parse(saved);
-      // Verify room still exists
-      get(dbRef("rooms", s.room)).then(snap => {
+      get(dbr("rooms", s.room)).then(snap => {
         if (snap.exists()) {
-          state = s;
-          state.last = null;
-          // Re-register player in DB
-          const playerData = { name: s.name + (s.isDM ? " 👑" : ""), isDM: s.isDM };
-          set(dbRef("rooms", s.room, "players", s.id), playerData).then(() => {
-            setupOnDisconnect();
-            startApp();
-          });
+          state = { ...s, last: null };
+          const playerData = { name: state.name, isDM: state.isDM };
+          set(dbr("rooms", state.room, "players", state.id), playerData)
+            .then(() => { setupDisconnect(); startApp(); });
         } else {
           localStorage.removeItem("kf_state");
           showSetup();
         }
       }).catch(() => showSetup());
-    } catch (e) {
-      localStorage.removeItem("kf_state");
-      showSetup();
-    }
+    } catch(_) { localStorage.removeItem("kf_state"); showSetup(); }
   } else {
     showSetup();
   }
 }
 
+// ─── Setup screen ─────────────────────────────────────────────────────────────
 function showSetup() {
-  document.getElementById("setup").classList.remove("hidden");
-  startLobbyListener();
+  $("setup").classList.remove("hidden");
+  listenLobby();
 }
 
-// ── Lobby listener ────────────────────────────────────────────────────────────
-function startLobbyListener() {
-  onValue(dbRef("rooms"), snap => {
+function listenLobby() {
+  onValue(dbr("rooms"), snap => {
     const data = snap.val() || {};
-    const list = document.getElementById("lobbyList");
-    const rooms = Object.entries(data);
-
-    if (rooms.length === 0) {
-      list.innerHTML = `<div style="text-align:center;color:#555;padding:20px;">Žádné místnosti nenalezeny</div>`;
+    const keys = Object.keys(data);
+    const list = $("lobbyList");
+    if (!keys.length) {
+      list.innerHTML = `<div class="empty-note" style="text-align:center;padding:16px;">Žádné místnosti…</div>`;
       return;
     }
-
-    list.innerHTML = rooms.map(([roomId, roomData]) => {
-      const players = Object.values(roomData.players || {});
-      const count = players.length;
+    list.innerHTML = keys.map(r => {
+      const cnt = Object.keys(data[r].players || {}).length;
       return `
         <div class="room-item">
           <div>
-            <div class="room-name">🚪 ${roomId}</div>
-            <div class="room-players">👥 ${count} hráč${count === 1 ? '' : count < 5 ? 'i' : 'ů'}</div>
+            <div class="room-name">🚪 ${r}</div>
+            <div class="room-meta">👥 ${cnt} hráč${cnt===1?'':cnt<5?'i':'ů'}</div>
           </div>
-          <button class="btn-secondary btn-sm" onclick="window.joinRoom('${roomId}')">Připojit</button>
+          <button class="btn-secondary btn-sm" onclick="window._joinRoom('${r}')">Připojit</button>
         </div>`;
     }).join("");
   });
 }
 
-// ── Open create room form ─────────────────────────────────────────────────────
-window.openCreateRoom = () => {
-  document.getElementById("createRoomSection").classList.toggle("hidden");
-};
+// ─── Toggle create form ───────────────────────────────────────────────────────
+window.toggleCreate = () => $("createRoomSection").classList.toggle("hidden");
 
-// ── Create room ───────────────────────────────────────────────────────────────
+// ─── Create room ──────────────────────────────────────────────────────────────
 window.createRoom = async () => {
-  const name = document.getElementById("nameInput").value.trim();
-  const room = document.getElementById("roomInput").value.trim();
-
-  if (!name) return alert("Zadej své jméno!");
-  if (!room) return alert("Zadej název místnosti!");
+  const name = $("nameInput").value.trim();
+  const room = $("roomInput").value.trim();
+  if (!name) { notif("❌ Zadej jméno!"); return; }
+  if (!room) { notif("❌ Zadej název místnosti!"); return; }
 
   const id = "DM_" + Date.now();
   state = { room, name: name + " 👑", id, isDM: true, severity: "Lehký", last: null };
 
-  await set(dbRef("rooms", room), {
+  await set(dbr("rooms", room), {
     players: { [id]: { name: state.name, isDM: true } },
     createdAt: Date.now(),
     lastActive: Date.now()
   });
 
   saveState();
-  setupOnDisconnect();
+  setupDisconnect();
   startApp();
 };
 
-// ── Join room ─────────────────────────────────────────────────────────────────
-window.joinRoom = async (room) => {
-  const name = document.getElementById("nameInput").value.trim();
-  if (!name) return alert("Zadej své jméno!");
+// ─── Join room ────────────────────────────────────────────────────────────────
+window._joinRoom = async (room) => {
+  const name = $("nameInput").value.trim();
+  if (!name) { notif("❌ Zadej jméno!"); return; }
 
   const id = "P_" + Date.now();
   state = { room, name, id, isDM: false, severity: "Lehký", last: null };
 
-  await set(dbRef("rooms", room, "players", id), { name, isDM: false });
-  await update(dbRef("rooms", room), { lastActive: Date.now() });
+  await set(dbr("rooms", room, "players", id), { name, isDM: false });
+  await update(dbr("rooms", room), { lastActive: Date.now() });
 
   saveState();
-  setupOnDisconnect();
+  setupDisconnect();
   startApp();
 };
 
-// ── Save state ────────────────────────────────────────────────────────────────
+// ─── Save / clear state ───────────────────────────────────────────────────────
 function saveState() {
-  const toSave = { ...state, last: null };
-  localStorage.setItem("kf_state", JSON.stringify(toSave));
+  localStorage.setItem("kf_state", JSON.stringify({ ...state, last: null }));
 }
 
-// ── onDisconnect cleanup ──────────────────────────────────────────────────────
-function setupOnDisconnect() {
-  onDisconnect(dbRef("rooms", state.room, "players", state.id)).remove();
+function setupDisconnect() {
+  onDisconnect(dbr("rooms", state.room, "players", state.id)).remove();
 }
 
-// ── Start App ─────────────────────────────────────────────────────────────────
+// ─── Start App ────────────────────────────────────────────────────────────────
 function startApp() {
-  document.getElementById("setup").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
+  $("setup").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  $("roomTitle").textContent = `${state.isDM ? "👑" : "🧑"} Místnost: ${state.room}`;
 
-  document.getElementById("roomTitle").textContent =
-    `${state.isDM ? "👑" : "🧑"} Místnost: ${state.room}`;
-
-  // Top buttons
-  document.getElementById("topBtns").innerHTML = `
-    <button class="btn-secondary btn-sm" onclick="window.logout()">🚪 Odejít</button>
-    ${state.isDM ? `<button class="btn-danger btn-sm" onclick="window.deleteRoom()">🗑️ Smazat místnost</button>` : ""}
+  $("topBtns").innerHTML = `
+    <button class="btn-secondary btn-sm" onclick="window._logout()">🚪 Odejít</button>
+    ${state.isDM ? `<button class="btn-danger btn-sm" onclick="window._deleteRoom()">🗑️ Smazat místnost</button>` : ""}
   `;
 
   if (state.isDM) {
-    document.getElementById("dmPanel").classList.remove("hidden");
-    buildGeneratorUI();
+    $("dmPanel").classList.remove("hidden");
+    buildGenerator();
     listenPlayers();
-    startAutoDeleteCheck();
+    startAutoDelete();
   } else {
-    document.getElementById("playerPanel").classList.remove("hidden");
+    $("playerPanel").classList.remove("hidden");
     listenPlayers();
-    listenForMessage();
+    listenMessage();
   }
 }
 
-// ── Build Generator UI ────────────────────────────────────────────────────────
-function buildGeneratorUI() {
-  const gen = document.getElementById("generator");
+// ─── Build Generator UI ───────────────────────────────────────────────────────
+function buildGenerator() {
+  const gen = $("generator");
   gen.innerHTML = "";
 
   // ⚔️ Útok
-  const atkData = FAIL_DATA["Útok"] || {};
-  if (Object.keys(atkData).length > 0) {
-    const sec = document.createElement("div");
-    sec.className = "cat-section";
-    sec.innerHTML = `<h4>⚔️ Útok</h4><div class="btn-group" id="atkBtns"></div>`;
-    const btnGroup = sec.querySelector("#atkBtns");
-    Object.entries(atkData).forEach(([type, sevData]) => {
-      const b = document.createElement("button");
-      b.className = "btn-secondary btn-sm";
-      b.textContent = type;
-      b.onclick = () => roll(sevData[state.severity], `Útok – ${type}`);
-      btnGroup.appendChild(b);
+  const atkData = FAILS["Útok"] || {};
+  if (Object.keys(atkData).length) {
+    const block = document.createElement("div");
+    block.className = "cat-block";
+    block.innerHTML = `<div class="cat-title">⚔️ Útok</div><div class="btn-group" id="_atkBtns"></div>`;
+    gen.appendChild(block);
+    const g = block.querySelector("#_atkBtns");
+    Object.entries(atkData).forEach(([type, sevMap]) => {
+      const b = makeBtn(type, "btn-secondary btn-sm", () => roll(sevMap[state.severity], `Útok – ${type}`));
+      g.appendChild(b);
     });
-    gen.appendChild(sec);
   }
 
   // 🛡️ Obrana
-  const defData = FAIL_DATA["Obrana"] || {};
-  if (Object.keys(defData).length > 0) {
-    const sec = document.createElement("div");
-    sec.className = "cat-section";
-    sec.innerHTML = `<h4>🛡️ Obrana</h4><div class="btn-group"></div>`;
-    const btnGroup = sec.querySelector(".btn-group");
-    const b = document.createElement("button");
-    b.className = "btn-secondary btn-sm";
-    b.textContent = "Obrana";
-    b.onclick = () => roll(defData[state.severity], "Obrana");
-    btnGroup.appendChild(b);
-    gen.appendChild(sec);
+  const defData = FAILS["Obrana"] || {};
+  if (Object.keys(defData).length) {
+    const block = document.createElement("div");
+    block.className = "cat-block";
+    block.innerHTML = `<div class="cat-title">🛡️ Obrana</div><div class="btn-group"></div>`;
+    gen.appendChild(block);
+    const g = block.querySelector(".btn-group");
+    const b = makeBtn("Obrana", "btn-secondary btn-sm", () => roll(defData[state.severity], "Obrana"));
+    g.appendChild(b);
   }
 
   // 🎯 Skill
-  const skillData = FAIL_DATA["Skill"] || {};
-  if (Object.keys(skillData).length > 0) {
-    const sec = document.createElement("div");
-    sec.className = "cat-section";
-    sec.innerHTML = `<h4>🎯 Skilly</h4>`;
+  const skillData = FAILS["Skill"] || {};
+  if (Object.keys(skillData).length) {
+    const block = document.createElement("div");
+    block.className = "cat-block";
+    block.innerHTML = `<div class="cat-title">🎯 Skilly</div>`;
+    gen.appendChild(block);
 
     Object.entries(skillData).forEach(([attr, skills]) => {
-      const attrLabel = document.createElement("div");
-      attrLabel.className = "attr-label";
-      attrLabel.textContent = attr;
-      sec.appendChild(attrLabel);
+      const lbl = document.createElement("div");
+      lbl.className = "attr-label";
+      lbl.textContent = attr;
+      block.appendChild(lbl);
 
-      const btnGroup = document.createElement("div");
-      btnGroup.className = "btn-group";
+      const grp = document.createElement("div");
+      grp.className = "btn-group";
+      block.appendChild(grp);
 
-      Object.entries(skills).forEach(([skillName, sevData]) => {
-        const b = document.createElement("button");
-        b.className = "btn-secondary btn-sm";
-        b.textContent = skillName;
-        b.onclick = () => roll(sevData[state.severity], `${attr} – ${skillName}`);
-        btnGroup.appendChild(b);
+      Object.entries(skills).forEach(([skillName, sevMap]) => {
+        const b = makeBtn(skillName, "btn-secondary btn-sm",
+          () => roll(sevMap[state.severity], `${attr} – ${skillName}`));
+        grp.appendChild(b);
       });
-
-      sec.appendChild(btnGroup);
     });
-
-    gen.appendChild(sec);
   }
 }
 
-// ── Set Severity ──────────────────────────────────────────────────────────────
-window.setSeverity = (sev, el) => {
+function makeBtn(text, cls, handler) {
+  const b = document.createElement("button");
+  b.textContent = text;
+  b.className = cls;
+  b.onclick = handler;
+  return b;
+}
+
+// ─── Set severity ─────────────────────────────────────────────────────────────
+window.setSev = (sev, el) => {
   state.severity = sev;
   document.querySelectorAll(".sev-btn").forEach(b => b.classList.remove("active"));
   el.classList.add("active");
 };
 
-// ── Weighted Random ───────────────────────────────────────────────────────────
+// ─── Weighted random ──────────────────────────────────────────────────────────
 function weighted(pool) {
-  if (!pool || pool.length === 0) return null;
-  const total = pool.reduce((a, b) => a + (b.weight || 1), 0);
+  if (!pool || !pool.length) return null;
+  const total = pool.reduce((s, x) => s + (x.weight || 1), 0);
   let r = Math.random() * total;
   for (const item of pool) {
     r -= (item.weight || 1);
@@ -806,159 +788,157 @@ function weighted(pool) {
   return pool[0];
 }
 
-// ── Roll ──────────────────────────────────────────────────────────────────────
+// ─── Roll ─────────────────────────────────────────────────────────────────────
 function roll(pool, label) {
-  if (!pool || pool.length === 0) {
-    showNotif("⚠️ Žádná data pro tuto kombinaci!");
+  if (!pool || !pool.length) {
+    notif(`⚠️ Žádná data pro: ${label} / ${state.severity}`);
     return;
   }
+  const res = weighted(pool);
+  if (!res) { notif("❌ Chyba generování"); return; }
 
-  const result = weighted(pool);
-  if (!result) { showNotif("❌ Chyba při generování"); return; }
-
-  state.last = result;
+  state.last = res;
 
   // Show result box
-  const box = document.getElementById("resultBox");
+  const box = $("resultBox");
   box.classList.remove("hidden");
+  $("resEffect").textContent = "⚠️ " + res.effect;
+  $("resRp1").textContent  = res.roleplay?.[0] ?? "(prázdné)";
+  $("resRp2").textContent  = res.roleplay?.[1] ?? "(prázdné)";
 
-  document.getElementById("resEffect").textContent = "⚠️ " + result.effect;
-  document.getElementById("resRp1").textContent = result.roleplay?.[0] ?? "(žádný)";
-  document.getElementById("resRp2").textContent = result.roleplay?.[1] ?? "(žádný)";
-
-  // Update send buttons (they may already be rendered)
+  // Refresh send buttons
   renderTargets();
+  notif(`🎲 ${label}`, "#2a9d5c");
 
-  showNotif("🎲 " + label);
+  // Touch lastActive
+  update(dbr("rooms", state.room), { lastActive: Date.now() });
 }
 
-// ── Listen Players ────────────────────────────────────────────────────────────
+// ─── Listen players ───────────────────────────────────────────────────────────
 function listenPlayers() {
-  onValue(dbRef("rooms", state.room, "players"), snap => {
+  onValue(dbr("rooms", state.room, "players"), snap => {
     const players = snap.val() || {};
     playersCache = players;
 
-    // Header players list
-    const names = Object.values(players).map(p => p.name).join(" | ");
-    document.getElementById("playersTop").textContent = names;
+    // Header
+    $("playersTop").textContent = Object.values(players).map(p => p.name).join("  |  ");
 
     if (state.isDM) {
-      // DM sidebar
-      const sidebar = document.getElementById("playerListSidebar");
-      sidebar.innerHTML = Object.entries(players).map(([id, p]) =>
-        `<div class="player-item">${p.isDM ? "👑" : "🧑"} ${p.name}</div>`
-      ).join("") || `<div style="color:#555;font-size:0.85rem;">Žádní hráči</div>`;
-
+      // DM player list
+      const el = $("dmPlayerList");
+      const entries = Object.entries(players);
+      if (!entries.length) {
+        el.innerHTML = `<div class="empty-note">Žádní hráči</div>`;
+      } else {
+        el.innerHTML = entries.map(([id, p]) =>
+          `<div class="player-chip">${p.isDM ? "👑" : "🧑"} ${p.name}</div>`
+        ).join("");
+      }
       renderTargets();
-
-      // Auto delete check: if only DM or empty
-      update(dbRef("rooms", state.room), { lastActive: Date.now() });
-
     } else {
-      // Player sees list
-      const list = document.getElementById("playerListPlayer");
-      list.innerHTML = Object.entries(players).map(([id, p]) =>
-        `<div class="player-item">${p.isDM ? "👑" : "🧑"} ${p.name}${id === state.id ? " <span style='color:#e9a020;font-size:0.75rem;'>(ty)</span>" : ""}</div>`
-      ).join("") || `<div style="color:#555">Žádní hráči</div>`;
+      // Player list for player view
+      const el = $("playerListPlayer");
+      const entries = Object.entries(players);
+      el.innerHTML = entries.map(([id, p]) =>
+        `<div class="player-chip">
+          ${p.isDM ? "👑" : "🧑"} ${p.name}
+          ${id === state.id ? '<span style="color:var(--accent2);font-size:0.72rem;margin-left:4px;">(ty)</span>' : ""}
+        </div>`
+      ).join("") || `<div class="empty-note">Žádní hráči</div>`;
     }
   });
 }
 
-// ── Render Send Targets ───────────────────────────────────────────────────────
+// ─── Render send targets ──────────────────────────────────────────────────────
 function renderTargets() {
-  const targets = document.getElementById("targets");
+  const el = $("targets");
+  const hasResult = !!state.last;
   const others = Object.entries(playersCache).filter(([id]) => id !== state.id);
 
-  if (others.length === 0) {
-    targets.innerHTML = `<div style="color:#555;font-size:0.85rem;">Žádní hráči k dispozici</div>`;
+  if (!others.length) {
+    el.innerHTML = `<div class="empty-note">Žádní hráči k dispozici</div>`;
     return;
   }
 
-  const hasResult = !!state.last;
-
-  targets.innerHTML = others.map(([id, p]) => `
-    <div class="target-card">
+  el.innerHTML = others.map(([id, p]) => `
+    <div class="target-row">
       <div class="target-name">🧑 ${p.name}</div>
       <div class="target-btns">
-        <button class="btn-success btn-sm" ${!hasResult ? "disabled" : ""} onclick="window.sendMsg('${id}', 'r1')">📜 Roleplay 1</button>
-        <button class="btn-info btn-sm" ${!hasResult ? "disabled" : ""} onclick="window.sendMsg('${id}', 'r2')">📜 Roleplay 2</button>
-        <button class="btn-warning btn-sm" ${!hasResult ? "disabled" : ""} onclick="window.sendMsg('${id}', 'all')">📦 Oba</button>
+        <button class="btn-success btn-sm"  ${!hasResult?"disabled":""} onclick="window._send('${id}','r1')">📜 Roleplay 1</button>
+        <button class="btn-info btn-sm"     ${!hasResult?"disabled":""} onclick="window._send('${id}','r2')">📜 Roleplay 2</button>
+        <button class="btn-warning btn-sm"  ${!hasResult?"disabled":""} onclick="window._send('${id}','all')">📦 Oba</button>
       </div>
     </div>
   `).join("");
 }
 
-// ── Send Message ──────────────────────────────────────────────────────────────
-window.sendMsg = (playerId, type) => {
-  if (!state.last) { showNotif("❌ Nejprve vygeneruj výsledek!"); return; }
+// ─── Send message ─────────────────────────────────────────────────────────────
+window._send = (playerId, type) => {
+  if (!state.last) { notif("❌ Nejprve vygeneruj výsledek!"); return; }
 
   const { effect, roleplay } = state.last;
   const rp0 = roleplay?.[0] ?? "";
   const rp1 = roleplay?.[1] ?? "";
 
   let rpText = "";
-  if (type === "r1") rpText = rp0;
-  else if (type === "r2") rpText = rp1;
+  if      (type === "r1")  rpText = rp0;
+  else if (type === "r2")  rpText = rp1;
   else if (type === "all") rpText = [rp0, rp1].filter(Boolean).join("\n\n");
 
-  const msg = { effect, roleplay: rpText, timestamp: Date.now() };
-
-  set(dbRef("rooms", state.room, "msg", playerId), msg)
-    .then(() => showNotif("✅ Odesláno!"))
-    .catch(() => showNotif("❌ Chyba odesílání"));
+  set(dbr("rooms", state.room, "msg", playerId), {
+    effect,
+    roleplay: rpText,
+    ts: Date.now()
+  })
+  .then(()  => notif("✅ Odesláno!", "#2a9d5c"))
+  .catch(() => notif("❌ Chyba odesílání"));
 };
 
-// ── Listen for Message (Player) ───────────────────────────────────────────────
-function listenForMessage() {
-  onValue(dbRef("rooms", state.room, "msg", state.id), snap => {
+// ─── Listen for message (player) ─────────────────────────────────────────────
+function listenMessage() {
+  onValue(dbr("rooms", state.room, "msg", state.id), snap => {
     const data = snap.val();
-    const box = document.getElementById("playerResult");
-
+    const box  = $("playerResult");
     if (!data) {
-      box.innerHTML = `<div class="waiting">⏳ Čekám na výsledek od DM...</div>`;
+      box.innerHTML = `<div class="waiting-text">⏳ Čekám na výsledek od DM…</div>`;
       return;
     }
-
     box.innerHTML = `
       <div class="msg-effect">⚠️ ${data.effect}</div>
-      ${data.roleplay ? `<div class="msg-roleplay">🎭 ${data.roleplay.replace(/\n/g, '<br>')}</div>` : ""}
+      ${data.roleplay
+        ? `<div class="msg-rp">🎭 ${data.roleplay.replace(/\n/g, "<br>")}</div>`
+        : ""}
     `;
-    showNotif("📬 Nový výsledek od DM!");
+    notif("📬 Nový výsledek od DM!");
   });
 }
 
-// ── Auto Delete Check ─────────────────────────────────────────────────────────
-function startAutoDeleteCheck() {
-  // Check every minute if room has been inactive for 5+ minutes
+// ─── Auto delete: no players for 5 min ───────────────────────────────────────
+function startAutoDelete() {
   setInterval(() => {
-    get(dbRef("rooms", state.room)).then(snap => {
+    get(dbr("rooms", state.room)).then(snap => {
       if (!snap.exists()) return;
-      const data = snap.val();
-      const players = data.players || {};
-      const playerCount = Object.keys(players).length;
-      const lastActive = data.lastActive || 0;
-      const now = Date.now();
-
-      // If no players for 5 min → delete
-      if (playerCount === 0 && (now - lastActive) > 5 * 60 * 1000) {
-        remove(dbRef("rooms", state.room));
+      const d = snap.val();
+      const cnt = Object.keys(d.players || {}).length;
+      const idle = Date.now() - (d.lastActive || 0);
+      if (cnt === 0 && idle > 5 * 60 * 1000) {
+        remove(dbr("rooms", state.room));
       }
     });
-  }, 60 * 1000);
+  }, 60_000);
 }
 
-// ── Logout ────────────────────────────────────────────────────────────────────
-window.logout = async () => {
-  // Remove player from room
-  await remove(dbRef("rooms", state.room, "players", state.id)).catch(() => {});
+// ─── Logout ───────────────────────────────────────────────────────────────────
+window._logout = async () => {
+  await remove(dbr("rooms", state.room, "players", state.id)).catch(() => {});
   localStorage.removeItem("kf_state");
   location.reload();
 };
 
-// ── Delete Room ───────────────────────────────────────────────────────────────
-window.deleteRoom = async () => {
+// ─── Delete room ──────────────────────────────────────────────────────────────
+window._deleteRoom = async () => {
   if (!confirm("Opravdu smazat místnost? Tím odpojíš všechny hráče.")) return;
-  await remove(dbRef("rooms", state.room)).catch(() => {});
+  await remove(dbr("rooms", state.room)).catch(() => {});
   localStorage.removeItem("kf_state");
   location.reload();
 };
