@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -454,9 +453,82 @@
       }
     }
 
-    function start() {
-      elements.setup.classList.add("hidden");
-      elements.app.classList.remove("hidden");
+  function start() {
+  elements.setup.classList.add("hidden");
+  elements.app.classList.remove("hidden");
 
-      if (state.isDM) {
-        elements.dmPanel
+  if (state.isDM) {
+    elements.dmPanel.classList.remove("hidden");
+
+    elements.topButtons.innerHTML = `
+      <button id="deleteRoomBtn">🗑️</button>
+      <button id="logoutBtn">🚪</button>
+    `;
+
+    document.getElementById("deleteRoomBtn").onclick = async () => {
+      await remove(ref(db, "rooms/" + state.room));
+      localStorage.clear();
+      location.reload();
+    };
+
+    document.getElementById("logoutBtn").onclick = () => {
+      localStorage.clear();
+      location.reload();
+    };
+
+  } else {
+    elements.playerPanel.classList.remove("hidden");
+
+    elements.roomNameDisplay.innerText = "Room: " + state.room;
+
+    elements.topButtons.innerHTML = `
+      <button id="logoutBtn">🚪</button>
+    `;
+
+    document.getElementById("logoutBtn").onclick = () => {
+      localStorage.clear();
+      location.reload();
+    };
+  }
+
+  // disconnect při odchodu
+  onDisconnect(ref(db, "rooms/" + state.room + "/players/" + state.myId)).remove();
+
+  listenPlayers();
+  listenMessages();
+}
+
+function listenPlayers() {
+  onValue(ref(db, "rooms/" + state.room + "/players"), snap => {
+    state.players = snap.val() || {};
+
+    elements.playersTop.innerText =
+      Object.values(state.players).map(p => p.name).join(" | ");
+
+    renderPlayersList();
+  });
+}
+
+function renderPlayersList() {
+  let html = "";
+
+  let i = 1;
+
+  Object.values(state.players).forEach(p => {
+    html += `<button class="player${i}">${escapeHtml(p.name)}</button>`;
+    i++;
+  });
+
+  elements.playersList.innerHTML = html;
+}
+
+function listenMessages() {
+  onValue(ref(db, "rooms/" + state.room + "/msg/" + state.myId), snap => {
+    if (snap.val()) {
+      elements.playerResult.innerText = snap.val();
+    }
+  });
+}
+
+// START APP
+init();
