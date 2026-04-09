@@ -58,6 +58,13 @@ button {
   padding: 10px;
   border-radius: 8px;
 }
+
+.card {
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
 </style>
 </head>
 
@@ -82,13 +89,21 @@ button {
   <h3 id="roomTitle"></h3>
 
   <div id="dmPanel" class="hidden">
-    <h3>DM Panel</h3>
+    <h3>🎲 Generátor failu</h3>
+    <button id="rollBtn" class="primary">Hodit fail</button>
+
+    <div id="resultBox" class="card hidden"></div>
+
+    <h3>📤 Poslat hráči</h3>
+    <div id="playerTargets"></div>
   </div>
 
   <div id="playerPanel" class="hidden">
     <h3>Hráči</h3>
     <div id="playersList"></div>
-    <div id="result"></div>
+
+    <h3>📩 Výsledek</h3>
+    <div id="result" class="card">Čekám...</div>
   </div>
 </div>
 
@@ -109,8 +124,20 @@ let state = {
   room: "",
   name: "",
   id: "",
-  isDM: false
+  isDM: false,
+  players: {},
+  lastResult: ""
 };
+
+const FAILS = [
+  "Upustíš zbraň",
+  "Zakopneš a spadneš",
+  "Zasáhneš spojence",
+  "Zlomíš si zbraň",
+  "Ztratíš rovnováhu",
+  "Netrefíš vůbec nic",
+  "Zraníš sám sebe"
+];
 
 const el = {
   setup: document.getElementById("setup"),
@@ -121,7 +148,10 @@ const el = {
   dmPanel: document.getElementById("dmPanel"),
   playerPanel: document.getElementById("playerPanel"),
   topPlayers: document.getElementById("topPlayers"),
-  topButtons: document.getElementById("topButtons")
+  topButtons: document.getElementById("topButtons"),
+  result: document.getElementById("result"),
+  resultBox: document.getElementById("resultBox"),
+  playerTargets: document.getElementById("playerTargets")
 };
 
 // ===== CREATE ROOM =====
@@ -197,22 +227,62 @@ function start() {
 
   onDisconnect(ref(db, "rooms/" + state.room + "/players/" + state.id)).remove();
 
-  onValue(ref(db, "rooms/" + state.room + "/players"), snap => {
-    const players = snap.val() || {};
+  listenPlayers();
 
-    el.topPlayers.innerText = Object.values(players).map(p => p.name).join(" | ");
+  if (!state.isDM) {
+    onValue(ref(db, "rooms/" + state.room + "/messages/" + state.id), snap => {
+      if (snap.val()) {
+        el.result.innerText = snap.val();
+      }
+    });
+  }
+
+  document.getElementById("rollBtn")?.addEventListener("click", rollFail);
+}
+
+// ===== PLAYERS =====
+function listenPlayers() {
+  onValue(ref(db, "rooms/" + state.room + "/players"), snap => {
+    state.players = snap.val() || {};
+
+    el.topPlayers.innerText = Object.values(state.players).map(p => p.name).join(" | ");
 
     let html = "";
+    let targets = "";
+
     let i = 1;
 
-    Object.values(players).forEach(p => {
+    Object.entries(state.players).forEach(([id, p]) => {
       html += `<button class="playerBtn" style="background:${getColor(i)}">${p.name}</button>`;
+
+      if (state.isDM && !id.startsWith("DM_")) {
+        targets += `<button onclick="sendTo('${id}')">${p.name}</button>`;
+      }
+
       i++;
     });
 
     el.playersList.innerHTML = html;
+    el.playerTargets.innerHTML = targets;
   });
 }
+
+// ===== FAIL =====
+function rollFail() {
+  const fail = FAILS[Math.floor(Math.random() * FAILS.length)];
+
+  state.lastResult = fail;
+
+  el.resultBox.innerText = fail;
+  el.resultBox.classList.remove("hidden");
+}
+
+// ===== SEND =====
+window.sendTo = async (playerId) => {
+  if (!state.lastResult) return alert("Nejdřív hoď fail");
+
+  await set(ref(db, "rooms/" + state.room + "/messages/" + playerId), state.lastResult);
+};
 
 // ===== COLORS =====
 function getColor(i) {
@@ -241,7 +311,7 @@ window.deleteRoom = async () => {
   location.reload();
 };
 
-// ===== AUTO RECONNECT =====
+// ===== AUTO =====
 const savedRoom = localStorage.getItem("room");
 if (savedRoom) {
   state = {
