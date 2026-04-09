@@ -127,16 +127,20 @@ function start() {
   onDisconnect(ref(db, "rooms/" + state.room + "/players/" + state.id)).remove();
 
   onValue(ref(db, "rooms/" + state.room + "/players"), snap => {
-    const players = snap.val() || {};
-    let html = "";
+  const players = snap.val() || {};
 
-    Object.values(players).forEach(p => {
-      html += `<div>${p.name}</div>`;
-    });
+  let html = "";
 
-    document.getElementById("playersList").innerHTML = html;
+  Object.entries(players).forEach(([id, p]) => {
+    html += `<div>${p.name}</div>`;
   });
-}
+
+  document.getElementById("playersList").innerHTML = html;
+
+  // 🔥 EXTRA: zobraz i nahoře
+  document.getElementById("roomTitle").innerText =
+    "Room: " + state.room + " | " + Object.values(players).map(p => p.name).join(", ");
+});
 
 // ===== STORAGE =====
 function save() {
