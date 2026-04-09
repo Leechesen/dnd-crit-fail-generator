@@ -4565,6 +4565,16 @@
         ],
         "weight": 1
       }
+    ],
+    "Legendary": [
+      {
+        "effect": "Umřel jsi",
+        "roleplay": [
+          "Umřel jsi",
+          "Umřel jsi"
+        ],
+        "weight": 1
+      }
     ]
   },
   "Skill": {
