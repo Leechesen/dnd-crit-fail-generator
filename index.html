@@ -82,6 +82,7 @@
   .btn-purple    { background: var(--purple);  color: #fff; }
   .btn-sm        { padding: 5px 10px; font-size: 0.78rem; }
   .btn-kick      { background: #7b1010; color: #ffaaaa; border: 1px solid #c0392b; }
+  .btn-dm        { background: #5a3200; color: #ffd580; border: 1px solid var(--accent2); }
 
   .hidden { display: none !important; }
 
@@ -156,6 +157,7 @@
   .room-name   { font-weight: bold; }
   .room-meta   { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
   .room-locked { font-size: 0.75rem; color: var(--accent2); margin-top: 2px; }
+  .room-btns   { display: flex; gap: 6px; flex-shrink: 0; }
 
   /* ── APP ── */
   #app { padding: 16px 20px; max-width: 1300px; margin: 0 auto; }
@@ -237,7 +239,7 @@
 
   .btn-group { display: flex; flex-wrap: wrap; gap: 5px; }
 
-  /* ── ATTRIBUTE SUBHEADINGS: Strength, Dexterity, etc. ── */
+  /* ── ATTRIBUTE SUBHEADINGS ── */
   .attr-label {
     display: flex;
     align-items: center;
@@ -313,7 +315,6 @@
   }
   .res-body { padding: 12px; }
 
-  /* normal result rows */
   .res-effect {
     background: #200a0a;
     border-left: 3px solid var(--accent);
@@ -345,7 +346,7 @@
     letter-spacing: 0.5px;
   }
 
-  /* ── NO-RESULT / error state inside result box ── */
+  /* ── NO-RESULT / error state ── */
   .res-missing {
     display: flex;
     align-items: center;
@@ -538,7 +539,6 @@
           <div id="dmPlayerList"><div class="empty-note">Žádní hráči</div></div>
         </div>
 
-        <!-- result box is always visible once opened; content swaps -->
         <div id="resultBox" class="hidden">
           <div class="res-header" id="resHeader">🎲 Výsledek</div>
           <div class="res-body" id="resBody"></div>
@@ -604,7 +604,7 @@ const LS_KICKED_KEY = "kf_kicked";
 let notifTimer = null;
 function notif(msg, color = "#e94560") {
   const el = $("notif");
-  el.textContent     = msg;
+  el.textContent      = msg;
   el.style.background = color;
   el.classList.add("show");
   clearTimeout(notifTimer);
@@ -666,25 +666,13 @@ function selectSeverity(sev) {
 // ════════════════════════════════════════════════════════════════════════════
 //  RESULT DISPLAY HELPERS
 // ════════════════════════════════════════════════════════════════════════════
-
-/**
- * Show a "combination does not exist" message inside the result box.
- * No alert, no crash, layout preserved.
- *
- * @param {string} label  - human-readable action label (e.g. "Útok – Melee")
- * @param {string} sev    - the severity that was requested
- * @param {string[]} available - severity keys that DO exist for this action
- */
 function showMissingResult(label, sev, available) {
   const box = $("resultBox");
   box.classList.remove("hidden");
-
   $("resHeader").textContent = "⚠️ Kombinace neexistuje";
-
   const avail = available.length
     ? `Dostupné závažnosti pro „${label}": ${available.join(", ")}`
     : `Pro „${label}" nejsou žádná data.`;
-
   $("resBody").innerHTML = `
     <div class="res-missing">
       <div class="res-missing-icon">⚠️</div>
@@ -696,21 +684,14 @@ function showMissingResult(label, sev, available) {
         </div>
       </div>
     </div>`;
-
-  // Clear last result so send buttons stay disabled
   state.last = null;
   renderTargets();
 }
 
-/**
- * Show a successful roll result inside the result box.
- */
 function showSuccessResult(res, label, sev) {
   const box = $("resultBox");
   box.classList.remove("hidden");
-
   $("resHeader").textContent = `🎲 Výsledek — ${label} / ${sev}`;
-
   $("resBody").innerHTML = `
     <div class="res-effect">⚠️ ${res.effect ?? "(bez efektu)"}</div>
     <div class="res-rp">
@@ -724,79 +705,37 @@ function showSuccessResult(res, label, sev) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-//  ROLL  ← strict: NO fallback, NO crash
+//  ROLL
 // ════════════════════════════════════════════════════════════════════════════
-
-/**
- * Attempt to generate a result for the currently selected severity.
- *
- * Rules (strict):
- *  1. sevMap must be a non-null object.
- *  2. sevMap[selectedSeverity] must exist AND be a non-empty array.
- *  3. If either check fails → showMissingResult(), stop. No fallback.
- *  4. Otherwise → weighted pick → showSuccessResult().
- *
- * @param {Object} sevMap  - object keyed by severity name, values are entry arrays
- * @param {string} label   - human-readable label for display
- */
 function roll(sevMap, label) {
   const sev = state.severity;
-
-  // ── Guard 1: sevMap must be a valid object ────────────────────────────────
   if (!sevMap || typeof sevMap !== "object" || Array.isArray(sevMap)) {
-    showMissingResult(label, sev, []);
-    console.warn(`[roll] sevMap invalid for "${label}"`);
-    return;
+    showMissingResult(label, sev, []); return;
   }
-
-  // Collect all keys that have a non-empty array (for informational display only)
   const available = Object.entries(sevMap)
     .filter(([, pool]) => Array.isArray(pool) && pool.length > 0)
     .map(([key]) => key);
-
-  // ── Guard 2a: selected severity key must exist ────────────────────────────
   if (!Object.prototype.hasOwnProperty.call(sevMap, sev)) {
-    showMissingResult(label, sev, available);
-    console.warn(`[roll] Severity "${sev}" not found in "${label}". Available:`, available);
-    return;
+    showMissingResult(label, sev, available); return;
   }
-
   const pool = sevMap[sev];
-
-  // ── Guard 2b: pool must be a non-empty array ──────────────────────────────
   if (!Array.isArray(pool) || pool.length === 0) {
-    showMissingResult(label, sev, available);
-    console.warn(`[roll] Pool for "${sev}" in "${label}" is empty or not an array`);
-    return;
+    showMissingResult(label, sev, available); return;
   }
-
-  // ── All guards passed → generate ─────────────────────────────────────────
   const res = weighted(pool);
-
-  if (!res) {
-    // weighted() should never return null for a non-empty pool, but be safe
-    showMissingResult(label, sev, available);
-    console.error(`[roll] weighted() returned null for "${label}" / "${sev}"`);
-    return;
-  }
-
+  if (!res) { showMissingResult(label, sev, available); return; }
   state.last = res;
   showSuccessResult(res, label, sev);
   renderTargets();
   notif(`🎲 ${label} / ${sev}`, "#2a9d5c");
-
   update(dbr("rooms", state.room), { lastActive: Date.now() }).catch(console.error);
 }
 
-// ── Weighted random pick ──────────────────────────────────────────────────────
 function weighted(pool) {
   const total = pool.reduce((s, x) => s + (x.weight || 1), 0);
   let r = Math.random() * total;
-  for (const item of pool) {
-    r -= (item.weight || 1);
-    if (r <= 0) return item;
-  }
-  return pool[pool.length - 1]; // safety fallback within a valid pool
+  for (const item of pool) { r -= (item.weight || 1); if (r <= 0) return item; }
+  return pool[pool.length - 1];
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -825,38 +764,27 @@ function buildGenerator() {
   const gen = $("generator");
   gen.innerHTML = "";
 
-  // ⚔️ Útok
   const atkData = FAILS["Útok"];
   if (atkData && typeof atkData === "object" && Object.keys(atkData).length) {
     const block = mkBlock("⚔️ Útok");
     const grp   = mkGroup();
     Object.entries(atkData).forEach(([type, sevMap]) => {
       if (!sevMap || typeof sevMap !== "object") return;
-      grp.appendChild(mkGenBtn(
-        type,
-        `Dostupné: ${Object.keys(sevMap).join(", ")}`,
-        () => roll(sevMap, `Útok – ${type}`)
-      ));
+      grp.appendChild(mkGenBtn(type, `Dostupné: ${Object.keys(sevMap).join(", ")}`,
+        () => roll(sevMap, `Útok – ${type}`)));
     });
-    block.appendChild(grp);
-    gen.appendChild(block);
+    block.appendChild(grp); gen.appendChild(block);
   }
 
-  // 🛡️ Obrana
   const defData = FAILS["Obrana"];
   if (defData && typeof defData === "object" && Object.keys(defData).length) {
     const block = mkBlock("🛡️ Obrana");
     const grp   = mkGroup();
-    grp.appendChild(mkGenBtn(
-      "Obrana",
-      `Dostupné: ${Object.keys(defData).join(", ")}`,
-      () => roll(defData, "Obrana")
-    ));
-    block.appendChild(grp);
-    gen.appendChild(block);
+    grp.appendChild(mkGenBtn("Obrana", `Dostupné: ${Object.keys(defData).join(", ")}`,
+      () => roll(defData, "Obrana")));
+    block.appendChild(grp); gen.appendChild(block);
   }
 
-  // 🎯 Skill
   const skillData = FAILS["Skill"];
   if (skillData && typeof skillData === "object" && Object.keys(skillData).length) {
     const block = mkBlock("🎯 Skilly");
@@ -869,11 +797,8 @@ function buildGenerator() {
       const grp = mkGroup();
       Object.entries(skills).forEach(([skillName, sevMap]) => {
         if (!sevMap || typeof sevMap !== "object") return;
-        grp.appendChild(mkGenBtn(
-          skillName,
-          `Dostupné: ${Object.keys(sevMap).join(", ")}`,
-          () => roll(sevMap, `${attr} – ${skillName}`)
-        ));
+        grp.appendChild(mkGenBtn(skillName, `Dostupné: ${Object.keys(sevMap).join(", ")}`,
+          () => roll(sevMap, `${attr} – ${skillName}`)));
       });
       block.appendChild(grp);
     });
@@ -882,22 +807,16 @@ function buildGenerator() {
 }
 
 function mkBlock(title) {
-  const d = document.createElement("div");
-  d.className = "cat-block";
-  const t = document.createElement("div");
-  t.className = "cat-title"; t.textContent = title;
-  d.appendChild(t);
-  return d;
+  const d = document.createElement("div"); d.className = "cat-block";
+  const t = document.createElement("div"); t.className = "cat-title"; t.textContent = title;
+  d.appendChild(t); return d;
 }
 function mkGroup() {
-  const d = document.createElement("div");
-  d.className = "btn-group";
-  return d;
+  const d = document.createElement("div"); d.className = "btn-group"; return d;
 }
 function mkGenBtn(text, title, handler) {
   const b = document.createElement("button");
-  b.className = "btn-secondary btn-sm";
-  b.textContent = text; b.title = title; b.onclick = handler;
+  b.className = "btn-secondary btn-sm"; b.textContent = text; b.title = title; b.onclick = handler;
   return b;
 }
 
@@ -953,12 +872,21 @@ function init() {
       state = { ...s, last: null };
       if (!ALL_SEVERITIES.includes(state.severity)) state.severity = ALL_SEVERITIES[0];
       set(dbr("rooms", state.room, "players", state.id), { name: state.name, isDM: state.isDM })
+        .then(() => {
+          // If re-joining as DM, also refresh the dm record
+          if (state.isDM) {
+            return update(dbr("rooms", state.room), { dm: state.id });
+          }
+        })
         .then(() => { setupOnDisconnect(); startApp(); })
         .catch(err => { console.error(err); notif("❌ Chyba obnovení spojení."); showSetup(); });
     })
     .catch(() => showSetup());
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+//  SETUP SCREEN
+// ════════════════════════════════════════════════════════════════════════════
 function showSetup() {
   $("app").classList.add("hidden");
   $("dmPanel").classList.add("hidden");
@@ -968,26 +896,41 @@ function showSetup() {
   listenLobby();
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+//  LOBBY  ← modified: adds "Join as DM" button per room
+// ════════════════════════════════════════════════════════════════════════════
 function listenLobby() {
   onValue(dbr("rooms"), snap => {
     const data = snap.val() || {};
     const keys = Object.keys(data);
     const list = $("lobbyList");
+
     if (!keys.length) {
       list.innerHTML = `<div class="empty-note" style="text-align:center;padding:16px;">Žádné místnosti…</div>`;
       return;
     }
+
     list.innerHTML = keys.map(r => {
-      const cnt    = Object.keys(data[r].players || {}).length;
-      const locked = !!(data[r].password);
+      const cnt      = Object.keys(data[r].players || {}).length;
+      const locked   = !!(data[r].password);
+      const players  = data[r].players || {};
+      // DM is active if rooms/{r}/dm points to an id that is still in players
+      const dmId     = data[r].dm || null;
+      const dmActive = dmId && players[dmId];
+
       return `
         <div class="room-item">
           <div>
             <div class="room-name">🚪 ${r}</div>
-            <div class="room-meta">👥 ${cnt} hráč${cnt===1?'':cnt<5?'i':'ů'}</div>
+            <div class="room-meta">👥 ${cnt} hráč${cnt===1?'':cnt<5?'i':'ů'}${dmActive ? ' · 👑 DM online' : ' · 👑 DM offline'}</div>
             ${locked ? `<div class="room-locked">🔒 Vyžaduje heslo</div>` : ""}
           </div>
-          <button class="btn-secondary btn-sm" onclick="window._joinRoom('${r}')">Připojit</button>
+          <div class="room-btns">
+            ${!dmActive
+              ? `<button class="btn-dm btn-sm" onclick="window._joinAsDM('${r}')">👑 Join as DM</button>`
+              : ""}
+            <button class="btn-secondary btn-sm" onclick="window._joinRoom('${r}')">Připojit</button>
+          </div>
         </div>`;
     }).join("");
   });
@@ -996,7 +939,7 @@ function listenLobby() {
 window.toggleCreate = () => $("createRoomSection").classList.toggle("hidden");
 
 // ════════════════════════════════════════════════════════════════════════════
-//  CREATE / JOIN
+//  CREATE ROOM
 // ════════════════════════════════════════════════════════════════════════════
 window.createRoom = async () => {
   const name     = $("nameInput").value.trim();
@@ -1014,6 +957,7 @@ window.createRoom = async () => {
 
   const roomData = {
     players:    { [id]: { name: state.name, isDM: true } },
+    dm:         id,   // ← track current DM id at room level
     createdAt:  Date.now(),
     lastActive: Date.now(),
   };
@@ -1026,6 +970,60 @@ window.createRoom = async () => {
   saveState(); setupOnDisconnect(); startApp();
 };
 
+// ════════════════════════════════════════════════════════════════════════════
+//  JOIN AS DM  ← new function
+// ════════════════════════════════════════════════════════════════════════════
+window._joinAsDM = async (room) => {
+  const name = $("nameInput").value.trim();
+  if (!name) { notif("❌ Zadej jméno!"); return; }
+
+  // Fetch latest room snapshot
+  let snap;
+  try { snap = await get(dbr("rooms", room)); }
+  catch (e) { notif("❌ Chyba Firebase. Zkus to znovu."); return; }
+  if (!snap.exists()) { notif("❌ Místnost neexistuje."); return; }
+
+  const roomData = snap.val();
+
+  // ── STRICT SINGLE-DM VALIDATION ──────────────────────────────────────────
+  // Re-read to prevent race condition
+  const freshSnap = await get(dbr("rooms", room));
+  const fresh     = freshSnap.val() || {};
+  const players   = fresh.players || {};
+  const dmId      = fresh.dm || null;
+  const dmActive  = dmId && players[dmId];
+
+  if (dmActive) {
+    notif("❌ Místnost už má DM!");
+    console.warn("[joinAsDM] DM already active:", dmId);
+    return;
+  }
+
+  // Password check
+  if (roomData.password) {
+    const entered = window.prompt(`🔒 Místnost „${room}" vyžaduje heslo:`);
+    if (entered === null) return;
+    if (entered.trim() !== roomData.password) { notif("❌ Nesprávné heslo!"); return; }
+  }
+
+  const id = "DM_" + Date.now();
+  state = { room, name: name + " 👑", id, isDM: true, severity: ALL_SEVERITIES[0], last: null };
+
+  try {
+    // Remove old DM player entry if still dangling
+    if (dmId && !players[dmId]) {
+      await remove(dbr("rooms", room, "players", dmId)).catch(() => {});
+    }
+    await set(dbr("rooms", room, "players", id), { name: state.name, isDM: true });
+    await update(dbr("rooms", room), { dm: id, lastActive: Date.now() });
+  } catch (e) { notif("❌ Nepodařilo se připojit jako DM: " + e.message); return; }
+
+  saveState(); setupOnDisconnect(); startApp();
+};
+
+// ════════════════════════════════════════════════════════════════════════════
+//  JOIN ROOM (player)
+// ════════════════════════════════════════════════════════════════════════════
 window._joinRoom = async (room) => {
   const name = $("nameInput").value.trim();
   if (!name) { notif("❌ Zadej jméno!"); return; }
@@ -1053,11 +1051,18 @@ window._joinRoom = async (room) => {
   saveState(); setupOnDisconnect(); startApp();
 };
 
+// ════════════════════════════════════════════════════════════════════════════
+//  PERSIST
+// ════════════════════════════════════════════════════════════════════════════
 function saveState() {
   localStorage.setItem(LS_KEY, JSON.stringify({ ...state, last: null }));
 }
 function setupOnDisconnect() {
   onDisconnect(dbr("rooms", state.room, "players", state.id)).remove();
+  // When DM disconnects also clear the dm field so room shows DM offline
+  if (state.isDM) {
+    onDisconnect(dbr("rooms", state.room, "dm")).remove();
+  }
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -1183,8 +1188,7 @@ function renderTargets() {
   const hasResult = !!state.last;
   const others    = Object.entries(playersCache).filter(([id, p]) => id !== state.id && !p.isDM);
   if (!others.length) {
-    el.innerHTML = `<div class="empty-note">Žádní hráči k dispozici</div>`;
-    return;
+    el.innerHTML = `<div class="empty-note">Žádní hráči k dispozici</div>`; return;
   }
   el.innerHTML = others.map(([id, p]) => `
     <div class="target-row">
@@ -1261,6 +1265,10 @@ function startAutoDelete() {
 // ════════════════════════════════════════════════════════════════════════════
 window._logout = async () => {
   await remove(dbr("rooms", state.room, "players", state.id)).catch(console.error);
+  // If DM logs out, clear the dm field so room shows DM offline immediately
+  if (state.isDM) {
+    await remove(dbr("rooms", state.room, "dm")).catch(console.error);
+  }
   localStorage.removeItem(LS_KEY);
   location.reload();
 };
