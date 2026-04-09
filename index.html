@@ -29,7 +29,6 @@
     font-size: 14px;
   }
 
-  /* ── HEADER ── */
   header {
     display: flex;
     justify-content: space-between;
@@ -59,7 +58,6 @@
 
   #topBtns { display: flex; gap: 6px; flex-shrink: 0; }
 
-  /* ── BUTTONS ── */
   button {
     padding: 7px 13px;
     border: none;
@@ -95,7 +93,6 @@
     border-radius: 16px;
     border: 1px solid var(--border);
   }
-
   #setup h2 { text-align: center; color: var(--accent); margin-bottom: 22px; font-size: 1.5rem; }
 
   .form-group { margin-bottom: 14px; }
@@ -176,7 +173,6 @@
     gap: 16px;
     align-items: start;
   }
-
   @media (max-width: 800px) { .dm-layout { grid-template-columns: 1fr; } }
 
   /* ── CARDS ── */
@@ -197,14 +193,19 @@
     border-bottom: 1px solid var(--border);
   }
 
-  /* ── SEVERITY BUTTONS (dynamic) ── */
+  /* ── SEVERITY ── */
   .sev-row { display: flex; gap: 7px; flex-wrap: wrap; }
 
+  /*
+   * Severity buttons get their background from a CSS custom property
+   * --sev-bg that is set inline by JS. This way any new severity
+   * automatically gets a colour from the palette without hardcoding.
+   */
   .sev-btn {
     flex: 1;
     min-width: 70px;
     text-align: center;
-    padding: 9px 6px;
+    padding: 9px 8px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
@@ -213,6 +214,7 @@
     transition: all 0.18s;
     user-select: none;
     color: #fff;
+    background: var(--sev-bg, #444);
   }
   .sev-btn:hover  { filter: brightness(1.2); }
   .sev-btn.active {
@@ -220,14 +222,6 @@
     transform: scale(1.06);
     box-shadow: 0 0 10px rgba(255,255,255,0.25);
   }
-
-  /* Severity colour mapping */
-  .sev-color-0 { background: var(--green); }
-  .sev-color-1 { background: var(--accent2); }
-  .sev-color-2 { background: #c0392b; }
-  .sev-color-3 { background: var(--purple); }
-  .sev-color-4 { background: var(--blue); }
-  .sev-color-5 { background: #555; }
 
   /* ── GENERATOR ── */
   .cat-block  { margin-bottom: 14px; }
@@ -238,7 +232,6 @@
   /* ── RIGHT COLUMN ── */
   .right-col { display: flex; flex-direction: column; }
 
-  /* ── PLAYER CHIP ── */
   .player-chip {
     padding: 7px 11px;
     background: var(--bg3);
@@ -376,7 +369,6 @@
 
   .empty-note { color: var(--muted); font-size: 0.82rem; font-style: italic; }
 
-  /* current severity indicator */
   #currentSev {
     font-size: 0.78rem;
     color: var(--muted);
@@ -432,21 +424,20 @@
   <div id="dmPanel" class="hidden">
     <div class="dm-layout">
 
-      <!-- LEFT -->
+      <!-- LEFT: controls -->
       <div id="dmLeft">
         <div class="card">
           <h3>🎯 Závažnost</h3>
           <div class="sev-row" id="severityBtns"></div>
-          <div id="currentSev">Vybraná závažnost: <span id="sevLabel">—</span></div>
+          <div id="currentSev">Vybraná: <span id="sevLabel">—</span></div>
         </div>
-
         <div class="card">
           <h3>🎲 Generátor</h3>
           <div id="generator"></div>
         </div>
       </div>
 
-      <!-- RIGHT -->
+      <!-- RIGHT: players → result → send -->
       <div class="right-col">
         <div class="card">
           <h3>👥 Hráči v místnosti</h3>
@@ -473,6 +464,7 @@
           <div id="targets"><div class="empty-note">Nejprve vygeneruj výsledek</div></div>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -510,16 +502,17 @@ const fbApp = initializeApp({
 });
 const db = getDatabase(fbApp);
 
-// ── State ─────────────────────────────────────────────────────────────────────
+// ── App state ─────────────────────────────────────────────────────────────────
 let FAILS = {};
-let ALL_SEVERITIES = [];   // discovered dynamically from JSON
+let ALL_SEVERITIES = [];   // populated dynamically from JSON
 let state = { room:"", name:"", id:"", isDM:false, severity:"", last:null };
 let playersCache = {};
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── DOM helper ────────────────────────────────────────────────────────────────
 const $   = id => document.getElementById(id);
 const dbr = (...p) => ref(db, p.join("/"));
 
+// ── Notification ──────────────────────────────────────────────────────────────
 let notifTimer = null;
 function notif(msg, color = "#e94560") {
   const el = $("notif");
@@ -530,75 +523,165 @@ function notif(msg, color = "#e94560") {
   notifTimer = setTimeout(() => el.classList.remove("show"), 3000);
 }
 
-// ── Collect all severity keys from the JSON ───────────────────────────────────
-// We scan "Útok", "Obrana", and "Skill" branches to find every severity name.
+// ═════════════════════════════════════════════════════════════════════════════
+//  SEVERITY – fully dynamic
+// ═════════════════════════════════════════════════════════════════════════════
+
+/*
+ * Walk every branch of the JSON and collect the union of all severity keys.
+ *
+ * Branches checked:
+ *   data["Útok"][attackType]          → object whose keys are severities
+ *   data["Obrana"]                    → object whose keys are severities
+ *   data["Skill"][attribute][skill]   → object whose keys are severities
+ *
+ * Returns an array ordered by a preferred list first, then any extras appended
+ * in the order they were first encountered.
+ */
 function discoverSeverities(data) {
   const found = new Set();
 
-  // From "Útok" → each attackType → keys
-  const utok = data["Útok"] || {};
-  Object.values(utok).forEach(sevMap => {
-    if (sevMap && typeof sevMap === "object") Object.keys(sevMap).forEach(k => found.add(k));
-  });
-
-  // From "Obrana" → keys
-  const obrana = data["Obrana"] || {};
-  Object.keys(obrana).forEach(k => found.add(k));
-
-  // From "Skill" → attr → skill → keys
-  const skill = data["Skill"] || {};
-  Object.values(skill).forEach(skills => {
-    Object.values(skills || {}).forEach(sevMap => {
-      if (sevMap && typeof sevMap === "object") Object.keys(sevMap).forEach(k => found.add(k));
+  // helper: add keys of an object if it looks like a severity→array map
+  function addFromSevMap(obj) {
+    if (!obj || typeof obj !== "object") return;
+    Object.keys(obj).forEach(k => {
+      // only add if the value is an array (= pool of entries)
+      if (Array.isArray(obj[k])) found.add(k);
     });
-  });
+  }
 
-  // Preferred order; anything extra appended at end
-  const preferred = ["Lehký", "Střední", "Těžký", "Sranda"];
-  const ordered = preferred.filter(s => found.has(s));
+  // "Útok" → each attack type → severity map
+  const utok = data["Útok"];
+  if (utok && typeof utok === "object") {
+    Object.values(utok).forEach(sevMap => addFromSevMap(sevMap));
+  }
+
+  // "Obrana" → severity map directly
+  addFromSevMap(data["Obrana"]);
+
+  // "Skill" → attribute → skill → severity map
+  const skill = data["Skill"];
+  if (skill && typeof skill === "object") {
+    Object.values(skill).forEach(attrs => {
+      if (attrs && typeof attrs === "object") {
+        Object.values(attrs).forEach(sevMap => addFromSevMap(sevMap));
+      }
+    });
+  }
+
+  // Preferred display order – anything not in this list is appended at the end
+  const PREFERRED_ORDER = ["Lehký", "Střední", "Těžký", "Sranda"];
+  const ordered = PREFERRED_ORDER.filter(s => found.has(s));
   found.forEach(s => { if (!ordered.includes(s)) ordered.push(s); });
+
   return ordered;
 }
 
-// ── Severity colour class (cycles through defined colours) ────────────────────
-const SEV_COLORS = ["sev-color-0","sev-color-1","sev-color-2","sev-color-3","sev-color-4","sev-color-5"];
-function sevColorClass(index) { return SEV_COLORS[index % SEV_COLORS.length]; }
+/*
+ * Colour palette for severity buttons.
+ * Cycles if there are more severities than colours.
+ */
+const SEV_PALETTE = [
+  "#2a9d5c",  // green   – index 0
+  "#e9a020",  // amber   – index 1
+  "#c0392b",  // red     – index 2
+  "#8e44ad",  // purple  – index 3
+  "#2980b9",  // blue    – index 4
+  "#16a085",  // teal    – index 5
+  "#d35400",  // orange  – index 6
+  "#7f8c8d",  // grey    – index 7
+];
+function sevColor(index) { return SEV_PALETTE[index % SEV_PALETTE.length]; }
 
-// ── Build dynamic severity buttons ────────────────────────────────────────────
+/*
+ * Build the severity button row from ALL_SEVERITIES.
+ * Called once after JSON loads, and again after auto-reconnect sets state.
+ */
 function buildSeverityButtons() {
   const container = $("severityBtns");
   container.innerHTML = "";
 
   ALL_SEVERITIES.forEach((sev, i) => {
     const btn = document.createElement("div");
-    btn.className = `sev-btn ${sevColorClass(i)}`;
+    btn.className = "sev-btn" + (sev === state.severity ? " active" : "");
     btn.textContent = sev;
     btn.dataset.sev = sev;
-    if (sev === state.severity) btn.classList.add("active");
-    btn.onclick = () => setSev(sev, btn);
+    btn.style.setProperty("--sev-bg", sevColor(i));
+    btn.onclick = () => selectSeverity(sev);
     container.appendChild(btn);
   });
 
   $("sevLabel").textContent = state.severity || "—";
 }
 
-// ── Set Severity ──────────────────────────────────────────────────────────────
-function setSev(sev, el) {
+function selectSeverity(sev) {
   state.severity = sev;
   $("sevLabel").textContent = sev;
-  document.querySelectorAll(".sev-btn").forEach(b => b.classList.remove("active"));
-  el.classList.add("active");
+  document.querySelectorAll(".sev-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.sev === sev);
+  });
 }
-window.setSev = setSev; // keep accessible from inline onclick
 
-// ── Safe pool getter ──────────────────────────────────────────────────────────
-// Returns the array of entries for a given path, or null if missing.
-function getPool(path, severity) {
-  // path: already the severity-map object  e.g. FAILS["Útok"]["Melee"]
-  if (!path || typeof path !== "object") return null;
-  const pool = path[severity];
-  if (!Array.isArray(pool) || pool.length === 0) return null;
-  return pool;
+// ═════════════════════════════════════════════════════════════════════════════
+//  ROLL – safe pool resolution with fallback
+// ═════════════════════════════════════════════════════════════════════════════
+
+/*
+ * sevMap  – the object whose keys are severity names, values are entry arrays
+ *           e.g. FAILS["Útok"]["Melee"]  or  FAILS["Obrana"]
+ * label   – human-readable label for notifications
+ *
+ * Strategy:
+ *   1. Try sevMap[selectedSeverity]
+ *   2. If missing → pick a random available severity from sevMap as fallback
+ *   3. If sevMap is empty / invalid → error
+ */
+function roll(sevMap, label) {
+  if (!sevMap || typeof sevMap !== "object") {
+    notif(`❌ Žádná data pro: ${label}`);
+    return;
+  }
+
+  // Collect only keys that actually have a non-empty array
+  const available = Object.entries(sevMap)
+    .filter(([, pool]) => Array.isArray(pool) && pool.length > 0)
+    .map(([key]) => key);
+
+  if (!available.length) {
+    notif(`❌ Prázdná data pro: ${label}`);
+    return;
+  }
+
+  let chosenSev = state.severity;
+  let usedFallback = false;
+
+  if (!available.includes(chosenSev)) {
+    // Fallback: pick a random available severity
+    chosenSev = available[Math.floor(Math.random() * available.length)];
+    usedFallback = true;
+  }
+
+  const pool = sevMap[chosenSev];
+  const res  = weighted(pool);
+  if (!res) { notif("❌ Chyba generování"); return; }
+
+  state.last = res;
+
+  // Show result
+  $("resultBox").classList.remove("hidden");
+  $("resEffect").textContent = "⚠️ " + (res.effect ?? "(bez efektu)");
+  $("resRp1").textContent    = res.roleplay?.[0] ?? "(prázdné)";
+  $("resRp2").textContent    = res.roleplay?.[1] ?? "(prázdné)";
+
+  renderTargets();
+
+  if (usedFallback) {
+    notif(`⚠️ „${state.severity}" chybí → použito „${chosenSev}" | ${label}`, "#e9a020");
+  } else {
+    notif(`🎲 ${label} / ${chosenSev}`, "#2a9d5c");
+  }
+
+  update(dbr("rooms", state.room), { lastActive: Date.now() });
 }
 
 // ── Weighted random ───────────────────────────────────────────────────────────
@@ -612,37 +695,9 @@ function weighted(pool) {
   return pool[0];
 }
 
-// ── Roll ──────────────────────────────────────────────────────────────────────
-function roll(sevMap, label) {
-  // sevMap  = the object whose keys are severity names, values are entry arrays
-  // e.g.  FAILS["Útok"]["Melee"]  or  FAILS["Obrana"]
-
-  if (!state.severity) { notif("❌ Vyber závažnost!"); return; }
-
-  const pool = getPool(sevMap, state.severity);
-
-  if (!pool) {
-    notif(`⚠️ „${state.severity}" neexistuje pro: ${label}`);
-    return;
-  }
-
-  const res = weighted(pool);
-  if (!res) { notif("❌ Chyba generování"); return; }
-
-  state.last = res;
-
-  // Show result
-  $("resultBox").classList.remove("hidden");
-  $("resEffect").textContent = "⚠️ " + (res.effect ?? "(bez efektu)");
-  $("resRp1").textContent    = res.roleplay?.[0] ?? "(prázdné)";
-  $("resRp2").textContent    = res.roleplay?.[1] ?? "(prázdné)";
-
-  renderTargets();
-  notif(`🎲 ${label} / ${state.severity}`, "#2a9d5c");
-  update(dbr("rooms", state.room), { lastActive: Date.now() });
-}
-
-// ── Build Generator UI (fully dynamic) ────────────────────────────────────────
+// ═════════════════════════════════════════════════════════════════════════════
+//  GENERATOR UI – fully dynamic, no hardcoded categories or severities
+// ═════════════════════════════════════════════════════════════════════════════
 function buildGenerator() {
   const gen = $("generator");
   gen.innerHTML = "";
@@ -650,28 +705,16 @@ function buildGenerator() {
   // ⚔️ Útok
   const atkData = FAILS["Útok"];
   if (atkData && typeof atkData === "object" && Object.keys(atkData).length) {
-    const block = document.createElement("div");
-    block.className = "cat-block";
-
-    const title = document.createElement("div");
-    title.className = "cat-title";
-    title.textContent = "⚔️ Útok";
-    block.appendChild(title);
-
-    const grp = document.createElement("div");
-    grp.className = "btn-group";
-
+    const block = makeBlock("⚔️ Útok");
+    const grp   = makeGroup();
     Object.entries(atkData).forEach(([type, sevMap]) => {
-      // sevMap = { "Lehký": [...], "Střední": [...], "Těžký": [...], "Sranda": [...] }
       if (!sevMap || typeof sevMap !== "object") return;
-      const b = document.createElement("button");
-      b.className = "btn-secondary btn-sm";
-      b.textContent = type;
-      b.title = `Dostupné závažnosti: ${Object.keys(sevMap).join(", ")}`;
-      b.onclick = () => roll(sevMap, `Útok – ${type}`);
-      grp.appendChild(b);
+      grp.appendChild(makeGenBtn(
+        type,
+        `Dostupné: ${Object.keys(sevMap).join(", ")}`,
+        () => roll(sevMap, `Útok – ${type}`)
+      ));
     });
-
     block.appendChild(grp);
     gen.appendChild(block);
   }
@@ -679,26 +722,13 @@ function buildGenerator() {
   // 🛡️ Obrana
   const defData = FAILS["Obrana"];
   if (defData && typeof defData === "object" && Object.keys(defData).length) {
-    // defData = { "Lehký": [...], "Střední": [...], "Těžký": [...], "Sranda": [...] }
-    const block = document.createElement("div");
-    block.className = "cat-block";
-
-    const title = document.createElement("div");
-    title.className = "cat-title";
-    title.textContent = "🛡️ Obrana";
-    block.appendChild(title);
-
-    const grp = document.createElement("div");
-    grp.className = "btn-group";
-
-    const b = document.createElement("button");
-    b.className = "btn-secondary btn-sm";
-    b.textContent = "Obrana";
-    b.title = `Dostupné závažnosti: ${Object.keys(defData).join(", ")}`;
-    // Pass defData directly – roll() will pick defData[state.severity]
-    b.onclick = () => roll(defData, "Obrana");
-    grp.appendChild(b);
-
+    const block = makeBlock("🛡️ Obrana");
+    const grp   = makeGroup();
+    grp.appendChild(makeGenBtn(
+      "Obrana",
+      `Dostupné: ${Object.keys(defData).join(", ")}`,
+      () => roll(defData, "Obrana")
+    ));
     block.appendChild(grp);
     gen.appendChild(block);
   }
@@ -706,51 +736,68 @@ function buildGenerator() {
   // 🎯 Skill
   const skillData = FAILS["Skill"];
   if (skillData && typeof skillData === "object" && Object.keys(skillData).length) {
-    const block = document.createElement("div");
-    block.className = "cat-block";
-
-    const title = document.createElement("div");
-    title.className = "cat-title";
-    title.textContent = "🎯 Skilly";
-    block.appendChild(title);
-
+    const block = makeBlock("🎯 Skilly");
     Object.entries(skillData).forEach(([attr, skills]) => {
       if (!skills || typeof skills !== "object") return;
+      const lbl = document.createElement("div");
+      lbl.className = "attr-label";
+      lbl.textContent = attr;
+      block.appendChild(lbl);
 
-      const attrLbl = document.createElement("div");
-      attrLbl.className = "attr-label";
-      attrLbl.textContent = attr;
-      block.appendChild(attrLbl);
-
-      const grp = document.createElement("div");
-      grp.className = "btn-group";
-
+      const grp = makeGroup();
       Object.entries(skills).forEach(([skillName, sevMap]) => {
         if (!sevMap || typeof sevMap !== "object") return;
-        const b = document.createElement("button");
-        b.className = "btn-secondary btn-sm";
-        b.textContent = skillName;
-        b.title = `Dostupné závažnosti: ${Object.keys(sevMap).join(", ")}`;
-        b.onclick = () => roll(sevMap, `${attr} – ${skillName}`);
-        grp.appendChild(b);
+        grp.appendChild(makeGenBtn(
+          skillName,
+          `Dostupné: ${Object.keys(sevMap).join(", ")}`,
+          () => roll(sevMap, `${attr} – ${skillName}`)
+        ));
       });
-
       block.appendChild(grp);
     });
-
     gen.appendChild(block);
   }
 }
 
-// ── Load JSON ─────────────────────────────────────────────────────────────────
+function makeBlock(title) {
+  const d = document.createElement("div");
+  d.className = "cat-block";
+  const t = document.createElement("div");
+  t.className = "cat-title";
+  t.textContent = title;
+  d.appendChild(t);
+  return d;
+}
+
+function makeGroup() {
+  const d = document.createElement("div");
+  d.className = "btn-group";
+  return d;
+}
+
+function makeGenBtn(text, title, handler) {
+  const b = document.createElement("button");
+  b.className = "btn-secondary btn-sm";
+  b.textContent = text;
+  b.title = title;
+  b.onclick = handler;
+  return b;
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+//  LOAD JSON → INIT
+// ═════════════════════════════════════════════════════════════════════════════
 fetch("crit_fails.json")
   .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
   .then(data => {
     FAILS = data;
-    ALL_SEVERITIES = discoverSeverities(data);
 
-    // Default severity = first discovered
-    if (ALL_SEVERITIES.length) state.severity = ALL_SEVERITIES[0];
+    // Discover ALL severities present in the data
+    ALL_SEVERITIES = discoverSeverities(data);
+    if (!ALL_SEVERITIES.length) throw new Error("Žádné severity nenalezeny v crit_fails.json");
+
+    // Default to first discovered severity
+    state.severity = ALL_SEVERITIES[0];
 
     $("loading").classList.add("hidden");
     init();
@@ -760,7 +807,7 @@ fetch("crit_fails.json")
       `<div style="color:#e94560">❌ Nelze načíst crit_fails.json<br><small>${err.message}</small></div>`;
   });
 
-// ── Init / Auto-reconnect ─────────────────────────────────────────────────────
+// ── Init / auto-reconnect ─────────────────────────────────────────────────────
 function init() {
   const saved = localStorage.getItem("kf_state");
   if (saved) {
@@ -769,8 +816,10 @@ function init() {
       get(dbr("rooms", s.room)).then(snap => {
         if (snap.exists()) {
           state = { ...s, last: null };
-          // Ensure severity is valid
-          if (!ALL_SEVERITIES.includes(state.severity)) state.severity = ALL_SEVERITIES[0] || "";
+          // Make sure saved severity is still valid; if not, reset to first
+          if (!ALL_SEVERITIES.includes(state.severity)) {
+            state.severity = ALL_SEVERITIES[0];
+          }
           const playerData = { name: state.name, isDM: state.isDM };
           set(dbr("rooms", state.room, "players", state.id), playerData)
             .then(() => { setupDisconnect(); startApp(); });
@@ -796,12 +845,10 @@ function listenLobby() {
     const data = snap.val() || {};
     const keys = Object.keys(data);
     const list = $("lobbyList");
-
     if (!keys.length) {
       list.innerHTML = `<div class="empty-note" style="text-align:center;padding:16px;">Žádné místnosti…</div>`;
       return;
     }
-
     list.innerHTML = keys.map(r => {
       const cnt = Object.keys(data[r].players || {}).length;
       return `
@@ -826,17 +873,15 @@ window.createRoom = async () => {
   if (!room) { notif("❌ Zadej název místnosti!"); return; }
 
   const id = "DM_" + Date.now();
-  state = { room, name: name + " 👑", id, isDM: true, severity: ALL_SEVERITIES[0] || "Lehký", last: null };
+  state = { room, name: name + " 👑", id, isDM: true, severity: ALL_SEVERITIES[0], last: null };
 
   await set(dbr("rooms", room), {
-    players: { [id]: { name: state.name, isDM: true } },
+    players:   { [id]: { name: state.name, isDM: true } },
     createdAt: Date.now(),
     lastActive: Date.now()
   });
 
-  saveState();
-  setupDisconnect();
-  startApp();
+  saveState(); setupDisconnect(); startApp();
 };
 
 // ── Join room ─────────────────────────────────────────────────────────────────
@@ -845,14 +890,12 @@ window._joinRoom = async (room) => {
   if (!name) { notif("❌ Zadej jméno!"); return; }
 
   const id = "P_" + Date.now();
-  state = { room, name, id, isDM: false, severity: ALL_SEVERITIES[0] || "Lehký", last: null };
+  state = { room, name, id, isDM: false, severity: ALL_SEVERITIES[0], last: null };
 
   await set(dbr("rooms", room, "players", id), { name, isDM: false });
   await update(dbr("rooms", room), { lastActive: Date.now() });
 
-  saveState();
-  setupDisconnect();
-  startApp();
+  saveState(); setupDisconnect(); startApp();
 };
 
 function saveState() {
@@ -863,7 +906,7 @@ function setupDisconnect() {
   onDisconnect(dbr("rooms", state.room, "players", state.id)).remove();
 }
 
-// ── Start App ─────────────────────────────────────────────────────────────────
+// ── Start app ─────────────────────────────────────────────────────────────────
 function startApp() {
   $("setup").classList.add("hidden");
   $("app").classList.remove("hidden");
@@ -887,7 +930,7 @@ function startApp() {
   }
 }
 
-// ── Listen Players ────────────────────────────────────────────────────────────
+// ── Listen players ────────────────────────────────────────────────────────────
 function listenPlayers() {
   onValue(dbr("rooms", state.room, "players"), snap => {
     const players = snap.val() || {};
@@ -896,23 +939,22 @@ function listenPlayers() {
     $("playersTop").textContent = Object.values(players).map(p => p.name).join("  |  ");
 
     if (state.isDM) {
-      const el = $("dmPlayerList");
       const entries = Object.entries(players);
-      el.innerHTML = entries.length
-        ? entries.map(([id, p]) =>
+      $("dmPlayerList").innerHTML = entries.length
+        ? entries.map(([, p]) =>
             `<div class="player-chip">${p.isDM ? "👑" : "🧑"} ${p.name}</div>`
           ).join("")
         : `<div class="empty-note">Žádní hráči</div>`;
-
       renderTargets();
     } else {
-      const el = $("playerListPlayer");
       const entries = Object.entries(players);
-      el.innerHTML = entries.length
+      $("playerListPlayer").innerHTML = entries.length
         ? entries.map(([id, p]) =>
             `<div class="player-chip">
               ${p.isDM ? "👑" : "🧑"} ${p.name}
-              ${id === state.id ? '<span style="color:var(--accent2);font-size:0.72rem;margin-left:4px;">(ty)</span>' : ""}
+              ${id === state.id
+                ? '<span style="color:var(--accent2);font-size:0.72rem;margin-left:4px;">(ty)</span>'
+                : ""}
             </div>`
           ).join("")
         : `<div class="empty-note">Žádní hráči</div>`;
@@ -920,11 +962,11 @@ function listenPlayers() {
   });
 }
 
-// ── Render Send Targets ───────────────────────────────────────────────────────
+// ── Render send targets ───────────────────────────────────────────────────────
 function renderTargets() {
-  const el = $("targets");
+  const el        = $("targets");
   const hasResult = !!state.last;
-  const others = Object.entries(playersCache).filter(([id]) => id !== state.id);
+  const others    = Object.entries(playersCache).filter(([id]) => id !== state.id);
 
   if (!others.length) {
     el.innerHTML = `<div class="empty-note">Žádní hráči k dispozici</div>`;
@@ -935,15 +977,15 @@ function renderTargets() {
     <div class="target-row">
       <div class="target-name">🧑 ${p.name}</div>
       <div class="target-btns">
-        <button class="btn-success btn-sm"  ${!hasResult ? "disabled" : ""} onclick="window._send('${id}','r1')">📜 Roleplay 1</button>
-        <button class="btn-info btn-sm"     ${!hasResult ? "disabled" : ""} onclick="window._send('${id}','r2')">📜 Roleplay 2</button>
-        <button class="btn-warning btn-sm"  ${!hasResult ? "disabled" : ""} onclick="window._send('${id}','all')">📦 Oba</button>
+        <button class="btn-success btn-sm" ${!hasResult?"disabled":""} onclick="window._send('${id}','r1')">📜 Roleplay 1</button>
+        <button class="btn-info    btn-sm" ${!hasResult?"disabled":""} onclick="window._send('${id}','r2')">📜 Roleplay 2</button>
+        <button class="btn-warning btn-sm" ${!hasResult?"disabled":""} onclick="window._send('${id}','all')">📦 Oba</button>
       </div>
     </div>
   `).join("");
 }
 
-// ── Send Message ──────────────────────────────────────────────────────────────
+// ── Send message ──────────────────────────────────────────────────────────────
 window._send = (playerId, type) => {
   if (!state.last) { notif("❌ Nejprve vygeneruj výsledek!"); return; }
 
@@ -951,31 +993,27 @@ window._send = (playerId, type) => {
   const rp0 = roleplay?.[0] ?? "";
   const rp1 = roleplay?.[1] ?? "";
 
-  let rpText = "";
-  if      (type === "r1")  rpText = rp0;
-  else if (type === "r2")  rpText = rp1;
-  else if (type === "all") rpText = [rp0, rp1].filter(Boolean).join("\n\n");
+  const rpText =
+    type === "r1"  ? rp0 :
+    type === "r2"  ? rp1 :
+    /* all */        [rp0, rp1].filter(Boolean).join("\n\n");
 
   set(dbr("rooms", state.room, "msg", playerId), {
-    effect,
-    roleplay: rpText,
-    ts: Date.now()
+    effect, roleplay: rpText, ts: Date.now()
   })
   .then(()  => notif("✅ Odesláno!", "#2a9d5c"))
   .catch(() => notif("❌ Chyba odesílání"));
 };
 
-// ── Listen Message (Player) ───────────────────────────────────────────────────
+// ── Listen message (player) ───────────────────────────────────────────────────
 function listenMessage() {
   onValue(dbr("rooms", state.room, "msg", state.id), snap => {
     const data = snap.val();
     const box  = $("playerResult");
-
     if (!data) {
       box.innerHTML = `<div class="waiting-text">⏳ Čekám na výsledek od DM…</div>`;
       return;
     }
-
     box.innerHTML = `
       <div class="msg-effect">⚠️ ${data.effect}</div>
       ${data.roleplay
@@ -986,7 +1024,7 @@ function listenMessage() {
   });
 }
 
-// ── Auto Delete ───────────────────────────────────────────────────────────────
+// ── Auto delete (5 min idle, no players) ──────────────────────────────────────
 function startAutoDelete() {
   setInterval(() => {
     get(dbr("rooms", state.room)).then(snap => {
@@ -1000,7 +1038,7 @@ function startAutoDelete() {
   }, 60_000);
 }
 
-// ── Logout / Delete ───────────────────────────────────────────────────────────
+// ── Logout / delete room ──────────────────────────────────────────────────────
 window._logout = async () => {
   await remove(dbr("rooms", state.room, "players", state.id)).catch(() => {});
   localStorage.removeItem("kf_state");
