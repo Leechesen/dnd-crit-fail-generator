@@ -4,27 +4,29 @@ import json
 EXCEL_FILE = "crit_fails.xlsx"
 OUTPUT_JSON = "crit_fails.json"
 
+ALL_SEVERITIES = ["Lehký", "Střední", "Těžký", "Sranda"]
 
-# =========================
-# NORMALIZE SEVERITY (DYNAMIC)
-# =========================
+
 def normalize_severity(s):
-    if not s or pd.isna(s):
-        return "Default"
-    return str(s).strip()
+    if not s:
+        return "Lehký"
+    s = str(s).strip().lower()
+    if "leh" in s:
+        return "Lehký"
+    if "stř" in s or "str" in s:
+        return "Střední"
+    if "těž" in s or "tez" in s:
+        return "Těžký"
+    if "sranda" in s:
+        return "Sranda"
+    return "Lehký"
 
 
-# =========================
-# ENSURE SEVERITY EXISTS
-# =========================
-def ensure_severity(container, severity):
-    if severity not in container:
-        container[severity] = []
+def ensure_all_severities(container):
+    for sev in ALL_SEVERITIES:
+        container.setdefault(sev, [])
 
 
-# =========================
-# BUILD JSON
-# =========================
 def build_json_from_excel():
     xls = pd.ExcelFile(EXCEL_FILE)
     data = {}
@@ -63,7 +65,7 @@ def build_json_from_excel():
                     attack_type = "Melee"
 
                 data[action].setdefault(attack_type, {})
-                ensure_severity(data[action][attack_type], severity)
+                ensure_all_severities(data[action][attack_type])
                 data[action][attack_type][severity].append(entry)
 
             # =========================
@@ -75,20 +77,20 @@ def build_json_from_excel():
 
                 data[action].setdefault(attribute, {})
                 data[action][attribute].setdefault(skill, {})
-                ensure_severity(data[action][attribute][skill], severity)
+                ensure_all_severities(data[action][attribute][skill])
                 data[action][attribute][skill][severity].append(entry)
 
             # =========================
             # OBRANA / OSTATNÍ
             # =========================
             else:
-                ensure_severity(data[action], severity)
+                ensure_all_severities(data[action])
                 data[action][severity].append(entry)
 
     with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print("✅ JSON vytvořen (dynamické severity)")
+    print("✅ JSON má všechny severity")
 
 
 if __name__ == "__main__":
