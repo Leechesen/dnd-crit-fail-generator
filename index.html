@@ -179,15 +179,17 @@
       databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
     };
 
-    const DM_BADGE = " 👑";
-    const ROLL_ANIMATION_DELAY = 400;
-    const PLAYER_ID_PREFIX = "P_";
-    const DM_ID_PREFIX = "DM_";
-    const STORAGE_KEYS = {
-      ROOM: "room",
-      NAME: "name",
-      MY_ID: "myId",
-      IS_DM: "isDM"
+    const CONSTANTS = {
+      DM_BADGE: " 👑",
+      ROLL_ANIMATION_DELAY: 400,
+      PLAYER_ID_PREFIX: "P_",
+      DM_ID_PREFIX: "DM_",
+      STORAGE_KEYS: {
+        ROOM: "room",
+        NAME: "name",
+        MY_ID: "myId",
+        IS_DM: "isDM"
+      }
     };
 
     const app = initializeApp(FIREBASE_CONFIG);
@@ -269,12 +271,12 @@
     }
 
     function tryAutoReconnect() {
-      const savedRoom = localStorage.getItem(STORAGE_KEYS.ROOM);
+      const savedRoom = localStorage.getItem(CONSTANTS.STORAGE_KEYS.ROOM);
       if (savedRoom) {
         state.room = savedRoom;
-        state.name = localStorage.getItem(STORAGE_KEYS.NAME) || "";
-        state.myId = localStorage.getItem(STORAGE_KEYS.MY_ID) || "";
-        state.isDM = localStorage.getItem(STORAGE_KEYS.IS_DM) === "true";
+        state.name = localStorage.getItem(CONSTANTS.STORAGE_KEYS.NAME) || "";
+        state.myId = localStorage.getItem(CONSTANTS.STORAGE_KEYS.MY_ID) || "";
+        state.isDM = localStorage.getItem(CONSTANTS.STORAGE_KEYS.IS_DM) === "true";
         start();
       }
     }
@@ -363,7 +365,7 @@
 
       state.name = name;
       state.room = roomName;
-      state.myId = DM_ID_PREFIX + Date.now();
+      state.myId = CONSTANTS.DM_ID_PREFIX + Date.now();
       state.isDM = true;
 
       try {
@@ -371,7 +373,7 @@
           dm: state.myId,
           password: password || null,
           players: {
-            [state.myId]: { name: state.name + DM_BADGE }
+            [state.myId]: { name: state.name + CONSTANTS.DM_BADGE }
           }
         });
 
@@ -384,10 +386,10 @@
     }
 
     function saveToLocalStorage() {
-      localStorage.setItem(STORAGE_KEYS.ROOM, state.room);
-      localStorage.setItem(STORAGE_KEYS.NAME, state.name);
-      localStorage.setItem(STORAGE_KEYS.MY_ID, state.myId);
-      localStorage.setItem(STORAGE_KEYS.IS_DM, state.isDM);
+      localStorage.setItem(CONSTANTS.STORAGE_KEYS.ROOM, state.room);
+      localStorage.setItem(CONSTANTS.STORAGE_KEYS.NAME, state.name);
+      localStorage.setItem(CONSTANTS.STORAGE_KEYS.MY_ID, state.myId);
+      localStorage.setItem(CONSTANTS.STORAGE_KEYS.IS_DM, state.isDM);
     }
 
     function setupRoomListener() {
@@ -439,7 +441,7 @@
 
         state.room = roomName;
         state.name = name;
-        state.myId = localStorage.getItem(STORAGE_KEYS.MY_ID) || PLAYER_ID_PREFIX + Date.now();
+        state.myId = localStorage.getItem(CONSTANTS.STORAGE_KEYS.MY_ID) || CONSTANTS.PLAYER_ID_PREFIX + Date.now();
         state.isDM = false;
 
         await set(ref(db, "rooms/" + state.room + "/players/" + state.myId), { name: state.name });
@@ -457,7 +459,4 @@
       elements.app.classList.remove("hidden");
 
       if (state.isDM) {
-        elements.dmPanel.classList.remove("hidden");
-        elements.topButtons.innerHTML = `
-          <button id="deleteRoomBtn">🗑️</button>
-          <button id="
+        elements.dmPanel
