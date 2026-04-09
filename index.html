@@ -2,542 +2,140 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KritFailer</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #ffffff;
-      color: #000000;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px;
-      background: #f0f0f0;
-    }
-
-    .title {
-      color: #ff9800;
-      font-weight: bold;
-    }
-
-    .container {
-      padding: 12px;
-    }
-
-    input {
-      display: block;
-      width: 100%;
-      margin: 8px 0;
-      padding: 10px;
-      border: 1px solid #cccccc;
-      border-radius: 8px;
-      background: #ffffff;
-      color: #000000;
-    }
-
-    input::placeholder {
-      color: #999999;
-    }
-
-    button {
-      margin: 4px;
-      padding: 10px;
-      border: none;
-      border-radius: 10px;
-      background: #e0e0e0;
-      color: #000000;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    button:hover {
-      background: #cccccc;
-    }
-
-    button:focus {
-      outline: 2px solid #ff9800;
-      outline-offset: 2px;
-    }
-
-    .active {
-      background: #ff9800 !important;
-    }
-
-    .card {
-      background: #f5f5f5;
-      padding: 12px;
-      margin-top: 8px;
-      border-radius: 12px;
-      border: 1px solid #dddddd;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .meta {
-      color: #666666;
-      font-size: 12px;
-    }
-
-    .player1 { background: #ef4444; }
-    .player2 { background: #22c55e; }
-    .player3 { background: #3b82f6; }
-    .player4 { background: #eab308; }
-    .player5 { background: #a855f7; }
-
-    .room {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f5f5f5;
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 10px;
-    }
-
-    #playersList {
-      margin-top: 10px;
-    }
-
-    .roleplay-box {
-      background: #fafafa;
-      padding: 10px;
-      border-radius: 8px;
-      border-left: 4px solid #ff9800;
-    }
-
-    .effect-text {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
 </head>
 
 <body>
-  <header>
-    <div class="title">🎲 KritFailer</div>
-    <div id="playersTop"></div>
-    <div id="topButtons"></div>
-  </header>
 
-  <div id="setup" class="container">
-    <input id="name" placeholder="Jméno" autocomplete="off">
-    <input id="roomName" placeholder="Název místnosti" autocomplete="off">
-    <input id="roomPass" placeholder="Heslo (volitelné)" type="password" autocomplete="off">
-    <button id="createRoomBtn">🎲 Vytvořit místnost</button>
+<input id="name" placeholder="Jméno">
+<input id="roomName" placeholder="Room">
+<button id="createRoomBtn">Vytvořit</button>
 
-    <h3>Otevřené hry</h3>
-    <div id="roomsList"></div>
+<div id="roomsList"></div>
+
+<div id="app" style="display:none">
+  <div id="dmPanel" style="display:none">DM PANEL</div>
+  <div id="playerPanel" style="display:none">
+    <div id="playersList"></div>
+    <div id="playerResult"></div>
   </div>
+</div>
 
-  <div id="app" class="container hidden">
-    <div id="dmPanel" class="hidden">
-      <div id="severityButtons"></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getDatabase, ref, set, onValue, get, remove, onDisconnect
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-      <h3>Akce</h3>
-      <button data-action="melee">⚔️ Melee</button>
-      <button data-action="ranged">🏹 Ranged</button>
-      <button data-action="defense">🛡️ Obrana</button>
+const app = initializeApp({
+  apiKey: "xxx",
+  databaseURL: "xxx"
+});
+const db = getDatabase(app);
 
-      <h3>🎲 Skilly</h3>
-      <div id="skills"></div>
-    </div>
+let state = {
+  room: "",
+  name: "",
+  myId: "",
+  isDM: false,
+  players: {}
+};
 
-    <div id="playerPanel" class="hidden">
-      <h3 id="roomNameDisplay"></h3>
-      <div id="playersList"></div>
-      <div id="playerResult">Čekám na výsledek...</div>
-    </div>
-  </div>
+// CREATE ROOM
+document.getElementById("createRoomBtn").onclick = async () => {
+  const name = document.getElementById("name").value;
+  const room = document.getElementById("roomName").value;
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import {
-      getDatabase,
-      ref,
-      set,
-      onValue,
-      get,
-      remove,
-      onDisconnect
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  if (!name || !room) return alert("Vyplň vše");
 
-    const FIREBASE_CONFIG = {
-      apiKey: "AIzaSyDI3qi2zqosghoQNRQ31hDZU1y_tBioedY",
-      databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
-    };
+  const existing = await get(ref(db, "rooms/" + room));
+  if (existing.exists()) return alert("Room existuje");
 
-    const CONSTANTS = {
-      DM_BADGE: " 👑",
-      ROLL_ANIMATION_DELAY: 400,
-      PLAYER_ID_PREFIX: "P_",
-      DM_ID_PREFIX: "DM_",
-      STORAGE_KEYS: {
-        ROOM: "room",
-        NAME: "name",
-        MY_ID: "myId",
-        IS_DM: "isDM"
-      }
-    };
+  state = {
+    room,
+    name,
+    myId: "DM_" + Date.now(),
+    isDM: true
+  };
 
-    const app = initializeApp(FIREBASE_CONFIG);
-    const db = getDatabase(app);
-
-    const state = {
-      room: "",
-      name: "",
-      myId: "",
-      isDM: false,
-      players: {},
-      data: {},
-      severityList: [],
-      severity: ""
-    };
-
-    const elements = {
-      setup: document.getElementById("setup"),
-      app: document.getElementById("app"),
-      dmPanel: document.getElementById("dmPanel"),
-      playerPanel: document.getElementById("playerPanel"),
-      playersTop: document.getElementById("playersTop"),
-      topButtons: document.getElementById("topButtons"),
-      roomsList: document.getElementById("roomsList"),
-      playersList: document.getElementById("playersList"),
-      playerResult: document.getElementById("playerResult"),
-      roomNameDisplay: document.getElementById("roomNameDisplay"),
-      severityButtons: document.getElementById("severityButtons"),
-      skills: document.getElementById("skills"),
-      nameInput: document.getElementById("name"),
-      roomNameInput: document.getElementById("roomName"),
-      roomPassInput: document.getElementById("roomPass"),
-      createRoomBtn: document.getElementById("createRoomBtn")
-    };
-
-    function init() {
-      setupEventListeners();
-      loadGameData();
-      tryAutoReconnect();
-      setupRoomListener();
+  await set(ref(db, "rooms/" + room), {
+    players: {
+      [state.myId]: { name: name + " 👑" }
     }
+  });
 
-    function setupEventListeners() {
-      elements.createRoomBtn.addEventListener("click", createRoom);
-      elements.dmPanel.addEventListener("click", handleDmPanelClick);
-      elements.severityButtons.addEventListener("click", handleSeverityClick);
-      elements.roomsList.addEventListener("click", handleRoomsListClick);
-    }
+  localStorage.setItem("room", room);
+  localStorage.setItem("name", name);
+  localStorage.setItem("id", state.myId);
+  localStorage.setItem("isDM", "true");
 
-    function handleDmPanelClick(event) {
-      const button = event.target.closest("button");
-      if (!button) return;
+  start();
+};
 
-      const action = button.dataset.action;
-      const skillAttr = button.dataset.skillAttr;
-      const skillName = button.dataset.skillName;
+// JOIN ROOM
+window.joinRoom = async (room) => {
+  const name = document.getElementById("name").value;
+  if (!name) return alert("Zadej jméno");
 
-      if (action === "melee") {
-        generateAttack("Melee", button);
-      } else if (action === "ranged") {
-        generateAttack("Ranged", button);
-      } else if (action === "defense") {
-        generateDefense(button);
-      } else if (skillAttr && skillName) {
-        generateSkill(skillAttr, skillName, button);
-      }
-    }
+  const id = "P_" + Date.now();
 
-    function handleSeverityClick(event) {
-      const button = event.target.closest("button");
-      if (!button || !button.dataset.severity) return;
-      setSeverity(button.dataset.severity);
-    }
+  await set(ref(db, "rooms/" + room + "/players/" + id), { name });
 
-    function handleRoomsListClick(event) {
-      const button = event.target.closest("button");
-      if (!button || !button.dataset.room) return;
-      joinRoom(button.dataset.room);
-    }
+  state = { room, name, myId: id, isDM: false };
 
-    function tryAutoReconnect() {
-      const savedRoom = localStorage.getItem(CONSTANTS.STORAGE_KEYS.ROOM);
-      if (savedRoom) {
-        state.room = savedRoom;
-        state.name = localStorage.getItem(CONSTANTS.STORAGE_KEYS.NAME) || "";
-        state.myId = localStorage.getItem(CONSTANTS.STORAGE_KEYS.MY_ID) || "";
-        state.isDM = localStorage.getItem(CONSTANTS.STORAGE_KEYS.IS_DM) === "true";
-        start();
-      }
-    }
+  localStorage.setItem("room", room);
+  localStorage.setItem("name", name);
+  localStorage.setItem("id", id);
+  localStorage.setItem("isDM", "false");
 
-    async function loadGameData() {
-      try {
-        const response = await fetch("crit_fails.json");
-        if (!response.ok) {
-          throw new Error("Failed to load game data");
-        }
-        state.data = await response.json();
-        buildSeverity();
-        buildSkills();
-      } catch (error) {
-        console.error("Error loading game data:", error);
-      }
-    }
+  start();
+};
 
-    function buildSeverity() {
-      if (!state.data.Severity) return;
-      state.severityList = Object.keys(state.data.Severity);
-      const html = state.severityList
-        .map((sev) => `<button data-severity="${escapeHtml(sev)}">${escapeHtml(sev)}</button>`)
-        .join("");
-      elements.severityButtons.innerHTML = html;
-    }
+// ROOM LIST
+onValue(ref(db, "rooms"), snap => {
+  const data = snap.val() || {};
+  let html = "";
 
-    function buildSkills() {
-      if (!state.data.Skill) return;
-      const html = Object.entries(state.data.Skill)
-        .map(([attr, skills]) => {
-          const skillButtons = Object.keys(skills)
-            .map((skill) => `<button data-skill-attr="${escapeHtml(attr)}" data-skill-name="${escapeHtml(skill)}">${escapeHtml(skill)}</button>`)
-            .join("");
-          return `<div><strong>${escapeHtml(attr)}</strong><div>${skillButtons}</div></div>`;
-        })
-        .join("");
-      elements.skills.innerHTML = html;
-    }
+  Object.keys(data).forEach(r => {
+    html += `<button onclick="joinRoom('${r}')">${r}</button><br>`;
+  });
 
-    function setSeverity(severity) {
-      state.severity = severity;
-      const buttons = elements.severityButtons.querySelectorAll("button");
-      buttons.forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.severity === severity);
-      });
-    }
+  document.getElementById("roomsList").innerHTML = html;
+});
 
-    function weightedRandom(pool) {
-      if (!pool || pool.length === 0) return null;
+// START
+function start() {
+  document.getElementById("app").style.display = "block";
 
-      let total = 0;
-      for (const item of pool) {
-        total += item.weight || 1;
-      }
-
-      let random = Math.random() * total;
-      for (const item of pool) {
-        random -= item.weight || 1;
-        if (random <= 0) return item;
-      }
-
-      return pool[pool.length - 1];
-    }
-
-    function escapeHtml(text) {
-      const map = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-      };
-      return String(text).replace(/[&<>"']/g, (char) => map[char]);
-    }
-
-    async function createRoom() {
-  const name = elements.nameInput.value.trim();
-  const roomName = elements.roomNameInput.value.trim();
-  const password = elements.roomPassInput.value;
-
-  if (!name || !roomName) {
-    alert("Vyplň jméno a název místnosti");
-    return;
-  }
-
-  // 👉 kontrola jestli už room existuje
-  const existing = await get(ref(db, "rooms/" + roomName));
-  if (existing.exists()) {
-    alert("Místnost už existuje");
-    return;
-  }
-
-  state.name = name;
-  state.room = roomName;
-  state.myId = CONSTANTS.DM_ID_PREFIX + Date.now();
-  state.isDM = true;
-
-  try {
-    await set(ref(db, "rooms/" + state.room), {
-      dm: state.myId,
-      password: password || null,
-      players: {
-        [state.myId]: { name: state.name + CONSTANTS.DM_BADGE }
-      }
-    });
-
-    saveToLocalStorage();
-    start();
-  } catch (error) {
-    console.error("Error creating room:", error);
-    alert("Nepodařilo se vytvořit místnost");
-  }
-}
-
-    function saveToLocalStorage() {
-      localStorage.setItem(CONSTANTS.STORAGE_KEYS.ROOM, state.room);
-      localStorage.setItem(CONSTANTS.STORAGE_KEYS.NAME, state.name);
-      localStorage.setItem(CONSTANTS.STORAGE_KEYS.MY_ID, state.myId);
-      localStorage.setItem(CONSTANTS.STORAGE_KEYS.IS_DM, state.isDM);
-    }
-
-    function setupRoomListener() {
-      onValue(ref(db, "rooms"), (snapshot) => {
-        const rooms = snapshot.val() || {};
-        renderRoomsList(rooms);
-      });
-    }
-
-    function renderRoomsList(rooms) {
-      const html = Object.entries(rooms)
-        .map(([roomName, roomData]) => {
-          const playerCount = roomData.players ? Object.keys(roomData.players).length : 0;
-          return `
-            <div class="room">
-              <span>🎲 ${escapeHtml(roomName)} (${playerCount})</span>
-              <button data-room="${escapeHtml(roomName)}">Join</button>
-            </div>
-          `;
-        })
-        .join("");
-
-      elements.roomsList.innerHTML = html;
-    }
-
-    async function joinRoom(roomName) {
-      const name = elements.nameInput.value.trim();
-      if (!name) {
-        alert("Zadej jméno");
-        return;
-      }
-
-      try {
-        const snapshot = await get(ref(db, "rooms/" + roomName));
-        const roomData = snapshot.val();
-
-        if (!roomData) {
-          alert("Místnost neexistuje");
-          return;
-        }
-
-        if (roomData.password) {
-          const enteredPassword = prompt("Zadej heslo:");
-          if (enteredPassword !== roomData.password) {
-            alert("Špatné heslo");
-            return;
-          }
-        }
-
-        state.room = roomName;
-        state.name = name;
-        state.myId = localStorage.getItem(CONSTANTS.STORAGE_KEYS.MY_ID) || CONSTANTS.PLAYER_ID_PREFIX + Date.now();
-        state.isDM = false;
-
-        await set(ref(db, "rooms/" + state.room + "/players/" + state.myId), { name: state.name });
-
-        saveToLocalStorage();
-        start();
-      } catch (error) {
-        console.error("Error joining room:", error);
-        alert("Nepodařilo se připojit k místnosti");
-      }
-    }
-
-  function start() {
-  elements.setup.classList.add("hidden");
-  elements.app.classList.remove("hidden");
-
-  // 👉 reset panelů (DŮLEŽITÉ)
-  elements.dmPanel.classList.add("hidden");
-  elements.playerPanel.classList.add("hidden");
-
-  if (state.isDM) {
-    elements.dmPanel.classList.remove("hidden");
-
-    elements.topButtons.innerHTML = `
-      <button id="deleteRoomBtn">🗑️</button>
-      <button id="logoutBtn">🚪</button>
-    `;
-
-    document.getElementById("deleteRoomBtn").onclick = async () => {
-      await remove(ref(db, "rooms/" + state.room));
-      localStorage.clear();
-      location.reload();
-    };
-
-    document.getElementById("logoutBtn").onclick = () => {
-      localStorage.clear();
-      location.reload();
-    };
-
-  } else {
-    elements.playerPanel.classList.remove("hidden");
-
-    elements.roomNameDisplay.innerText = "Room: " + state.room;
-
-    elements.topButtons.innerHTML = `
-      <button id="logoutBtn">🚪</button>
-    `;
-
-    document.getElementById("logoutBtn").onclick = () => {
-      localStorage.clear();
-      location.reload();
-    };
-  }
+  document.getElementById("dmPanel").style.display = state.isDM ? "block" : "none";
+  document.getElementById("playerPanel").style.display = state.isDM ? "none" : "block";
 
   onDisconnect(ref(db, "rooms/" + state.room + "/players/" + state.myId)).remove();
 
-  listenPlayers();
-  listenMessages();
-}
-function listenPlayers() {
   onValue(ref(db, "rooms/" + state.room + "/players"), snap => {
-    state.players = snap.val() || {};
+    const players = snap.val() || {};
+    let html = "";
 
-    elements.playersTop.innerText =
-      Object.values(state.players).map(p => p.name).join(" | ");
+    Object.values(players).forEach(p => {
+      html += `<div>${p.name}</div>`;
+    });
 
-    renderPlayersList();
+    document.getElementById("playersList").innerHTML = html;
   });
 }
 
-function renderPlayersList() {
-  let html = "";
-
-  let i = 1;
-
-  Object.values(state.players).forEach(p => {
-    html += `<button class="player${i}">${escapeHtml(p.name)}</button>`;
-    i++;
-  });
-
-  elements.playersList.innerHTML = html;
+// AUTO RECONNECT
+const savedRoom = localStorage.getItem("room");
+if (savedRoom) {
+  state = {
+    room: savedRoom,
+    name: localStorage.getItem("name"),
+    myId: localStorage.getItem("id"),
+    isDM: localStorage.getItem("isDM") === "true"
+  };
+  start();
 }
+</script>
 
-function listenMessages() {
-  onValue(ref(db, "rooms/" + state.room + "/msg/" + state.myId), snap => {
-    if (snap.val()) {
-      elements.playerResult.innerText = snap.val();
-    }
-  });
-}
-
-// START APP
-init();
+</body>
+</html>
