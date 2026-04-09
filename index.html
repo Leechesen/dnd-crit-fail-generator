@@ -196,11 +196,6 @@
   /* ── SEVERITY ── */
   .sev-row { display: flex; gap: 7px; flex-wrap: wrap; }
 
-  /*
-   * Severity buttons get their background from a CSS custom property
-   * --sev-bg that is set inline by JS. This way any new severity
-   * automatically gets a colour from the palette without hardcoding.
-   */
   .sev-btn {
     flex: 1;
     min-width: 70px;
@@ -224,10 +219,82 @@
   }
 
   /* ── GENERATOR ── */
-  .cat-block  { margin-bottom: 14px; }
-  .cat-title  { font-weight: bold; color: var(--text); margin-bottom: 8px; font-size: 0.92rem; }
-  .attr-label { font-size: 0.75rem; color: var(--muted); margin: 8px 0 4px; font-style: italic; }
-  .btn-group  { display: flex; flex-wrap: wrap; gap: 5px; }
+  .cat-block { margin-bottom: 18px; }
+  .cat-title {
+    font-weight: bold;
+    color: var(--text);
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+  .btn-group { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  /* ════════════════════════════════════════════════
+     ATTRIBUTE LABELS  ← only section changed visually
+     ════════════════════════════════════════════════ */
+  .attr-label {
+    /* layout */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0 7px;
+    padding-bottom: 5px;
+
+    /* typography */
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+
+    /* default colour – overridden per-attribute by .attr-* classes */
+    color: #c8c8e8;
+
+    /* subtle underline using border */
+    border-bottom: 1px solid currentColor;
+    opacity: 0.9;
+  }
+
+  /* small decorative dot before the label text */
+  .attr-label::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* ── Per-attribute colour classes (assigned by JS via keyword matching) ── */
+  /* These cover the most common D&D / RPG attribute names in both
+     English and Czech. Any unrecognised attribute gets the default colour. */
+
+  /* Strength / Síla */
+  .attr-sila,
+  .attr-strength  { color: #e05555; }
+
+  /* Dexterity / Obratnost */
+  .attr-obratnost,
+  .attr-dexterity { color: #55c77a; }
+
+  /* Constitution / Odolnost */
+  .attr-odolnost,
+  .attr-constitution { color: #e8934a; }
+
+  /* Intelligence / Inteligence */
+  .attr-inteligence,
+  .attr-intelligence { color: #5b9de8; }
+
+  /* Wisdom / Moudrost */
+  .attr-moudrost,
+  .attr-wisdom    { color: #a78bfa; }
+
+  /* Charisma */
+  .attr-charisma  { color: #f472b6; }
+
+  /* Perception / Vnímání */
+  .attr-vnimania,
+  .attr-vnímání,
+  .attr-perception { color: #fbbf24; }
 
   /* ── RIGHT COLUMN ── */
   .right-col { display: flex; flex-direction: column; }
@@ -424,7 +491,7 @@
   <div id="dmPanel" class="hidden">
     <div class="dm-layout">
 
-      <!-- LEFT: controls -->
+      <!-- LEFT -->
       <div id="dmLeft">
         <div class="card">
           <h3>🎯 Závažnost</h3>
@@ -437,7 +504,7 @@
         </div>
       </div>
 
-      <!-- RIGHT: players → result → send -->
+      <!-- RIGHT -->
       <div class="right-col">
         <div class="card">
           <h3>👥 Hráči v místnosti</h3>
@@ -502,13 +569,12 @@ const fbApp = initializeApp({
 });
 const db = getDatabase(fbApp);
 
-// ── App state ─────────────────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────────────────
 let FAILS = {};
-let ALL_SEVERITIES = [];   // populated dynamically from JSON
+let ALL_SEVERITIES = [];
 let state = { room:"", name:"", id:"", isDM:false, severity:"", last:null };
 let playersCache = {};
 
-// ── DOM helper ────────────────────────────────────────────────────────────────
 const $   = id => document.getElementById(id);
 const dbr = (...p) => ref(db, p.join("/"));
 
@@ -524,83 +590,40 @@ function notif(msg, color = "#e94560") {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-//  SEVERITY – fully dynamic
+//  SEVERITY – dynamic discovery
 // ═════════════════════════════════════════════════════════════════════════════
-
-/*
- * Walk every branch of the JSON and collect the union of all severity keys.
- *
- * Branches checked:
- *   data["Útok"][attackType]          → object whose keys are severities
- *   data["Obrana"]                    → object whose keys are severities
- *   data["Skill"][attribute][skill]   → object whose keys are severities
- *
- * Returns an array ordered by a preferred list first, then any extras appended
- * in the order they were first encountered.
- */
 function discoverSeverities(data) {
   const found = new Set();
 
-  // helper: add keys of an object if it looks like a severity→array map
   function addFromSevMap(obj) {
     if (!obj || typeof obj !== "object") return;
-    Object.keys(obj).forEach(k => {
-      // only add if the value is an array (= pool of entries)
-      if (Array.isArray(obj[k])) found.add(k);
-    });
+    Object.keys(obj).forEach(k => { if (Array.isArray(obj[k])) found.add(k); });
   }
 
-  // "Útok" → each attack type → severity map
   const utok = data["Útok"];
-  if (utok && typeof utok === "object") {
-    Object.values(utok).forEach(sevMap => addFromSevMap(sevMap));
-  }
-
-  // "Obrana" → severity map directly
+  if (utok && typeof utok === "object") Object.values(utok).forEach(addFromSevMap);
   addFromSevMap(data["Obrana"]);
-
-  // "Skill" → attribute → skill → severity map
   const skill = data["Skill"];
-  if (skill && typeof skill === "object") {
+  if (skill && typeof skill === "object")
     Object.values(skill).forEach(attrs => {
-      if (attrs && typeof attrs === "object") {
-        Object.values(attrs).forEach(sevMap => addFromSevMap(sevMap));
-      }
+      if (attrs && typeof attrs === "object") Object.values(attrs).forEach(addFromSevMap);
     });
-  }
 
-  // Preferred display order – anything not in this list is appended at the end
-  const PREFERRED_ORDER = ["Lehký", "Střední", "Těžký", "Sranda"];
-  const ordered = PREFERRED_ORDER.filter(s => found.has(s));
+  const PREFERRED = ["Lehký", "Střední", "Těžký", "Sranda"];
+  const ordered = PREFERRED.filter(s => found.has(s));
   found.forEach(s => { if (!ordered.includes(s)) ordered.push(s); });
-
   return ordered;
 }
 
-/*
- * Colour palette for severity buttons.
- * Cycles if there are more severities than colours.
- */
 const SEV_PALETTE = [
-  "#2a9d5c",  // green   – index 0
-  "#e9a020",  // amber   – index 1
-  "#c0392b",  // red     – index 2
-  "#8e44ad",  // purple  – index 3
-  "#2980b9",  // blue    – index 4
-  "#16a085",  // teal    – index 5
-  "#d35400",  // orange  – index 6
-  "#7f8c8d",  // grey    – index 7
+  "#2a9d5c","#e9a020","#c0392b","#8e44ad",
+  "#2980b9","#16a085","#d35400","#7f8c8d",
 ];
-function sevColor(index) { return SEV_PALETTE[index % SEV_PALETTE.length]; }
+const sevColor = i => SEV_PALETTE[i % SEV_PALETTE.length];
 
-/*
- * Build the severity button row from ALL_SEVERITIES.
- * Called once after JSON loads, and again after auto-reconnect sets state.
- */
 function buildSeverityButtons() {
   const container = $("severityBtns");
   container.innerHTML = "";
-
   ALL_SEVERITIES.forEach((sev, i) => {
     const btn = document.createElement("div");
     btn.className = "sev-btn" + (sev === state.severity ? " active" : "");
@@ -610,7 +633,6 @@ function buildSeverityButtons() {
     btn.onclick = () => selectSeverity(sev);
     container.appendChild(btn);
   });
-
   $("sevLabel").textContent = state.severity || "—";
 }
 
@@ -623,51 +645,55 @@ function selectSeverity(sev) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-//  ROLL – safe pool resolution with fallback
+//  ATTRIBUTE LABEL COLOUR CLASS
+//  Maps an attribute name → a CSS class defined in <style>.
+//  Matching is case-insensitive and accent-insensitive (best-effort).
 // ═════════════════════════════════════════════════════════════════════════════
+function attrColorClass(attrName) {
+  // Normalise: lowercase, remove diacritics where possible
+  const n = attrName.toLowerCase()
+    .replace(/í/g,"i").replace(/á/g,"a").replace(/é/g,"e")
+    .replace(/ů|ú/g,"u").replace(/ě/g,"e").replace(/š/g,"s")
+    .replace(/č/g,"c").replace(/ř/g,"r").replace(/ž/g,"z")
+    .replace(/ý/g,"y").replace(/ň/g,"n").replace(/ó/g,"o");
 
-/*
- * sevMap  – the object whose keys are severity names, values are entry arrays
- *           e.g. FAILS["Útok"]["Melee"]  or  FAILS["Obrana"]
- * label   – human-readable label for notifications
- *
- * Strategy:
- *   1. Try sevMap[selectedSeverity]
- *   2. If missing → pick a random available severity from sevMap as fallback
- *   3. If sevMap is empty / invalid → error
- */
+  if (/sila|sil|strength|str/.test(n))        return "attr-sila";
+  if (/obratnost|obr|dexterity|dex/.test(n))  return "attr-obratnost";
+  if (/odolnost|odo|constitution|con/.test(n)) return "attr-odolnost";
+  if (/inteligence|int|intelligence/.test(n)) return "attr-inteligence";
+  if (/moudrost|mou|wisdom|wis/.test(n))       return "attr-moudrost";
+  if (/charisma|cha/.test(n))                  return "attr-charisma";
+  if (/vnimai|vnim|percep/.test(n))            return "attr-vnimania";
+
+  // Unknown attribute → default colour defined on .attr-label itself
+  return "";
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+//  ROLL
+// ═════════════════════════════════════════════════════════════════════════════
 function roll(sevMap, label) {
-  if (!sevMap || typeof sevMap !== "object") {
-    notif(`❌ Žádná data pro: ${label}`);
-    return;
-  }
+  if (!sevMap || typeof sevMap !== "object") { notif(`❌ Žádná data pro: ${label}`); return; }
 
-  // Collect only keys that actually have a non-empty array
   const available = Object.entries(sevMap)
     .filter(([, pool]) => Array.isArray(pool) && pool.length > 0)
     .map(([key]) => key);
 
-  if (!available.length) {
-    notif(`❌ Prázdná data pro: ${label}`);
-    return;
-  }
+  if (!available.length) { notif(`❌ Prázdná data pro: ${label}`); return; }
 
-  let chosenSev = state.severity;
+  let chosenSev  = state.severity;
   let usedFallback = false;
 
   if (!available.includes(chosenSev)) {
-    // Fallback: pick a random available severity
-    chosenSev = available[Math.floor(Math.random() * available.length)];
+    chosenSev    = available[Math.floor(Math.random() * available.length)];
     usedFallback = true;
   }
 
-  const pool = sevMap[chosenSev];
-  const res  = weighted(pool);
+  const res = weighted(sevMap[chosenSev]);
   if (!res) { notif("❌ Chyba generování"); return; }
 
   state.last = res;
 
-  // Show result
   $("resultBox").classList.remove("hidden");
   $("resEffect").textContent = "⚠️ " + (res.effect ?? "(bez efektu)");
   $("resRp1").textContent    = res.roleplay?.[0] ?? "(prázdné)";
@@ -675,28 +701,22 @@ function roll(sevMap, label) {
 
   renderTargets();
 
-  if (usedFallback) {
-    notif(`⚠️ „${state.severity}" chybí → použito „${chosenSev}" | ${label}`, "#e9a020");
-  } else {
-    notif(`🎲 ${label} / ${chosenSev}`, "#2a9d5c");
-  }
+  usedFallback
+    ? notif(`⚠️ „${state.severity}" chybí → použito „${chosenSev}" | ${label}`, "#e9a020")
+    : notif(`🎲 ${label} / ${chosenSev}`, "#2a9d5c");
 
   update(dbr("rooms", state.room), { lastActive: Date.now() });
 }
 
-// ── Weighted random ───────────────────────────────────────────────────────────
 function weighted(pool) {
   const total = pool.reduce((s, x) => s + (x.weight || 1), 0);
   let r = Math.random() * total;
-  for (const item of pool) {
-    r -= (item.weight || 1);
-    if (r <= 0) return item;
-  }
+  for (const item of pool) { r -= (item.weight || 1); if (r <= 0) return item; }
   return pool[0];
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-//  GENERATOR UI – fully dynamic, no hardcoded categories or severities
+//  GENERATOR UI
 // ═════════════════════════════════════════════════════════════════════════════
 function buildGenerator() {
   const gen = $("generator");
@@ -737,10 +757,14 @@ function buildGenerator() {
   const skillData = FAILS["Skill"];
   if (skillData && typeof skillData === "object" && Object.keys(skillData).length) {
     const block = makeBlock("🎯 Skilly");
+
     Object.entries(skillData).forEach(([attr, skills]) => {
       if (!skills || typeof skills !== "object") return;
+
+      // ── Attribute label with dynamic colour class ──────────────────────────
       const lbl = document.createElement("div");
-      lbl.className = "attr-label";
+      // Base class + optional colour class
+      lbl.className = ["attr-label", attrColorClass(attr)].filter(Boolean).join(" ");
       lbl.textContent = attr;
       block.appendChild(lbl);
 
@@ -755,6 +779,7 @@ function buildGenerator() {
       });
       block.appendChild(grp);
     });
+
     gen.appendChild(block);
   }
 }
@@ -768,13 +793,11 @@ function makeBlock(title) {
   d.appendChild(t);
   return d;
 }
-
 function makeGroup() {
   const d = document.createElement("div");
   d.className = "btn-group";
   return d;
 }
-
 function makeGenBtn(text, title, handler) {
   const b = document.createElement("button");
   b.className = "btn-secondary btn-sm";
@@ -791,14 +814,9 @@ fetch("crit_fails.json")
   .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
   .then(data => {
     FAILS = data;
-
-    // Discover ALL severities present in the data
     ALL_SEVERITIES = discoverSeverities(data);
     if (!ALL_SEVERITIES.length) throw new Error("Žádné severity nenalezeny v crit_fails.json");
-
-    // Default to first discovered severity
     state.severity = ALL_SEVERITIES[0];
-
     $("loading").classList.add("hidden");
     init();
   })
@@ -816,12 +834,8 @@ function init() {
       get(dbr("rooms", s.room)).then(snap => {
         if (snap.exists()) {
           state = { ...s, last: null };
-          // Make sure saved severity is still valid; if not, reset to first
-          if (!ALL_SEVERITIES.includes(state.severity)) {
-            state.severity = ALL_SEVERITIES[0];
-          }
-          const playerData = { name: state.name, isDM: state.isDM };
-          set(dbr("rooms", state.room, "players", state.id), playerData)
+          if (!ALL_SEVERITIES.includes(state.severity)) state.severity = ALL_SEVERITIES[0];
+          set(dbr("rooms", state.room, "players", state.id), { name: state.name, isDM: state.isDM })
             .then(() => { setupDisconnect(); startApp(); });
         } else {
           localStorage.removeItem("kf_state");
@@ -865,36 +879,27 @@ function listenLobby() {
 
 window.toggleCreate = () => $("createRoomSection").classList.toggle("hidden");
 
-// ── Create room ───────────────────────────────────────────────────────────────
 window.createRoom = async () => {
   const name = $("nameInput").value.trim();
   const room = $("roomInput").value.trim();
   if (!name) { notif("❌ Zadej jméno!"); return; }
   if (!room) { notif("❌ Zadej název místnosti!"); return; }
-
   const id = "DM_" + Date.now();
   state = { room, name: name + " 👑", id, isDM: true, severity: ALL_SEVERITIES[0], last: null };
-
   await set(dbr("rooms", room), {
-    players:   { [id]: { name: state.name, isDM: true } },
-    createdAt: Date.now(),
-    lastActive: Date.now()
+    players: { [id]: { name: state.name, isDM: true } },
+    createdAt: Date.now(), lastActive: Date.now()
   });
-
   saveState(); setupDisconnect(); startApp();
 };
 
-// ── Join room ─────────────────────────────────────────────────────────────────
 window._joinRoom = async (room) => {
   const name = $("nameInput").value.trim();
   if (!name) { notif("❌ Zadej jméno!"); return; }
-
   const id = "P_" + Date.now();
   state = { room, name, id, isDM: false, severity: ALL_SEVERITIES[0], last: null };
-
   await set(dbr("rooms", room, "players", id), { name, isDM: false });
   await update(dbr("rooms", room), { lastActive: Date.now() });
-
   saveState(); setupDisconnect(); startApp();
 };
 
@@ -911,12 +916,10 @@ function startApp() {
   $("setup").classList.add("hidden");
   $("app").classList.remove("hidden");
   $("roomTitle").textContent = `${state.isDM ? "👑" : "🧑"} Místnost: ${state.room}`;
-
   $("topBtns").innerHTML = `
     <button class="btn-secondary btn-sm" onclick="window._logout()">🚪 Odejít</button>
     ${state.isDM ? `<button class="btn-danger btn-sm" onclick="window._deleteRoom()">🗑️ Smazat místnost</button>` : ""}
   `;
-
   if (state.isDM) {
     $("dmPanel").classList.remove("hidden");
     buildSeverityButtons();
@@ -935,7 +938,6 @@ function listenPlayers() {
   onValue(dbr("rooms", state.room, "players"), snap => {
     const players = snap.val() || {};
     playersCache = players;
-
     $("playersTop").textContent = Object.values(players).map(p => p.name).join("  |  ");
 
     if (state.isDM) {
@@ -962,17 +964,15 @@ function listenPlayers() {
   });
 }
 
-// ── Render send targets ───────────────────────────────────────────────────────
+// ── Render targets ────────────────────────────────────────────────────────────
 function renderTargets() {
   const el        = $("targets");
   const hasResult = !!state.last;
   const others    = Object.entries(playersCache).filter(([id]) => id !== state.id);
-
   if (!others.length) {
     el.innerHTML = `<div class="empty-note">Žádní hráči k dispozici</div>`;
     return;
   }
-
   el.innerHTML = others.map(([id, p]) => `
     <div class="target-row">
       <div class="target-name">🧑 ${p.name}</div>
@@ -985,24 +985,16 @@ function renderTargets() {
   `).join("");
 }
 
-// ── Send message ──────────────────────────────────────────────────────────────
+// ── Send ──────────────────────────────────────────────────────────────────────
 window._send = (playerId, type) => {
   if (!state.last) { notif("❌ Nejprve vygeneruj výsledek!"); return; }
-
   const { effect, roleplay } = state.last;
   const rp0 = roleplay?.[0] ?? "";
   const rp1 = roleplay?.[1] ?? "";
-
-  const rpText =
-    type === "r1"  ? rp0 :
-    type === "r2"  ? rp1 :
-    /* all */        [rp0, rp1].filter(Boolean).join("\n\n");
-
-  set(dbr("rooms", state.room, "msg", playerId), {
-    effect, roleplay: rpText, ts: Date.now()
-  })
-  .then(()  => notif("✅ Odesláno!", "#2a9d5c"))
-  .catch(() => notif("❌ Chyba odesílání"));
+  const rpText = type==="r1" ? rp0 : type==="r2" ? rp1 : [rp0,rp1].filter(Boolean).join("\n\n");
+  set(dbr("rooms", state.room, "msg", playerId), { effect, roleplay: rpText, ts: Date.now() })
+    .then(()  => notif("✅ Odesláno!", "#2a9d5c"))
+    .catch(() => notif("❌ Chyba odesílání"));
 };
 
 // ── Listen message (player) ───────────────────────────────────────────────────
@@ -1010,41 +1002,34 @@ function listenMessage() {
   onValue(dbr("rooms", state.room, "msg", state.id), snap => {
     const data = snap.val();
     const box  = $("playerResult");
-    if (!data) {
-      box.innerHTML = `<div class="waiting-text">⏳ Čekám na výsledek od DM…</div>`;
-      return;
-    }
+    if (!data) { box.innerHTML = `<div class="waiting-text">⏳ Čekám na výsledek od DM…</div>`; return; }
     box.innerHTML = `
       <div class="msg-effect">⚠️ ${data.effect}</div>
-      ${data.roleplay
-        ? `<div class="msg-rp">🎭 ${data.roleplay.replace(/\n/g, "<br>")}</div>`
-        : ""}
+      ${data.roleplay ? `<div class="msg-rp">🎭 ${data.roleplay.replace(/\n/g,"<br>")}</div>` : ""}
     `;
     notif("📬 Nový výsledek od DM!");
   });
 }
 
-// ── Auto delete (5 min idle, no players) ──────────────────────────────────────
+// ── Auto delete ───────────────────────────────────────────────────────────────
 function startAutoDelete() {
   setInterval(() => {
     get(dbr("rooms", state.room)).then(snap => {
       if (!snap.exists()) return;
       const d   = snap.val();
       const cnt = Object.keys(d.players || {}).length;
-      if (cnt === 0 && (Date.now() - (d.lastActive || 0)) > 5 * 60 * 1000) {
+      if (cnt === 0 && (Date.now() - (d.lastActive || 0)) > 5 * 60 * 1000)
         remove(dbr("rooms", state.room));
-      }
     });
   }, 60_000);
 }
 
-// ── Logout / delete room ──────────────────────────────────────────────────────
+// ── Logout / delete ───────────────────────────────────────────────────────────
 window._logout = async () => {
   await remove(dbr("rooms", state.room, "players", state.id)).catch(() => {});
   localStorage.removeItem("kf_state");
   location.reload();
 };
-
 window._deleteRoom = async () => {
   if (!confirm("Opravdu smazat místnost? Tím odpojíš všechny hráče.")) return;
   await remove(dbr("rooms", state.room)).catch(() => {});
