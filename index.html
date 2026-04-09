@@ -2,12 +2,12 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<title>KritFailer PRO</title>
+<title>KritFailer FINAL</title>
 
 <style>
 body { font-family: Arial; margin:0; background:#fff; }
 header { display:flex; justify-content:space-between; padding:10px; background:#eee; }
-button { margin:4px; padding:10px; border:none; border-radius:8px; cursor:pointer; }
+button { margin:4px; padding:8px; border:none; border-radius:8px; cursor:pointer; }
 .primary{ background:orange; color:white;}
 .danger{ background:red; color:white;}
 .card{ background:#f5f5f5; padding:10px; border-radius:10px; margin-top:10px;}
@@ -31,34 +31,18 @@ button { margin:4px; padding:10px; border:none; border-radius:8px; cursor:pointe
 </div>
 
 <div id="app" class="hidden">
-
 <h3 id="roomTitle"></h3>
 
 <div id="dmPanel" class="hidden">
-
-<h3>Typ</h3>
-<button onclick="setType('attack')">⚔️</button>
-<button onclick="setType('defense')">🛡️</button>
-<button onclick="setType('skill')">🎯</button>
-
-<h3>Attack</h3>
-<button onclick="setAttack('Melee')">Melee</button>
-<button onclick="setAttack('Ranged')">Ranged</button>
-
-<h3>Skill</h3>
-<select id="attr"></select>
-<select id="skill"></select>
-
 <h3>Severity</h3>
 <div id="severity"></div>
 
-<button class="primary" onclick="roll()">🎲 GENERUJ</button>
+<div id="generator"></div>
 
 <div id="resultBox" class="card hidden"></div>
 
 <h3>Pošli hráči</h3>
 <div id="targets"></div>
-
 </div>
 
 <div id="playerPanel" class="hidden">
@@ -68,7 +52,6 @@ button { margin:4px; padding:10px; border:none; border-radius:8px; cursor:pointe
 <h3>Výsledek</h3>
 <div id="result" class="card">Čekám...</div>
 </div>
-
 </div>
 
 <script type="module">
@@ -81,184 +64,272 @@ const app = initializeApp({
 });
 const db = getDatabase(app);
 
-let FAIL_DATA={};
-let state={
-room:"",name:"",id:"",isDM:false,
-type:"attack",attack:"Melee",severity:"Lehký",
-last:null,lastActivity:Date.now()
+let FAIL_DATA = {};
+let state = {
+  room:"",
+  name:"",
+  id:"",
+  isDM:false,
+  severity:"Lehký",
+  last:null
 };
 
-// ===== LOAD JSON =====
-fetch("crit_fails.json").then(r=>r.json()).then(d=>{
-FAIL_DATA=d;
-buildSeverity();
-buildSkills();
-});
-
-// ===== BUILD =====
-function buildSeverity(){
-["Lehký","Střední","Těžký","Sranda"].forEach(s=>{
-document.getElementById("severity").innerHTML+=
-`<button onclick="state.severity='${s}'">${s}</button>`;
-});
+// =====================
+// AUTO RECONNECT
+// =====================
+if(localStorage.room){
+  state = JSON.parse(localStorage.state);
+  start();
 }
 
-function buildSkills(){
-const attrs=Object.keys(FAIL_DATA["Skill"]||{});
-const attr=document.getElementById("attr");
-const skill=document.getElementById("skill");
+// =====================
+// LOAD JSON
+// =====================
+fetch("crit_fails.json").then(r=>r.json()).then(data=>{
+  FAIL_DATA = data;
+  buildUI();
+});
 
-attr.innerHTML=attrs.map(a=>`<option>${a}</option>`).join("");
+// =====================
+// UI BUILD
+// =====================
+function buildUI(){
 
-attr.onchange=()=>{
-const skills=Object.keys(FAIL_DATA["Skill"][attr.value]);
-skill.innerHTML=skills.map(s=>`<option>${s}</option>`).join("");
-};
-attr.dispatchEvent(new Event("change"));
+  // severity
+  ["Lehký","Střední","Těžký","Sranda"].forEach(s=>{
+    const b=document.createElement("button");
+    b.innerText=s;
+    b.onclick=()=>state.severity=s;
+    severity.appendChild(b);
+  });
+
+  const gen = document.getElementById("generator");
+
+  // ÚTOK
+  const atk = document.createElement("div");
+  atk.innerHTML="<h3>⚔️ Útok</h3>";
+
+  Object.entries(FAIL_DATA["Útok"]||{}).forEach(([type, sev])=>{
+    const b=document.createElement("button");
+    b.innerText=type;
+    b.onclick=()=>roll(sev[state.severity],`Útok ${type}`);
+    atk.appendChild(b);
+  });
+
+  gen.appendChild(atk);
+
+  // OBRANA
+  const def = document.createElement("div");
+  def.innerHTML="<h3>🛡️ Obrana</h3>";
+
+  const b=document.createElement("button");
+  b.innerText="Obrana";
+  b.onclick=()=>roll(FAIL_DATA["Obrana"]?.[state.severity],"Obrana");
+  def.appendChild(b);
+
+  gen.appendChild(def);
+
+  // SKILLY
+  const sk = document.createElement("div");
+  sk.innerHTML="<h3>🎯 Skilly</h3>";
+
+  Object.entries(FAIL_DATA["Skill"]||{}).forEach(([attr,skills])=>{
+    const t=document.createElement("h4");
+    t.innerText=attr;
+    sk.appendChild(t);
+
+    Object.entries(skills).forEach(([name,data])=>{
+      const b=document.createElement("button");
+      b.innerText=name;
+      b.onclick=()=>roll(data[state.severity],`${attr} ${name}`);
+      sk.appendChild(b);
+    });
+  });
+
+  gen.appendChild(sk);
 }
 
-// ===== RANDOM =====
+// =====================
+// RANDOM
+// =====================
 function weighted(pool){
-let sum=pool.reduce((a,b)=>a+(b.weight||1),0);
-let r=Math.random()*sum;
-for(let p of pool){ r-=p.weight||1; if(r<=0)return p;}
-return pool[0];
+  let sum = pool.reduce((a,b)=>a+(b.weight||1),0);
+  let r = Math.random()*sum;
+  for(let p of pool){
+    r -= p.weight||1;
+    if(r<=0) return p;
+  }
+  return pool[0];
 }
 
-// ===== ROLL =====
-window.roll=()=>{
-let pool;
+// =====================
+// ROLL
+// =====================
+function roll(pool,label){
 
-if(state.type==="attack") pool=FAIL_DATA["Útok"]?.[state.attack]?.[state.severity];
-if(state.type==="defense") pool=FAIL_DATA["Obrana"]?.[state.severity];
-if(state.type==="skill"){
-const a=attr.value,s=skill.value;
-pool=FAIL_DATA["Skill"]?.[a]?.[s]?.[state.severity];
+  if(!pool || pool.length===0){
+    alert("Žádná data");
+    return;
+  }
+
+  const r = weighted(pool);
+  state.last = r;
+
+  resultBox.innerHTML=`
+  <div>⚠️ ${r.effect}</div>
+  <div>🎭 ${r.roleplay[0]}</div>
+  <div>🎭 ${r.roleplay[1]}</div>
+  `;
+  resultBox.classList.remove("hidden");
 }
 
-if(!pool||pool.length===0){
-pool=FAIL_DATA["Útok"]?.[state.attack]?.["Lehký"];
-}
-
-const r=weighted(pool);
-
-state.last=r;
-
-document.getElementById("resultBox").innerHTML=`
-<div>⚠️ ${r.effect}</div>
-<div>🎭 ${r.roleplay[0]}</div>
-<div>🎭 ${r.roleplay[1]}</div>
-`;
-
-document.getElementById("resultBox").classList.remove("hidden");
-
-state.lastActivity=Date.now();
-};
-
-// ===== SEND =====
+// =====================
+// SEND
+// =====================
 window.send=(id,type)=>{
-if(!state.last) return;
+  if(!state.last) return;
 
-let msg="⚠️ "+state.last.effect+"\n";
+  let msg="⚠️ "+state.last.effect+"\n";
 
-if(type==="r1") msg+=state.last.roleplay[0];
-if(type==="r2") msg+=state.last.roleplay[1];
-if(type==="all") msg+=state.last.roleplay.join(" | ");
+  if(type==="r1") msg+=state.last.roleplay[0];
+  if(type==="r2") msg+=state.last.roleplay[1];
+  if(type==="all") msg+=state.last.roleplay.join(" | ");
 
-set(ref(db,"rooms/"+state.room+"/msg/"+id),msg);
+  set(ref(db,"rooms/"+state.room+"/msg/"+id),msg);
 };
 
-// ===== FIREBASE =====
+// =====================
+// CREATE ROOM
+// =====================
 window.createRoom=async()=>{
-state={...state,
-room:room.value,name:name.value,
-id:"DM_"+Date.now(),isDM:true};
+  const roomName=document.getElementById("room").value.trim();
+  const playerName=document.getElementById("name").value.trim();
 
-await set(ref(db,"rooms/"+state.room),{
-players:{[state.id]:{name:state.name+" 👑"}},
-lastActive:Date.now()
-});
+  if(!roomName||!playerName)return alert("Vyplň vše");
 
-start();
+  state={
+    room:roomName,
+    name:playerName,
+    id:"DM_"+Date.now(),
+    isDM:true,
+    severity:"Lehký"
+  };
+
+  localStorage.state=JSON.stringify(state);
+  localStorage.room=roomName;
+
+  await set(ref(db,"rooms/"+roomName),{
+    players:{[state.id]:{name:playerName+" 👑"}},
+    lastActive:Date.now()
+  });
+
+  start();
 };
 
+// =====================
+// JOIN
+// =====================
 window.joinRoom=async(r)=>{
-const id="P_"+Date.now();
-await set(ref(db,"rooms/"+r+"/players/"+id),{name:name.value});
-state={...state,room:r,name:name.value,id,isDM:false};
-start();
+  const name=document.getElementById("name").value.trim();
+  if(!name)return alert("Zadej jméno");
+
+  const id="P_"+Date.now();
+
+  await set(ref(db,"rooms/"+r+"/players/"+id),{name});
+
+  state={room:r,name,id,isDM:false,severity:"Lehký"};
+
+  localStorage.state=JSON.stringify(state);
+  localStorage.room=r;
+
+  start();
 };
 
+// =====================
+// START
+// =====================
 function start(){
-setup.classList.add("hidden");
-app.classList.remove("hidden");
 
-roomTitle.innerText=state.room;
+  setup.classList.add("hidden");
+  app.classList.remove("hidden");
 
-dmPanel.classList.toggle("hidden",!state.isDM);
-playerPanel.classList.toggle("hidden",state.isDM);
+  roomTitle.innerText=state.room;
 
-topBtns.innerHTML=`
-<button onclick="logout()">🚪</button>
-${state.isDM?`<button onclick="deleteRoom()">🗑️</button>`:""}
-`;
+  dmPanel.classList.toggle("hidden",!state.isDM);
+  playerPanel.classList.toggle("hidden",state.isDM);
 
-onDisconnect(ref(db,"rooms/"+state.room+"/players/"+state.id)).remove();
+  topBtns.innerHTML=`
+  <button onclick="logout()">🚪</button>
+  ${state.isDM?'<button onclick="deleteRoom()">🗑️</button>':''}
+  `;
 
-listenPlayers();
+  onDisconnect(ref(db,"rooms/"+state.room+"/players/"+state.id)).remove();
 
-if(!state.isDM){
-onValue(ref(db,"rooms/"+state.room+"/msg/"+state.id),snap=>{
-if(snap.val()) result.innerText=snap.val();
-});
+  listenPlayers();
+
+  if(!state.isDM){
+    onValue(ref(db,"rooms/"+state.room+"/msg/"+state.id),snap=>{
+      if(snap.val()) result.innerText=snap.val();
+    });
+  }
+
+  // auto delete
+  setInterval(()=>{
+    onValue(ref(db,"rooms/"+state.room+"/players"),snap=>{
+      if(!snap.val()){
+        remove(ref(db,"rooms/"+state.room));
+      }
+    });
+  },300000);
 }
 
-// auto delete after 5 min
-setInterval(()=>{
-if(state.isDM){
-if(Date.now()-state.lastActivity>300000){
-remove(ref(db,"rooms/"+state.room));
-alert("Room smazána (neaktivita)");
-location.reload();
-}
-}
-},10000);
-}
-
+// =====================
+// PLAYERS
+// =====================
 function listenPlayers(){
-onValue(ref(db,"rooms/"+state.room+"/players"),snap=>{
-const p=snap.val()||{};
+  onValue(ref(db,"rooms/"+state.room+"/players"),snap=>{
+    const p=snap.val()||{};
 
-playersTop.innerText=Object.values(p).map(x=>x.name).join(" | ");
+    playersTop.innerText=Object.values(p).map(x=>x.name).join(" | ");
 
-players.innerHTML=Object.values(p).map(x=>`<div>${x.name}</div>`).join("");
+    players.innerHTML=Object.values(p).map(x=>`<div>${x.name}</div>`).join("");
 
-targets.innerHTML=Object.entries(p)
-.filter(([id])=>id!==state.id)
-.map(([id,x])=>`
-<div>
-${x.name}
-<button onclick="send('${id}','r1')">R1</button>
-<button onclick="send('${id}','r2')">R2</button>
-<button onclick="send('${id}','all')">ALL</button>
-</div>
-`).join("");
-});
+    targets.innerHTML=Object.entries(p)
+    .filter(([id])=>id!==state.id)
+    .map(([id,x])=>`
+    <div>
+    ${x.name}
+    <button onclick="send('${id}','r1')">R1</button>
+    <button onclick="send('${id}','r2')">R2</button>
+    <button onclick="send('${id}','all')">ALL</button>
+    </div>
+    `).join("");
+  });
 }
 
-// ===== LOBBY =====
+// =====================
+// LOBBY
+// =====================
 onValue(ref(db,"rooms"),snap=>{
-const d=snap.val()||{};
-rooms.innerHTML=Object.keys(d)
-.map(r=>`<div>${r}<button onclick="joinRoom('${r}')">Join</button></div>`)
-.join("");
+  const d=snap.val()||{};
+  rooms.innerHTML=Object.keys(d)
+  .map(r=>`<div>${r}<button onclick="joinRoom('${r}')">Join</button></div>`)
+  .join("");
 });
 
-// ===== ACTIONS =====
-window.logout=()=>location.reload();
-window.deleteRoom=()=>remove(ref(db,"rooms/"+state.room));
-window.setType=t=>state.type=t;
-window.setAttack=a=>state.attack=a;
+// =====================
+// ACTIONS
+// =====================
+window.logout=()=>{
+  localStorage.clear();
+  location.reload();
+};
+
+window.deleteRoom=()=>{
+  remove(ref(db,"rooms/"+state.room));
+  logout();
+};
+
 </script>
 
 </body>
