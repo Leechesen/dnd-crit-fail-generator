@@ -1167,7 +1167,408 @@
           "weight": 1
         }
       ],
-      "Sranda": []
+      "Sranda": [
+        {
+          "effect": "Zakopneš o vlastní nohu.",
+          "roleplay": [
+            "Švihneš a nohy tě zradí.",
+            "Na chvíli bojuješ spíš se zemí než s nepřítelem."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Upustíš zbraň.",
+          "roleplay": [
+            "Zbraň ti vyklouzne z ruky.",
+            "Kov cinkne o zem s trapným zvukem."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Otočíš se dokola.",
+          "roleplay": [
+            "Přehnaný švih tě roztočí.",
+            "Na moment nevíš, kde je nepřítel."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zasekneš se v pozici.",
+          "roleplay": [
+            "Zůstaneš v divné póze.",
+            "Vypadáš jako socha bojovníka."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uhodíš do vzduchu.",
+          "roleplay": [
+            "Švihneš úplně mimo.",
+            "Vzduch tě ale rozhodně neporazil."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš dramatický výkřik.",
+          "roleplay": [
+            "Křičíš víc než bojuješ.",
+            "Soupeř tě sleduje pobaveně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Šlápneš na plášť.",
+          "roleplay": [
+            "Noha se ti zachytí do látky.",
+            "Ztrácíš balanc i důstojnost."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Miněš a skoro spadneš.",
+          "roleplay": [
+            "Přepadneš dopředu.",
+            "Na poslední chvíli to ustojíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uhodíš vlastní zbroj.",
+          "roleplay": [
+            "Tvůj útok narazí do tebe.",
+            "Zazvoní to víc než by mělo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zbraň se zasekne.",
+          "roleplay": [
+            "Zbraň se chytí do něčeho.",
+            "Chvíli ji taháš ven."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš grip.",
+          "roleplay": [
+            "Ruka ti sklouzne.",
+            "Útok nemá žádnou sílu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zavrávoráš.",
+          "roleplay": [
+            "Neudržíš rovnováhu.",
+            "Bojuješ spíš s gravitací."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamotá se ti ruka.",
+          "roleplay": [
+            "Pohyby jsou úplně mimo.",
+            "Vypadá to jako tanec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš zbytečný kotoul.",
+          "roleplay": [
+            "Pokus o styl skončí trapně.",
+            "Prach se zvedne kolem tebe."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Miněš o metr.",
+          "roleplay": [
+            "Útok jde úplně vedle.",
+            "Soupeř ani nemusí uhnout."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Spustíš bojový monolog.",
+          "roleplay": [
+            "Mluvíš místo boje.",
+            "Soupeř čeká, až skončíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš teatrální pózu.",
+          "roleplay": [
+            "Zastavíš se uprostřed útoku.",
+            "Vypadáš epicky… ale neúčinně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamíříš špatně.",
+          "roleplay": [
+            "Mineš cíl úplně.",
+            "Soupeř stojí vedle tebe."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uhodíš do země.",
+          "roleplay": [
+            "Zbraň zarazíš do hlíny.",
+            "Musíš ji vytrhnout ven."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš tempo.",
+          "roleplay": [
+            "Zastavíš se uprostřed pohybu.",
+            "Útok úplně vyšumí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zavřeš oči při útoku.",
+          "roleplay": [
+            "Instinkt tě zradí.",
+            "Nic netrefíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Upadneš na koleno.",
+          "roleplay": [
+            "Poklekneš bez důvodu.",
+            "Vypadá to skoro jako prosba."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Otřeš se o nepřítele.",
+          "roleplay": [
+            "Kontakt je směšný.",
+            "Nikdo neutrpěl újmu."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš zbytečný výpad.",
+          "roleplay": [
+            "Vyletíš dopředu.",
+            "Úplně mineš cíl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zadrhneš se.",
+          "roleplay": [
+            "Pohyb se zasekne.",
+            "Vypadá to neobratně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamáváš zbraní.",
+          "roleplay": [
+            "Útok nemá směr.",
+            "Spíš máváš než útočíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš orientaci.",
+          "roleplay": [
+            "Nejsi si jistý směrem.",
+            "Útočíš jinam."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš otočku navíc.",
+          "roleplay": [
+            "Přehnaný pohyb.",
+            "Ztratíš cíl z očí."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš komický krok.",
+          "roleplay": [
+            "Pohyb vypadá divně.",
+            "Soupeř se pousměje."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zadrhne se ti noha.",
+          "roleplay": [
+            "Švih není dokončen.",
+            "Zůstaneš stát."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš falešný útok.",
+          "roleplay": [
+            "Útok nemá sílu.",
+            "Nic se nestane."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Miněš úplně.",
+          "roleplay": [
+            "Útok jde vedle.",
+            "Soupeř si ani nevšimne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zadrhne se ti dech.",
+          "roleplay": [
+            "Na chvíli se zastavíš.",
+            "Útok nedokončíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zakopneš o kámen.",
+          "roleplay": [
+            "Nevšimneš si překážky.",
+            "Skoro spadneš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zvedneš prach.",
+          "roleplay": [
+            "Útok víří vzduch.",
+            "Nezasáhne nic."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamotá se ti hlava.",
+          "roleplay": [
+            "Přehnaný pohyb.",
+            "Ztratíš fokus."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš styl.",
+          "roleplay": [
+            "Pohyb je kostrbatý.",
+            "Vypadá to špatně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš krok zpět.",
+          "roleplay": [
+            "Místo útoku couvneš.",
+            "Ztratíš příležitost."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Miněš obloukem.",
+          "roleplay": [
+            "Široký švih mine cíl.",
+            "Nic netrefíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš dokončit útok.",
+          "roleplay": [
+            "Zastavíš se v půlce.",
+            "Působí to divně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš příliš velký krok.",
+          "roleplay": [
+            "Přestřelíš vzdálenost.",
+            "Útok je mimo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš balanc.",
+          "roleplay": [
+            "Nakloníš se dopředu.",
+            "Sotva to ustojíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš komickou otočku.",
+          "roleplay": [
+            "Pohyb je přehnaný.",
+            "Vypadá to směšně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uhodíš do vzduchu vedle hlavy.",
+          "roleplay": [
+            "Blízko, ale mimo.",
+            "Soupeř se ani nehne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zasekneš se v pohybu.",
+          "roleplay": [
+            "Nejdeš dál.",
+            "Útok končí naprázdno."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rytmus.",
+          "roleplay": [
+            "Nejde to plynule.",
+            "Útok selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš divný krok.",
+          "roleplay": [
+            "Pozice je špatná.",
+            "Útok nemá efekt."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamáváš kolem sebe.",
+          "roleplay": [
+            "Útok nemá cíl.",
+            "Vypadá to chaoticky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Miněš o vlásek.",
+          "roleplay": [
+            "Bylo to těsné.",
+            "Ale nestačilo to."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš timing.",
+          "roleplay": [
+            "Reakce je pozdě.",
+            "Útok nevyjde."
+          ],
+          "weight": 1
+        }
+      ]
     },
     "Ranged": {
       "Lehký": [
@@ -2264,7 +2665,408 @@
           "weight": 1
         }
       ],
-      "Sranda": []
+      "Sranda": [
+        {
+          "effect": "Šíp vystřelí úplně mimo.",
+          "roleplay": [
+            "Tvůj výstřel letí kdoví kam.",
+            "Možná jsi právě trefil strom někde daleko."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tětiva ti uklouzne.",
+          "roleplay": [
+            "Výstřel je slabý a nepřesný.",
+            "Šíp sotva opustí luk."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Šíp spadne hned před tebe.",
+          "roleplay": [
+            "Napneš luk… a nic.",
+            "Šíp jen trapně spadne k nohám."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Míříš úplně špatně.",
+          "roleplay": [
+            "Zaměříš vedle cíle.",
+            "Výstřel mine o několik metrů."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zakopneš při střelbě.",
+          "roleplay": [
+            "Ztratíš stabilitu.",
+            "Výstřel jde úplně mimo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Uděláš dramatický výstřel.",
+          "roleplay": [
+            "Póza je perfektní.",
+            "Zásah nulový."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tětiva tě plácne do ruky.",
+          "roleplay": [
+            "Ucukneš bolestí.",
+            "Výstřel selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Šíp se otočí ve vzduchu.",
+          "roleplay": [
+            "Let je divný.",
+            "Trajektorie nedává smysl."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš pustit tětivu.",
+          "roleplay": [
+            "Držíš napnutý luk.",
+            "A nic se nestane."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vystřelíš příliš brzy.",
+          "roleplay": [
+            "Nedokončíš zamíření.",
+            "Šíp mine."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamotá se ti prst.",
+          "roleplay": [
+            "Výstřel není čistý.",
+            "Šíp letí bokem."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Šíp narazí do překážky.",
+          "roleplay": [
+            "Cesta není čistá.",
+            "Střela se zastaví."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Míříš na špatný cíl.",
+          "roleplay": [
+            "Zaměříš úplně jinam.",
+            "Výstřel je zbytečný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Upustíš šíp.",
+          "roleplay": [
+            "Vypadne ti z ruky.",
+            "Musíš ho zvednout."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamíříš na vlastní nohu.",
+          "roleplay": [
+            "Rychle přehodnotíš směr.",
+            "Výstřel radši ani neproběhne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Šíp se odrazí.",
+          "roleplay": [
+            "Zvláštní úhel.",
+            "Nic netrefíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vystřelíš moc vysoko.",
+          "roleplay": [
+            "Šíp mizí na obloze.",
+            "Trefíš možná ptáka."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš rovnováhu.",
+          "roleplay": [
+            "Nakloníš se.",
+            "Výstřel mine."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zavřeš oči.",
+          "roleplay": [
+            "Výstřel je naslepo.",
+            "Ale fakt naslepo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vystřelíš pozdě.",
+          "roleplay": [
+            "Cíl už není tam.",
+            "Šíp letí do prázdna."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Šíp ti sklouzne.",
+          "roleplay": [
+            "Není správně nasazen.",
+            "Výstřel selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Tětiva vydá divný zvuk.",
+          "roleplay": [
+            "Zaskočí tě to.",
+            "Výstřel pokazíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Míříš moc dlouho.",
+          "roleplay": [
+            "Přemýšlíš až moc.",
+            "A mineš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš na dech.",
+          "roleplay": [
+            "Rozhodí tě to.",
+            "Výstřel není přesný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vystřelíš slabě.",
+          "roleplay": [
+            "Šíp nemá sílu.",
+            "Nedolétne."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zadrhne se ti ruka.",
+          "roleplay": [
+            "Pohyb není plynulý.",
+            "Výstřel selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš grip.",
+          "roleplay": [
+            "Luk ti klouže.",
+            "Nic netrefíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vystřelíš do země.",
+          "roleplay": [
+            "Špatný úhel.",
+            "Šíp zapíchneš pod sebe."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamíříš vedle.",
+          "roleplay": [
+            "Není to ani blízko.",
+            "Cíl je v pohodě."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Šíp letí divně.",
+          "roleplay": [
+            "Trajektorie je křivá.",
+            "Nic netrefíš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zadrhneš pohyb.",
+          "roleplay": [
+            "Nedokončíš výstřel.",
+            "Vypadá to trapně."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vystřelíš jinam.",
+          "roleplay": [
+            "Špatný směr.",
+            "Úplně mimo."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Míříš na zem.",
+          "roleplay": [
+            "Nechceš, ale stane se.",
+            "Šíp skončí dole."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš koncentraci.",
+          "roleplay": [
+            "Myšlenky utečou.",
+            "A šíp taky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vystřelíš s otočkou.",
+          "roleplay": [
+            "Styl > přesnost.",
+            "A mineš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamíříš mimo cíl.",
+          "roleplay": [
+            "Pozdě si to uvědomíš.",
+            "Už je vystřeleno."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Šíp spadne.",
+          "roleplay": [
+            "Nemá energii.",
+            "Konec."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš natáhnout luk.",
+          "roleplay": [
+            "Vystřelíš bez síly.",
+            "Nic se nestane."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zadrhne se tětiva.",
+          "roleplay": [
+            "Pohyb není hladký.",
+            "Výstřel selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zamíříš za cíl.",
+          "roleplay": [
+            "Přestřelíš.",
+            "Netrefíš nic."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš postoj.",
+          "roleplay": [
+            "Nejsi stabilní.",
+            "Šíp mine."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vystřelíš příliš rychle.",
+          "roleplay": [
+            "Bez zaměření.",
+            "Mineš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Šíp se kýve.",
+          "roleplay": [
+            "Let není stabilní.",
+            "Zásah nulový."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zapomeneš dýchat.",
+          "roleplay": [
+            "Ztuhneš.",
+            "Výstřel je špatný."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Míříš jinam.",
+          "roleplay": [
+            "Cíl je jinde.",
+            "Šíp taky."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš timing.",
+          "roleplay": [
+            "Pozdě vystřelíš.",
+            "Mineš."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Zadrhneš loket.",
+          "roleplay": [
+            "Pohyb je omezený.",
+            "Výstřel selže."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Vystřelíš do prázdna.",
+          "roleplay": [
+            "Nikdo tam není.",
+            "Zbytečný šíp."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Ztratíš fokus.",
+          "roleplay": [
+            "Nesoustředíš se.",
+            "A je to vidět."
+          ],
+          "weight": 1
+        },
+        {
+          "effect": "Mineš dramaticky.",
+          "roleplay": [
+            "Vypadá to dobře.",
+            "Ale mineš."
+          ],
+          "weight": 1
+        }
+      ]
     }
   },
   "Obrana": {
@@ -3362,7 +4164,408 @@
         "weight": 1
       }
     ],
-    "Sranda": []
+    "Sranda": [
+      {
+        "effect": "Zakryješ si oči.",
+        "roleplay": [
+          "Instinkt selže.",
+          "Nevidíš útok."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Blokuješ špatným směrem.",
+        "roleplay": [
+          "Bráníš se vedle.",
+          "Útok jde jinudy."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uhneš… do útoku.",
+        "roleplay": [
+          "Špatný krok.",
+          "Trefíš se sám."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zakopneš při obraně.",
+        "roleplay": [
+          "Ztratíš stabilitu.",
+          "Obrana nefunguje."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zvedneš ruce pozdě.",
+        "roleplay": [
+          "Reakce je pomalá.",
+          "Útok projde."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uhneš příliš brzy.",
+        "roleplay": [
+          "Otevřeš se.",
+          "Útok tě dožene."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš balanc.",
+        "roleplay": [
+          "Nakloníš se.",
+          "Nemůžeš bránit."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zamrzneš.",
+        "roleplay": [
+          "Neuděláš nic.",
+          "Útok tě překvapí."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zakryješ špatnou stranu.",
+        "roleplay": [
+          "Nechráníš správně.",
+          "Zbytečná obrana."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uděláš otočku.",
+        "roleplay": [
+          "Ztratíš přehled.",
+          "Útok projde."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Upadneš.",
+        "roleplay": [
+          "Obrana končí.",
+          "Jsi na zemi."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zvedneš štít pozdě.",
+        "roleplay": [
+          "Reakce je opožděná.",
+          "Nic neblokuješ."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uhneš do strany… kde je útok.",
+        "roleplay": [
+          "Špatný směr.",
+          "Zásah jistý."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zamotá se ti noha.",
+        "roleplay": [
+          "Nemůžeš reagovat.",
+          "Útok tě zasáhne."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš fokus.",
+        "roleplay": [
+          "Nesleduješ útok.",
+          "Obrana selže."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zvedneš zbraň špatně.",
+        "roleplay": [
+          "Nechrání tě.",
+          "Zásah přichází."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uhneš pozdě.",
+        "roleplay": [
+          "Reakce je pomalá.",
+          "Nestihneš to."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zakryješ si obličej.",
+        "roleplay": [
+          "Zbytečně.",
+          "Zbytek těla odkrytý."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš rytmus.",
+        "roleplay": [
+          "Pohyby nesedí.",
+          "Obrana nefunguje."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zapomeneš reagovat.",
+        "roleplay": [
+          "Stojíš.",
+          "A koukáš."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uhneš moc.",
+        "roleplay": [
+          "Odkryješ se.",
+          "Útok projde."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zakopneš dozadu.",
+        "roleplay": [
+          "Pád.",
+          "Konec obrany."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zvedneš ruce špatně.",
+        "roleplay": [
+          "Nechráníš nic.",
+          "Útok projde."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš postoj.",
+        "roleplay": [
+          "Není stabilita.",
+          "Obrana selže."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uhneš špatným směrem.",
+        "roleplay": [
+          "Přesně do rány.",
+          "Smůla."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zasekneš se.",
+        "roleplay": [
+          "Pohyb nepokračuje.",
+          "Útok tě zasáhne."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zvedneš štít moc vysoko.",
+        "roleplay": [
+          "Spodek odkrytý.",
+          "Zásah."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zakryješ si ruce.",
+        "roleplay": [
+          "Tělo odkryté.",
+          "Útok projde."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš orientaci.",
+        "roleplay": [
+          "Nevíš odkud útok jde.",
+          "A neubráníš se."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zavřeš oči.",
+        "roleplay": [
+          "Nevidíš útok.",
+          "Smůla."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš rovnováhu.",
+        "roleplay": [
+          "Kolísáš.",
+          "Neubráníš se."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uhneš dopředu.",
+        "roleplay": [
+          "Špatná volba.",
+          "Jdeš do útoku."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zvedneš nohu.",
+        "roleplay": [
+          "Nevhodně.",
+          "Ztratíš balanc."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zamrzneš v panice.",
+        "roleplay": [
+          "Neuděláš nic.",
+          "Zásah."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zakryješ špatnou část.",
+        "roleplay": [
+          "Odkrytý zbytek.",
+          "Útok projde."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš grip.",
+        "roleplay": [
+          "Neudržíš obranu.",
+          "Zásah."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zakopneš o sebe.",
+        "roleplay": [
+          "Pád.",
+          "Obrana končí."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uhneš pomalu.",
+        "roleplay": [
+          "Nestihneš.",
+          "Zásah."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zvedneš ruce pozdě.",
+        "roleplay": [
+          "Příliš pozdě.",
+          "Útok projde."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš směr.",
+        "roleplay": [
+          "Nevíš kam jít.",
+          "Obrana selže."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zakryješ jen část.",
+        "roleplay": [
+          "Zbytek odkrytý.",
+          "Zásah."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš rytmus boje.",
+        "roleplay": [
+          "Pohyby nesedí.",
+          "Obrana padá."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zamotá se ti krok.",
+        "roleplay": [
+          "Neudržíš stabilitu.",
+          "Útok projde."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zvedneš štít vedle.",
+        "roleplay": [
+          "Mimo směr útoku.",
+          "Nechrání tě."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uhneš úplně mimo.",
+        "roleplay": [
+          "Nechráníš se.",
+          "Zásah."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš koncentraci.",
+        "roleplay": [
+          "Myšlenky jinde.",
+          "Obrana selže."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zakryješ si hlavu.",
+        "roleplay": [
+          "Tělo odkryté.",
+          "Zásah."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Zasekneš se v pohybu.",
+        "roleplay": [
+          "Nemůžeš pokračovat.",
+          "Útok projde."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Uhneš špatně.",
+        "roleplay": [
+          "Do rány.",
+          "Bolí to."
+        ],
+        "weight": 1
+      },
+      {
+        "effect": "Ztratíš stabilitu.",
+        "roleplay": [
+          "Kolísáš.",
+          "Neubráníš se."
+        ],
+        "weight": 1
+      }
+    ]
   },
   "Skill": {
     "Strength": {
