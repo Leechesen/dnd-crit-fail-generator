@@ -1,34 +1,88 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <title>KritFailer</title>
-  <style>
-    body { font-family: Arial; background: #fff; color: #000; }
-    button { padding: 10px; margin: 5px; }
-    .hidden { display: none; }
-  </style>
+<meta charset="UTF-8">
+<title>KritFailer</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #ffffff;
+  color: #111;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f3f3f3;
+}
+
+.title {
+  color: orange;
+  font-weight: bold;
+}
+
+.container {
+  padding: 12px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin: 4px;
+}
+
+.primary { background: orange; color: white; }
+.danger { background: #ef4444; color: white; }
+.playerBtn { color: white; }
+
+.hidden { display: none; }
+
+.room {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  background: #eee;
+  padding: 10px;
+  border-radius: 8px;
+}
+</style>
 </head>
 
 <body>
 
-<h2>🎲 KritFailer</h2>
+<header>
+  <div class="title">🎲 KritFailer</div>
+  <div id="topPlayers"></div>
+  <div id="topButtons"></div>
+</header>
 
-<div id="setup">
+<div id="setup" class="container">
   <input id="name" placeholder="Jméno">
   <input id="roomName" placeholder="Název místnosti">
-  <button id="createRoomBtn">Vytvořit místnost</button>
+  <button class="primary" id="createRoomBtn">Vytvořit místnost</button>
 
   <h3>Lobby</h3>
   <div id="roomsList"></div>
 </div>
 
-<div id="app" class="hidden">
-  <div id="topButtons"></div>
+<div id="app" class="container hidden">
   <h3 id="roomTitle"></h3>
 
   <div id="dmPanel" class="hidden">
-    <h3>DM</h3>
+    <h3>DM Panel</h3>
   </div>
 
   <div id="playerPanel" class="hidden">
@@ -58,6 +112,18 @@ let state = {
   isDM: false
 };
 
+const el = {
+  setup: document.getElementById("setup"),
+  app: document.getElementById("app"),
+  roomTitle: document.getElementById("roomTitle"),
+  playersList: document.getElementById("playersList"),
+  roomsList: document.getElementById("roomsList"),
+  dmPanel: document.getElementById("dmPanel"),
+  playerPanel: document.getElementById("playerPanel"),
+  topPlayers: document.getElementById("topPlayers"),
+  topButtons: document.getElementById("topButtons")
+};
+
 // ===== CREATE ROOM =====
 document.getElementById("createRoomBtn").onclick = async () => {
   const name = document.getElementById("name").value.trim();
@@ -73,6 +139,7 @@ document.getElementById("createRoomBtn").onclick = async () => {
   };
 
   await set(ref(db, "rooms/" + room), {
+    dm: state.id,
     players: {
       [state.id]: { name: name + " 👑" }
     }
@@ -97,50 +164,61 @@ window.joinRoom = async (room) => {
   start();
 };
 
-// ===== ROOM LIST =====
+// ===== LOBBY =====
 onValue(ref(db, "rooms"), snap => {
   const data = snap.val() || {};
   let html = "";
 
   Object.keys(data).forEach(r => {
-    html += `<button onclick="joinRoom('${r}')">${r}</button><br>`;
+    html += `
+      <div class="room">
+        <span>${r}</span>
+        <button onclick="joinRoom('${r}')">Join</button>
+      </div>`;
   });
 
-  document.getElementById("roomsList").innerHTML = html;
+  el.roomsList.innerHTML = html;
 });
 
 // ===== START =====
 function start() {
-  document.getElementById("setup").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
+  el.setup.classList.add("hidden");
+  el.app.classList.remove("hidden");
 
-  document.getElementById("roomTitle").innerText = "Room: " + state.room;
+  el.roomTitle.innerText = "Room: " + state.room;
 
-  document.getElementById("dmPanel").classList.toggle("hidden", !state.isDM);
-  document.getElementById("playerPanel").classList.toggle("hidden", state.isDM);
+  el.dmPanel.classList.toggle("hidden", !state.isDM);
+  el.playerPanel.classList.toggle("hidden", state.isDM);
 
-  document.getElementById("topButtons").innerHTML = `
-    <button onclick="logout()">🚪 Logout</button>
-    ${state.isDM ? `<button onclick="deleteRoom()">🗑️ Smazat room</button>` : ""}
+  el.topButtons.innerHTML = `
+    <button onclick="logout()">🚪</button>
+    ${state.isDM ? `<button class="danger" onclick="deleteRoom()">🗑️</button>` : ""}
   `;
 
   onDisconnect(ref(db, "rooms/" + state.room + "/players/" + state.id)).remove();
 
   onValue(ref(db, "rooms/" + state.room + "/players"), snap => {
-  const players = snap.val() || {};
+    const players = snap.val() || {};
 
-  let html = "";
+    el.topPlayers.innerText = Object.values(players).map(p => p.name).join(" | ");
 
-  Object.entries(players).forEach(([id, p]) => {
-    html += `<div>${p.name}</div>`;
+    let html = "";
+    let i = 1;
+
+    Object.values(players).forEach(p => {
+      html += `<button class="playerBtn" style="background:${getColor(i)}">${p.name}</button>`;
+      i++;
+    });
+
+    el.playersList.innerHTML = html;
   });
+}
 
-  document.getElementById("playersList").innerHTML = html;
-
-  // 🔥 EXTRA: zobraz i nahoře
-  document.getElementById("roomTitle").innerText =
-    "Room: " + state.room + " | " + Object.values(players).map(p => p.name).join(", ");
-});
+// ===== COLORS =====
+function getColor(i) {
+  const colors = ["#ef4444","#22c55e","#3b82f6","#eab308","#a855f7"];
+  return colors[(i-1)%colors.length];
+}
 
 // ===== STORAGE =====
 function save() {
@@ -156,7 +234,7 @@ window.logout = () => {
   location.reload();
 };
 
-// ===== DELETE ROOM =====
+// ===== DELETE =====
 window.deleteRoom = async () => {
   await remove(ref(db, "rooms/" + state.room));
   localStorage.clear();
