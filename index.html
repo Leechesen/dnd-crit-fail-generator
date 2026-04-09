@@ -1,14 +1,9 @@
+<!DOCTYPE html>
+<html lang="cs">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KritFailer</title>
-
-<!-- ── Favicon ── -->
-<link rel="icon"                type="image/png" href="crit.png">
-<link rel="icon" sizes="32x32"  type="image/png" href="crit.png">
-<link rel="icon" sizes="192x192" type="image/png" href="crit.png">
-<link rel="apple-touch-icon"    href="crit.png">
-
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -90,6 +85,7 @@
 
   .hidden { display: none !important; }
 
+  /* ── SETUP ── */
   #setup {
     max-width: 480px;
     margin: 50px auto;
@@ -146,6 +142,7 @@
   .divider::before { left: 0; }
   .divider::after  { right: 0; }
 
+  /* ── LOBBY ── */
   .room-item {
     display: flex;
     justify-content: space-between;
@@ -160,6 +157,7 @@
   .room-meta   { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
   .room-locked { font-size: 0.75rem; color: var(--accent2); margin-top: 2px; }
 
+  /* ── APP ── */
   #app { padding: 16px 20px; max-width: 1300px; margin: 0 auto; }
 
   #roomTitle {
@@ -171,6 +169,7 @@
     border-bottom: 1px solid var(--border);
   }
 
+  /* ── DM LAYOUT ── */
   .dm-layout {
     display: grid;
     grid-template-columns: 1fr 340px;
@@ -179,6 +178,7 @@
   }
   @media (max-width: 800px) { .dm-layout { grid-template-columns: 1fr; } }
 
+  /* ── CARDS ── */
   .card {
     background: var(--bg2);
     border-radius: 12px;
@@ -196,6 +196,7 @@
     border-bottom: 1px solid var(--border);
   }
 
+  /* ── SEVERITY ── */
   .sev-row { display: flex; gap: 7px; flex-wrap: wrap; }
   .sev-btn {
     flex: 1;
@@ -219,10 +220,12 @@
     box-shadow: 0 0 10px rgba(255,255,255,0.25);
   }
 
+  /* ── GENERATOR ── */
   .cat-block { margin-bottom: 14px; }
   .cat-title { font-weight: bold; color: var(--text); margin-bottom: 8px; font-size: 0.92rem; }
   .btn-group { display: flex; flex-wrap: wrap; gap: 5px; }
 
+  /* ── ATTRIBUTE LABELS ── */
   .attr-label {
     display: flex;
     align-items: center;
@@ -253,8 +256,10 @@
   .attr-charisma                         { color: #f472b6; }
   .attr-vnimania,    .attr-perception   { color: #fbbf24; }
 
+  /* ── RIGHT COLUMN ── */
   .right-col { display: flex; flex-direction: column; }
 
+  /* ── PLAYER CHIP ── */
   .player-chip {
     display: flex;
     align-items: center;
@@ -278,6 +283,7 @@
     white-space: nowrap;
   }
 
+  /* ── RESULT BOX ── */
   #resultBox {
     border: 1px solid var(--accent);
     border-radius: 12px;
@@ -294,6 +300,8 @@
     letter-spacing: 1px;
   }
   .res-body { padding: 12px; }
+
+  /* normal result rows */
   .res-effect {
     background: #200a0a;
     border-left: 3px solid var(--accent);
@@ -325,6 +333,7 @@
     letter-spacing: 0.5px;
   }
 
+  /* ── NO-RESULT / error state inside result box ── */
   .res-missing {
     display: flex;
     align-items: center;
@@ -346,6 +355,7 @@
     margin-top: 3px;
   }
 
+  /* ── TARGETS ── */
   .target-row {
     padding: 10px;
     background: var(--bg3);
@@ -356,6 +366,7 @@
   .target-name { font-weight: bold; font-size: 0.85rem; margin-bottom: 7px; }
   .target-btns { display: flex; gap: 5px; flex-wrap: wrap; }
 
+  /* ── PLAYER PANEL ── */
   .player-layout {
     display: grid;
     grid-template-columns: 1fr 280px;
@@ -401,6 +412,7 @@
     font-size: 0.9rem;
   }
 
+  /* ── NOTIFICATION ── */
   #notif {
     position: fixed;
     bottom: 18px;
@@ -420,6 +432,7 @@
   }
   #notif.show { opacity: 1; transform: translateY(0); }
 
+  /* ── LOADING ── */
   #loading { text-align: center; padding: 80px 20px; color: var(--muted); }
   .spin {
     display: inline-block;
@@ -442,4 +455,809 @@
   }
   #currentSev span { color: var(--accent2); font-weight: bold; }
 </style>
+<link rel="icon" type="image/png" href="crit.png">
 </head>
+<body>
+
+<header>
+  <div class="logo">🎲 KritFailer</div>
+  <div id="playersTop"></div>
+  <div id="topBtns"></div>
+</header>
+
+<div id="notif"></div>
+
+<div id="loading">
+  <div class="spin"></div>
+  <div>Načítám data…</div>
+</div>
+
+<!-- SETUP -->
+<div id="setup" class="hidden">
+  <h2>🎲 KritFailer</h2>
+  <div class="form-group">
+    <label>Tvoje jméno</label>
+    <input id="nameInput" placeholder="Zadej jméno…" maxlength="30">
+  </div>
+  <div class="setup-actions">
+    <button class="btn-primary" onclick="toggleCreate()">👑 Vytvořit místnost</button>
+  </div>
+  <div id="createRoomSection" class="hidden">
+    <div class="form-group" style="margin-top:10px;">
+      <label>Název místnosti</label>
+      <input id="roomInput" placeholder="Název místnosti…" maxlength="30">
+    </div>
+    <div class="form-group">
+      <label>Heslo <span style="color:var(--muted)">(volitelné)</span></label>
+      <input id="passwordInput" type="password" placeholder="Nechte prázdné pro veřejnou místnost…">
+      <div class="hint">Hráči budou muset zadat heslo při vstupu.</div>
+    </div>
+    <button class="btn-success" onclick="createRoom()"
+      style="width:100%;padding:10px;margin-top:4px;">✅ Vytvořit</button>
+  </div>
+  <div class="divider">nebo se připoj k existující místnosti</div>
+  <div id="lobbyList">
+    <div class="empty-note" style="text-align:center;padding:16px;">Žádné místnosti…</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <h2 id="roomTitle"></h2>
+
+  <!-- DM PANEL -->
+  <div id="dmPanel" class="hidden">
+    <div class="dm-layout">
+      <div id="dmLeft">
+        <div class="card">
+          <h3>🎯 Závažnost</h3>
+          <div class="sev-row" id="severityBtns"></div>
+          <div id="currentSev">Vybraná: <span id="sevLabel">—</span></div>
+        </div>
+        <div class="card">
+          <h3>🎲 Generátor</h3>
+          <div id="generator"></div>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="card">
+          <h3>👥 Hráči v místnosti</h3>
+          <div id="dmPlayerList"><div class="empty-note">Žádní hráči</div></div>
+        </div>
+
+        <!-- result box is always visible once opened; content swaps -->
+        <div id="resultBox" class="hidden">
+          <div class="res-header" id="resHeader">🎲 Výsledek</div>
+          <div class="res-body" id="resBody"></div>
+        </div>
+
+        <div class="card">
+          <h3>📨 Pošli hráči</h3>
+          <div id="targets"><div class="empty-note">Nejprve vygeneruj výsledek</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYER PANEL -->
+  <div id="playerPanel" class="hidden">
+    <div class="player-layout">
+      <div>
+        <div class="card">
+          <h3>📬 Tvůj výsledek</h3>
+          <div id="playerResult">
+            <div class="waiting-text">⏳ Čekám na výsledek od DM…</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3>👥 Hráči v místnosti</h3>
+          <div id="playerListPlayer"><div class="empty-note">Načítám…</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp }          from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getDatabase, ref, set, get,
+  onValue, remove, update, onDisconnect
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+// ── Firebase ──────────────────────────────────────────────────────────────────
+const fbApp = initializeApp({
+  apiKey:      "AIzaSyBsomething",
+  databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
+});
+const db = getDatabase(fbApp);
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let FAILS             = {};
+let ALL_SEVERITIES    = [];
+let state             = { room:"", name:"", id:"", isDM:false, severity:"", last:null };
+let playersCache      = {};
+let listenersAttached = false;
+
+const $   = id => document.getElementById(id);
+const dbr = (...p) => ref(db, p.join("/"));
+
+const LS_KEY        = "kf_state";
+const LS_KICKED_KEY = "kf_kicked";
+
+// ── Notification ──────────────────────────────────────────────────────────────
+let notifTimer = null;
+function notif(msg, color = "#e94560") {
+  const el = $("notif");
+  el.textContent     = msg;
+  el.style.background = color;
+  el.classList.add("show");
+  clearTimeout(notifTimer);
+  notifTimer = setTimeout(() => el.classList.remove("show"), 3500);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  SEVERITY
+// ════════════════════════════════════════════════════════════════════════════
+function discoverSeverities(data) {
+  const found = new Set();
+  function addFromSevMap(obj) {
+    if (!obj || typeof obj !== "object") return;
+    Object.keys(obj).forEach(k => { if (Array.isArray(obj[k])) found.add(k); });
+  }
+  const utok = data["Útok"];
+  if (utok && typeof utok === "object") Object.values(utok).forEach(addFromSevMap);
+  addFromSevMap(data["Obrana"]);
+  const skill = data["Skill"];
+  if (skill && typeof skill === "object")
+    Object.values(skill).forEach(attrs => {
+      if (attrs && typeof attrs === "object") Object.values(attrs).forEach(addFromSevMap);
+    });
+  const PREFERRED = ["Lehký","Střední","Těžký","Sranda"];
+  const ordered   = PREFERRED.filter(s => found.has(s));
+  found.forEach(s => { if (!ordered.includes(s)) ordered.push(s); });
+  return ordered;
+}
+
+const SEV_PALETTE = [
+  "#2a9d5c","#e9a020","#c0392b","#8e44ad",
+  "#2980b9","#16a085","#d35400","#7f8c8d",
+];
+const sevColor = i => SEV_PALETTE[i % SEV_PALETTE.length];
+
+function buildSeverityButtons() {
+  const container = $("severityBtns");
+  container.innerHTML = "";
+  ALL_SEVERITIES.forEach((sev, i) => {
+    const btn       = document.createElement("div");
+    btn.className   = "sev-btn" + (sev === state.severity ? " active" : "");
+    btn.textContent = sev;
+    btn.dataset.sev = sev;
+    btn.style.setProperty("--sev-bg", sevColor(i));
+    btn.onclick     = () => selectSeverity(sev);
+    container.appendChild(btn);
+  });
+  $("sevLabel").textContent = state.severity || "—";
+}
+
+function selectSeverity(sev) {
+  state.severity = sev;
+  $("sevLabel").textContent = sev;
+  document.querySelectorAll(".sev-btn").forEach(b =>
+    b.classList.toggle("active", b.dataset.sev === sev)
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  RESULT DISPLAY HELPERS
+// ════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Show a "combination does not exist" message inside the result box.
+ * No alert, no crash, layout preserved.
+ *
+ * @param {string} label  - human-readable action label (e.g. "Útok – Melee")
+ * @param {string} sev    - the severity that was requested
+ * @param {string[]} available - severity keys that DO exist for this action
+ */
+function showMissingResult(label, sev, available) {
+  const box = $("resultBox");
+  box.classList.remove("hidden");
+
+  $("resHeader").textContent = "⚠️ Kombinace neexistuje";
+
+  const avail = available.length
+    ? `Dostupné závažnosti pro „${label}": ${available.join(", ")}`
+    : `Pro „${label}" nejsou žádná data.`;
+
+  $("resBody").innerHTML = `
+    <div class="res-missing">
+      <div class="res-missing-icon">⚠️</div>
+      <div>
+        <div>Tato kombinace neexistuje</div>
+        <div class="res-missing-detail">
+          Závažnost „${sev}" není definována pro: <strong>${label}</strong>.<br>
+          ${avail}
+        </div>
+      </div>
+    </div>`;
+
+  // Clear last result so send buttons stay disabled
+  state.last = null;
+  renderTargets();
+}
+
+/**
+ * Show a successful roll result inside the result box.
+ */
+function showSuccessResult(res, label, sev) {
+  const box = $("resultBox");
+  box.classList.remove("hidden");
+
+  $("resHeader").textContent = `🎲 Výsledek — ${label} / ${sev}`;
+
+  $("resBody").innerHTML = `
+    <div class="res-effect">⚠️ ${res.effect ?? "(bez efektu)"}</div>
+    <div class="res-rp">
+      <div class="rp-label">🎭 Roleplay 1</div>
+      <div>${res.roleplay?.[0] ?? "(prázdné)"}</div>
+    </div>
+    <div class="res-rp">
+      <div class="rp-label">🎭 Roleplay 2</div>
+      <div>${res.roleplay?.[1] ?? "(prázdné)"}</div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  ROLL  ← strict: NO fallback, NO crash
+// ════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Attempt to generate a result for the currently selected severity.
+ *
+ * Rules (strict):
+ *  1. sevMap must be a non-null object.
+ *  2. sevMap[selectedSeverity] must exist AND be a non-empty array.
+ *  3. If either check fails → showMissingResult(), stop. No fallback.
+ *  4. Otherwise → weighted pick → showSuccessResult().
+ *
+ * @param {Object} sevMap  - object keyed by severity name, values are entry arrays
+ * @param {string} label   - human-readable label for display
+ */
+function roll(sevMap, label) {
+  const sev = state.severity;
+
+  // ── Guard 1: sevMap must be a valid object ────────────────────────────────
+  if (!sevMap || typeof sevMap !== "object" || Array.isArray(sevMap)) {
+    showMissingResult(label, sev, []);
+    console.warn(`[roll] sevMap invalid for "${label}"`);
+    return;
+  }
+
+  // Collect all keys that have a non-empty array (for informational display only)
+  const available = Object.entries(sevMap)
+    .filter(([, pool]) => Array.isArray(pool) && pool.length > 0)
+    .map(([key]) => key);
+
+  // ── Guard 2a: selected severity key must exist ────────────────────────────
+  if (!Object.prototype.hasOwnProperty.call(sevMap, sev)) {
+    showMissingResult(label, sev, available);
+    console.warn(`[roll] Severity "${sev}" not found in "${label}". Available:`, available);
+    return;
+  }
+
+  const pool = sevMap[sev];
+
+  // ── Guard 2b: pool must be a non-empty array ──────────────────────────────
+  if (!Array.isArray(pool) || pool.length === 0) {
+    showMissingResult(label, sev, available);
+    console.warn(`[roll] Pool for "${sev}" in "${label}" is empty or not an array`);
+    return;
+  }
+
+  // ── All guards passed → generate ─────────────────────────────────────────
+  const res = weighted(pool);
+
+  if (!res) {
+    // weighted() should never return null for a non-empty pool, but be safe
+    showMissingResult(label, sev, available);
+    console.error(`[roll] weighted() returned null for "${label}" / "${sev}"`);
+    return;
+  }
+
+  state.last = res;
+  showSuccessResult(res, label, sev);
+  renderTargets();
+  notif(`🎲 ${label} / ${sev}`, "#2a9d5c");
+
+  update(dbr("rooms", state.room), { lastActive: Date.now() }).catch(console.error);
+}
+
+// ── Weighted random pick ──────────────────────────────────────────────────────
+function weighted(pool) {
+  const total = pool.reduce((s, x) => s + (x.weight || 1), 0);
+  let r = Math.random() * total;
+  for (const item of pool) {
+    r -= (item.weight || 1);
+    if (r <= 0) return item;
+  }
+  return pool[pool.length - 1]; // safety fallback within a valid pool
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  ATTRIBUTE COLOUR CLASS
+// ════════════════════════════════════════════════════════════════════════════
+function attrColorClass(attrName) {
+  const n = attrName.toLowerCase()
+    .replace(/[íì]/g,"i").replace(/[áà]/g,"a").replace(/[éè]/g,"e")
+    .replace(/[ůú]/g,"u").replace(/ě/g,"e").replace(/š/g,"s")
+    .replace(/č/g,"c").replace(/ř/g,"r").replace(/ž/g,"z")
+    .replace(/ý/g,"y").replace(/ň/g,"n").replace(/ó/g,"o");
+  if (/sila|sil|strength|str/.test(n))         return "attr-sila";
+  if (/obratnost|obr|dexterity|dex/.test(n))   return "attr-obratnost";
+  if (/odolnost|odo|constitution|con/.test(n)) return "attr-odolnost";
+  if (/inteligence|int|intelligence/.test(n))  return "attr-inteligence";
+  if (/moudrost|mou|wisdom|wis/.test(n))        return "attr-moudrost";
+  if (/charisma|cha/.test(n))                   return "attr-charisma";
+  if (/vnimai|vnim|percep/.test(n))             return "attr-vnimania";
+  return "";
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  GENERATOR UI
+// ════════════════════════════════════════════════════════════════════════════
+function buildGenerator() {
+  const gen = $("generator");
+  gen.innerHTML = "";
+
+  // ⚔️ Útok
+  const atkData = FAILS["Útok"];
+  if (atkData && typeof atkData === "object" && Object.keys(atkData).length) {
+    const block = mkBlock("⚔️ Útok");
+    const grp   = mkGroup();
+    Object.entries(atkData).forEach(([type, sevMap]) => {
+      if (!sevMap || typeof sevMap !== "object") return;
+      grp.appendChild(mkGenBtn(
+        type,
+        `Dostupné: ${Object.keys(sevMap).join(", ")}`,
+        () => roll(sevMap, `Útok – ${type}`)
+      ));
+    });
+    block.appendChild(grp);
+    gen.appendChild(block);
+  }
+
+  // 🛡️ Obrana
+  const defData = FAILS["Obrana"];
+  if (defData && typeof defData === "object" && Object.keys(defData).length) {
+    const block = mkBlock("🛡️ Obrana");
+    const grp   = mkGroup();
+    grp.appendChild(mkGenBtn(
+      "Obrana",
+      `Dostupné: ${Object.keys(defData).join(", ")}`,
+      () => roll(defData, "Obrana")
+    ));
+    block.appendChild(grp);
+    gen.appendChild(block);
+  }
+
+  // 🎯 Skill
+  const skillData = FAILS["Skill"];
+  if (skillData && typeof skillData === "object" && Object.keys(skillData).length) {
+    const block = mkBlock("🎯 Skilly");
+    Object.entries(skillData).forEach(([attr, skills]) => {
+      if (!skills || typeof skills !== "object") return;
+      const lbl       = document.createElement("div");
+      lbl.className   = ["attr-label", attrColorClass(attr)].filter(Boolean).join(" ");
+      lbl.textContent = attr;
+      block.appendChild(lbl);
+      const grp = mkGroup();
+      Object.entries(skills).forEach(([skillName, sevMap]) => {
+        if (!sevMap || typeof sevMap !== "object") return;
+        grp.appendChild(mkGenBtn(
+          skillName,
+          `Dostupné: ${Object.keys(sevMap).join(", ")}`,
+          () => roll(sevMap, `${attr} – ${skillName}`)
+        ));
+      });
+      block.appendChild(grp);
+    });
+    gen.appendChild(block);
+  }
+}
+
+function mkBlock(title) {
+  const d = document.createElement("div");
+  d.className = "cat-block";
+  const t = document.createElement("div");
+  t.className = "cat-title"; t.textContent = title;
+  d.appendChild(t);
+  return d;
+}
+function mkGroup() {
+  const d = document.createElement("div");
+  d.className = "btn-group";
+  return d;
+}
+function mkGenBtn(text, title, handler) {
+  const b = document.createElement("button");
+  b.className = "btn-secondary btn-sm";
+  b.textContent = text; b.title = title; b.onclick = handler;
+  return b;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  LOAD JSON → INIT
+// ════════════════════════════════════════════════════════════════════════════
+fetch("crit_fails.json")
+  .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+  .then(data => {
+    FAILS          = data;
+    ALL_SEVERITIES = discoverSeverities(data);
+    if (!ALL_SEVERITIES.length) throw new Error("Žádné severity nenalezeny");
+    state.severity = ALL_SEVERITIES[0];
+    console.log("[KritFailer] JSON loaded. Severities:", ALL_SEVERITIES);
+    $("loading").classList.add("hidden");
+    init();
+  })
+  .catch(err => {
+    console.error("[KritFailer] JSON load error:", err);
+    $("loading").innerHTML =
+      `<div style="color:#e94560">❌ Nelze načíst crit_fails.json<br><small>${err.message}</small></div>`;
+  });
+
+// ════════════════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════════════════
+function init() {
+  console.log("[KritFailer] init()");
+
+  if (localStorage.getItem(LS_KICKED_KEY)) {
+    localStorage.removeItem(LS_KICKED_KEY);
+    localStorage.removeItem(LS_KEY);
+    showSetup();
+    notif("❌ Byl/a jsi vyhozen/a z místnosti.");
+    return;
+  }
+
+  const saved = localStorage.getItem(LS_KEY);
+  if (!saved) { showSetup(); return; }
+
+  let s;
+  try { s = JSON.parse(saved); }
+  catch (e) { localStorage.removeItem(LS_KEY); showSetup(); return; }
+
+  get(dbr("rooms", s.room))
+    .then(snap => {
+      if (!snap.exists()) {
+        localStorage.removeItem(LS_KEY);
+        showSetup();
+        notif("⚠️ Místnost již neexistuje.");
+        return;
+      }
+      state = { ...s, last: null };
+      if (!ALL_SEVERITIES.includes(state.severity)) state.severity = ALL_SEVERITIES[0];
+      set(dbr("rooms", state.room, "players", state.id), { name: state.name, isDM: state.isDM })
+        .then(() => { setupOnDisconnect(); startApp(); })
+        .catch(err => { console.error(err); notif("❌ Chyba obnovení spojení."); showSetup(); });
+    })
+    .catch(() => showSetup());
+}
+
+function showSetup() {
+  $("app").classList.add("hidden");
+  $("dmPanel").classList.add("hidden");
+  $("playerPanel").classList.add("hidden");
+  listenersAttached = false;
+  $("setup").classList.remove("hidden");
+  listenLobby();
+}
+
+function listenLobby() {
+  onValue(dbr("rooms"), snap => {
+    const data = snap.val() || {};
+    const keys = Object.keys(data);
+    const list = $("lobbyList");
+    if (!keys.length) {
+      list.innerHTML = `<div class="empty-note" style="text-align:center;padding:16px;">Žádné místnosti…</div>`;
+      return;
+    }
+    list.innerHTML = keys.map(r => {
+      const cnt    = Object.keys(data[r].players || {}).length;
+      const locked = !!(data[r].password);
+      return `
+        <div class="room-item">
+          <div>
+            <div class="room-name">🚪 ${r}</div>
+            <div class="room-meta">👥 ${cnt} hráč${cnt===1?'':cnt<5?'i':'ů'}</div>
+            ${locked ? `<div class="room-locked">🔒 Vyžaduje heslo</div>` : ""}
+          </div>
+          <button class="btn-secondary btn-sm" onclick="window._joinRoom('${r}')">Připojit</button>
+        </div>`;
+    }).join("");
+  });
+}
+
+window.toggleCreate = () => $("createRoomSection").classList.toggle("hidden");
+
+// ════════════════════════════════════════════════════════════════════════════
+//  CREATE / JOIN
+// ════════════════════════════════════════════════════════════════════════════
+window.createRoom = async () => {
+  const name     = $("nameInput").value.trim();
+  const room     = $("roomInput").value.trim();
+  const password = $("passwordInput").value.trim();
+  if (!name) { notif("❌ Zadej jméno!"); return; }
+  if (!room) { notif("❌ Zadej název místnosti!"); return; }
+  try {
+    const existing = await get(dbr("rooms", room));
+    if (existing.exists()) { notif("❌ Místnost s tímto názvem již existuje!"); return; }
+  } catch (e) { notif("❌ Chyba Firebase. Zkus to znovu."); return; }
+
+  const id = "DM_" + Date.now();
+  state = { room, name: name + " 👑", id, isDM: true, severity: ALL_SEVERITIES[0], last: null };
+
+  const roomData = {
+    players:    { [id]: { name: state.name, isDM: true } },
+    createdAt:  Date.now(),
+    lastActive: Date.now(),
+  };
+  if (password) roomData.password = password;
+
+  try {
+    await set(dbr("rooms", room), roomData);
+  } catch (e) { notif("❌ Nepodařilo se vytvořit místnost: " + e.message); return; }
+
+  saveState(); setupOnDisconnect(); startApp();
+};
+
+window._joinRoom = async (room) => {
+  const name = $("nameInput").value.trim();
+  if (!name) { notif("❌ Zadej jméno!"); return; }
+
+  let snap;
+  try { snap = await get(dbr("rooms", room)); }
+  catch (e) { notif("❌ Chyba Firebase. Zkus to znovu."); return; }
+  if (!snap.exists()) { notif("❌ Místnost neexistuje."); return; }
+
+  const roomData = snap.val();
+  if (roomData.password) {
+    const entered = window.prompt(`🔒 Místnost „${room}" vyžaduje heslo:`);
+    if (entered === null) return;
+    if (entered.trim() !== roomData.password) { notif("❌ Nesprávné heslo!"); return; }
+  }
+
+  const id = "P_" + Date.now();
+  state = { room, name, id, isDM: false, severity: ALL_SEVERITIES[0], last: null };
+
+  try {
+    await set(dbr("rooms", room, "players", id), { name, isDM: false });
+    await update(dbr("rooms", room), { lastActive: Date.now() });
+  } catch (e) { notif("❌ Nepodařilo se připojit: " + e.message); return; }
+
+  saveState(); setupOnDisconnect(); startApp();
+};
+
+function saveState() {
+  localStorage.setItem(LS_KEY, JSON.stringify({ ...state, last: null }));
+}
+function setupOnDisconnect() {
+  onDisconnect(dbr("rooms", state.room, "players", state.id)).remove();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  START APP
+// ════════════════════════════════════════════════════════════════════════════
+function startApp() {
+  console.log("[KritFailer] startApp() isDM:", state.isDM);
+  $("setup").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  $("roomTitle").textContent = (state.isDM ? "👑" : "🧑") + " Místnost: " + state.room;
+
+  $("topBtns").innerHTML = `
+    <button class="btn-secondary btn-sm" onclick="window._logout()">🚪 Odejít</button>
+    ${state.isDM ? `<button class="btn-danger btn-sm" onclick="window._deleteRoom()">🗑️ Smazat místnost</button>` : ""}
+  `;
+
+  if (state.isDM) {
+    $("dmPanel").classList.remove("hidden");
+    $("playerPanel").classList.add("hidden");
+    buildSeverityButtons();
+    buildGenerator();
+  } else {
+    $("playerPanel").classList.remove("hidden");
+    $("dmPanel").classList.add("hidden");
+  }
+
+  if (!listenersAttached) {
+    listenersAttached = true;
+    listenPlayers();
+    watchRoomDeleted();
+    if (!state.isDM) listenMessage();
+    if (state.isDM)  startAutoDelete();
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  PLAYERS
+// ════════════════════════════════════════════════════════════════════════════
+function listenPlayers() {
+  onValue(dbr("rooms", state.room, "players"), snap => {
+    const players = snap.val() || {};
+    playersCache  = players;
+
+    if (!state.isDM && !players[state.id]) { handleKicked(); return; }
+
+    $("playersTop").textContent = Object.values(players).map(p => p.name).join("  |  ");
+
+    if (state.isDM) { renderDMPlayerList(players); renderTargets(); }
+    else              renderPlayerList(players);
+  });
+}
+
+function renderDMPlayerList(players) {
+  const el      = $("dmPlayerList");
+  const entries = Object.entries(players);
+  if (!entries.length) { el.innerHTML = `<div class="empty-note">Žádní hráči</div>`; return; }
+  el.innerHTML = "";
+  entries.forEach(([id, p]) => {
+    const chip = document.createElement("div");
+    chip.className = "player-chip";
+    const nameSpan = document.createElement("span");
+    nameSpan.className   = "player-chip-name";
+    nameSpan.textContent = (p.isDM ? "👑 " : "🧑 ") + p.name;
+    chip.appendChild(nameSpan);
+    if (!p.isDM && id !== state.id) {
+      const kb = document.createElement("button");
+      kb.className   = "btn-kick btn-sm";
+      kb.textContent = "❌ Kick";
+      kb.onclick     = () => kickPlayer(id, p.name);
+      chip.appendChild(kb);
+    }
+    el.appendChild(chip);
+  });
+}
+
+function renderPlayerList(players) {
+  const entries = Object.entries(players);
+  $("playerListPlayer").innerHTML = entries.length
+    ? entries.map(([id, p]) => `
+        <div class="player-chip">
+          <span class="player-chip-name">
+            ${p.isDM ? "👑" : "🧑"} ${p.name}
+            ${id === state.id
+              ? '<span style="color:var(--accent2);font-size:0.72rem;margin-left:4px;">(ty)</span>'
+              : ""}
+          </span>
+        </div>`).join("")
+    : `<div class="empty-note">Žádní hráči</div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  KICK
+// ════════════════════════════════════════════════════════════════════════════
+async function kickPlayer(playerId, playerName) {
+  if (!confirm(`Opravdu vyhodit hráče „${playerName}"?`)) return;
+  try {
+    await set(dbr("rooms", state.room, "msg", playerId), {
+      kicked: true, effect: "Byl/a jsi vyhozen/a z místnosti.", roleplay: "", ts: Date.now()
+    });
+    await remove(dbr("rooms", state.room, "players", playerId));
+    notif(`✅ Hráč „${playerName}" byl vyhozen.`, "#2a9d5c");
+  } catch (e) { notif("❌ Kick selhal: " + e.message); }
+}
+
+function handleKicked() {
+  localStorage.setItem(LS_KICKED_KEY, "1");
+  localStorage.removeItem(LS_KEY);
+  const box = $("playerResult");
+  if (box) box.innerHTML = `
+    <div class="msg-kicked">
+      ❌ Byl/a jsi vyhozen/a z místnosti.<br><br>
+      <button class="btn-primary" onclick="location.reload()">Zpět do lobby</button>
+    </div>`;
+  notif("❌ Byl/a jsi vyhozen/a z místnosti.", "#c0392b");
+  setTimeout(() => location.reload(), 4000);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  SEND
+// ════════════════════════════════════════════════════════════════════════════
+function renderTargets() {
+  const el        = $("targets");
+  const hasResult = !!state.last;
+  const others    = Object.entries(playersCache).filter(([id, p]) => id !== state.id && !p.isDM);
+  if (!others.length) {
+    el.innerHTML = `<div class="empty-note">Žádní hráči k dispozici</div>`;
+    return;
+  }
+  el.innerHTML = others.map(([id, p]) => `
+    <div class="target-row">
+      <div class="target-name">🧑 ${p.name}</div>
+      <div class="target-btns">
+        <button class="btn-success btn-sm" ${!hasResult?"disabled":""} onclick="window._send('${id}','r1')">📜 Roleplay 1</button>
+        <button class="btn-info    btn-sm" ${!hasResult?"disabled":""} onclick="window._send('${id}','r2')">📜 Roleplay 2</button>
+        <button class="btn-warning btn-sm" ${!hasResult?"disabled":""} onclick="window._send('${id}','all')">📦 Oba</button>
+      </div>
+    </div>`).join("");
+}
+
+window._send = (playerId, type) => {
+  if (!state.last) { notif("❌ Nejprve vygeneruj výsledek!"); return; }
+  const { effect, roleplay } = state.last;
+  const rp0    = roleplay?.[0] ?? "";
+  const rp1    = roleplay?.[1] ?? "";
+  const rpText = type==="r1" ? rp0 : type==="r2" ? rp1 : [rp0,rp1].filter(Boolean).join("\n\n");
+  set(dbr("rooms", state.room, "msg", playerId), { effect, roleplay: rpText, ts: Date.now() })
+    .then(()  => notif("✅ Odesláno!", "#2a9d5c"))
+    .catch(e  => { console.error(e); notif("❌ Chyba odesílání"); });
+};
+
+// ════════════════════════════════════════════════════════════════════════════
+//  MESSAGE LISTENER (player)
+// ════════════════════════════════════════════════════════════════════════════
+function listenMessage() {
+  onValue(dbr("rooms", state.room, "msg", state.id), snap => {
+    const data = snap.val();
+    const box  = $("playerResult");
+    if (!data) { box.innerHTML = `<div class="waiting-text">⏳ Čekám na výsledek od DM…</div>`; return; }
+    if (data.kicked) { handleKicked(); return; }
+    box.innerHTML = `
+      <div class="msg-effect">⚠️ ${data.effect}</div>
+      ${data.roleplay
+        ? `<div class="msg-rp">🎭 ${data.roleplay.replace(/\n/g,"<br>")}</div>`
+        : ""}`;
+    notif("📬 Nový výsledek od DM!");
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  WATCH ROOM DELETED
+// ════════════════════════════════════════════════════════════════════════════
+function watchRoomDeleted() {
+  let initialLoad = true;
+  onValue(dbr("rooms", state.room), snap => {
+    if (initialLoad) { initialLoad = false; return; }
+    if (!snap.exists()) {
+      localStorage.removeItem(LS_KEY);
+      notif("⚠️ Místnost byla smazána.");
+      setTimeout(() => location.reload(), 2500);
+    }
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  AUTO DELETE
+// ════════════════════════════════════════════════════════════════════════════
+function startAutoDelete() {
+  setInterval(() => {
+    get(dbr("rooms", state.room)).then(snap => {
+      if (!snap.exists()) return;
+      const d   = snap.val();
+      const cnt = Object.keys(d.players || {}).length;
+      if (cnt === 0 && (Date.now() - (d.lastActive || 0)) > 5 * 60 * 1000)
+        remove(dbr("rooms", state.room));
+    }).catch(console.error);
+  }, 60_000);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  LOGOUT / DELETE
+// ════════════════════════════════════════════════════════════════════════════
+window._logout = async () => {
+  await remove(dbr("rooms", state.room, "players", state.id)).catch(console.error);
+  localStorage.removeItem(LS_KEY);
+  location.reload();
+};
+window._deleteRoom = async () => {
+  if (!confirm("Opravdu smazat místnost? Tím odpojíš všechny hráče.")) return;
+  await remove(dbr("rooms", state.room)).catch(console.error);
+  localStorage.removeItem(LS_KEY);
+  location.reload();
+};
+</script>
+</body>
+</html>
