@@ -1076,7 +1076,11 @@ function startApp() {
 
   $("topBtns").innerHTML = `
     <button class="btn-secondary btn-sm" onclick="window._logout()">🚪 Odejít</button>
-    ${state.isDM ? `<button class="btn-danger btn-sm" onclick="window._deleteRoom()">🗑️ Smazat místnost</button>` : ""}
+    ${state.isDM ? `
+      <button class="btn-purple btn-sm" onclick="window._copyOverlay()">🎥 Overlay</button>
+      <button class="btn-secondary btn-sm" onclick="window._previewOverlay()">👁️ Preview</button>
+      <button class="btn-danger btn-sm" onclick="window._deleteRoom()">🗑️ Smazat místnost</button>
+    ` : ""}
   `;
 
   if (state.isDM) {
@@ -1277,6 +1281,24 @@ window._deleteRoom = async () => {
   await remove(dbr("rooms", state.room)).catch(console.error);
   localStorage.removeItem(LS_KEY);
   location.reload();
+};
+// ════════════════════════════════════════════════════════════════════════════
+//  OVERLAY
+// ════════════════════════════════════════════════════════════════════════════
+window._copyOverlay = () => {
+  const url = `${location.origin}/overlay.html?room=${state.room}`;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url)
+      .then(() => notif("📋 Overlay link zkopírován!", "#8e44ad"))
+      .catch(() => prompt("📋 Zkopíruj overlay link:", url));
+  } else {
+    prompt("📋 Zkopíruj overlay link:", url);
+  }
+};
+
+window._previewOverlay = () => {
+  const url = `${location.origin}/overlay.html?room=${state.room}`;
+  window.open(url, "_blank");
 };
 </script>
 </body>
