@@ -12,198 +12,225 @@
     height: 100%;
     background: transparent;
     overflow: hidden;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Segoe UI', Georgia, serif;
   }
 
-  #overlay-wrapper {
+  #no-room {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 1.1rem;
+    font-style: italic;
+    background: transparent;
+  }
+
+  #overlay-wrap {
     position: fixed;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
-    width: 680px;
-    max-width: 95vw;
+    width: min(720px, 92vw);
+    opacity: 0;
     pointer-events: none;
-    z-index: 9999;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform-origin: bottom center;
   }
 
-  #overlay-card {
-    background: rgba(22, 33, 62, 0.97);
-    border: 2px solid #e94560;
-    border-radius: 18px;
-    box-shadow:
-      0 8px 40px rgba(0, 0, 0, 0.85),
-      0 0 0 1px rgba(233, 69, 96, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    padding: 0;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(30px) scale(0.97);
-    transition:
-      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  #overlay-card.visible {
+  #overlay-wrap.visible {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateX(-50%) scaleY(1);
   }
 
-  #overlay-card.hiding {
+  #overlay-wrap.hidden-out {
     opacity: 0;
-    transform: translateY(20px) scale(0.97);
-    transition:
-      opacity 0.6s ease-in,
-      transform 0.6s ease-in;
+    transform: translateX(-50%) scaleY(0.97);
   }
 
-  .ov-header {
-    background: linear-gradient(135deg, #e94560 0%, #c0392b 100%);
-    padding: 10px 18px;
+  /* ── PANEL ── */
+  .panel {
+    position: relative;
+    background: linear-gradient(160deg, #0d0d18 0%, #12101e 60%, #0a0a14 100%);
+    border: 2px solid #444466;
+    border-radius: 6px;
+    padding: 20px 26px 18px;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04) inset,
+      0 8px 40px rgba(0,0,0,0.85),
+      0 2px 8px rgba(0,0,0,0.6);
+    overflow: hidden;
+  }
+
+  /* corner ornaments */
+  .panel::before,
+  .panel::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-color: currentColor;
+    border-style: solid;
+    opacity: 0.35;
+  }
+  .panel::before { top: 6px;    left: 6px;    border-width: 2px 0 0 2px; }
+  .panel::after  { bottom: 6px; right: 6px;   border-width: 0 2px 2px 0; }
+
+  /* severity colour theming */
+  .panel.sev-lehky  { border-color: #888899; --sev-color: #aaaacc; --sev-glow: rgba(170,170,200,0.18); }
+  .panel.sev-stredni{ border-color: #c07010; --sev-color: #e9a020; --sev-glow: rgba(233,160,32,0.22); }
+  .panel.sev-tezky  { border-color: #9b1e1e; --sev-color: #e94560; --sev-glow: rgba(233,69,96,0.25); }
+  .panel.sev-other  { border-color: #4a4a6a; --sev-color: #8888bb; --sev-glow: rgba(136,136,187,0.15); }
+
+  .panel.sev-lehky::before,
+  .panel.sev-lehky::after  { color: #aaaacc; }
+  .panel.sev-stredni::before,
+  .panel.sev-stredni::after{ color: #e9a020; }
+  .panel.sev-tezky::before,
+  .panel.sev-tezky::after  { color: #e94560; }
+  .panel.sev-other::before,
+  .panel.sev-other::after  { color: #8888bb; }
+
+  /* inner glow strip */
+  .panel-glow {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--sev-color, #888899);
+    opacity: 0.75;
+    border-radius: 6px 6px 0 0;
+    box-shadow: 0 0 14px 3px var(--sev-glow, rgba(136,136,153,0.2));
+  }
+
+  /* ── TITLE ── */
+  .title-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    gap: 12px;
+    margin-bottom: 12px;
   }
 
-  .ov-header-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .title-icon {
+    font-size: 1.7rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 6px var(--sev-color, #aaaacc));
   }
 
-  .ov-icon {
-    font-size: 1.3rem;
+  .title-text {
+    font-size: 1.75rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--sev-color, #ccccdd);
+    text-shadow:
+      0 0 12px var(--sev-glow, rgba(200,200,220,0.4)),
+      0 2px 4px rgba(0,0,0,0.8);
     line-height: 1;
   }
 
-  .ov-title {
-    font-size: 0.78rem;
+  .severity-badge {
+    margin-left: auto;
+    font-size: 0.7rem;
     font-weight: 700;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: #fff;
-    opacity: 0.92;
-  }
-
-  .ov-player {
-    font-size: 1rem;
-    font-weight: 800;
-    color: #fff;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    color: var(--sev-color, #aaaacc);
+    border: 1px solid var(--sev-color, #aaaacc);
+    border-radius: 3px;
+    padding: 3px 8px;
+    opacity: 0.8;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 220px;
   }
 
-  .ov-body {
-    padding: 14px 18px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sev-color, #666688) 30%, var(--sev-color, #666688) 70%, transparent);
+    opacity: 0.35;
+    margin-bottom: 13px;
   }
 
-  .ov-effect {
-    background: rgba(32, 10, 10, 0.8);
-    border-left: 4px solid #e94560;
-    border-radius: 0 10px 10px 0;
-    padding: 10px 14px;
-    color: #ff9090;
-    font-weight: 700;
-    font-size: 1rem;
-    line-height: 1.45;
-  }
-
-  .ov-effect-label {
-    font-size: 0.68rem;
-    color: #e94560;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-    opacity: 0.85;
-  }
-
-  .ov-rp {
-    background: rgba(10, 24, 10, 0.8);
-    border-left: 4px solid #2a9d5c;
-    border-radius: 0 10px 10px 0;
-    padding: 10px 14px;
-    color: #90e890;
-    font-size: 0.9rem;
+  /* ── EFFECT ── */
+  .effect-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #f0e8d8;
     line-height: 1.5;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+    margin-bottom: 12px;
+    padding-left: 10px;
+    border-left: 2px solid var(--sev-color, #888899);
   }
 
-  .ov-rp-label {
-    font-size: 0.68rem;
-    color: #2a9d5c;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-    opacity: 0.85;
-  }
-
-  .ov-footer {
-    background: rgba(15, 52, 96, 0.6);
-    padding: 6px 18px;
+  /* ── PLAYER ── */
+  .player-row {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 6px;
+    gap: 7px;
+    margin-top: 4px;
   }
 
-  .ov-timer-bar-wrap {
-    flex: 1;
+  .player-label {
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(180,170,200,0.5);
+    font-weight: 600;
+  }
+
+  .player-name {
+    font-size: 0.82rem;
+    color: rgba(220,210,240,0.75);
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  /* ── TIMER BAR ── */
+  .timer-bar-wrap {
+    margin-top: 13px;
     height: 3px;
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.06);
     border-radius: 2px;
     overflow: hidden;
   }
 
-  .ov-timer-bar {
+  .timer-bar {
     height: 100%;
     width: 100%;
-    background: linear-gradient(90deg, #e94560, #e9a020);
+    background: var(--sev-color, #888899);
+    opacity: 0.5;
     border-radius: 2px;
     transform-origin: left center;
-    transition: transform linear;
+    transition: none;
   }
 
-  .ov-footer-text {
-    font-size: 0.68rem;
-    color: rgba(255,255,255,0.3);
-    white-space: nowrap;
-    letter-spacing: 0.5px;
+  .timer-bar.running {
+    transition: transform linear;
+    transform: scaleX(0);
   }
 </style>
 </head>
 <body>
 
-<div id="overlay-wrapper">
-  <div id="overlay-card">
-    <div class="ov-header">
-      <div class="ov-header-left">
-        <span class="ov-icon">🎲</span>
-        <span class="ov-title">Kritický neúspěch</span>
-      </div>
-      <span class="ov-player" id="ov-player"></span>
+<div id="no-room" style="display:none;">No room selected</div>
+
+<div id="overlay-wrap" aria-live="polite">
+  <div class="panel" id="panel">
+    <div class="panel-glow" id="panelGlow"></div>
+    <div class="title-row">
+      <div class="title-icon" id="titleIcon">💀</div>
+      <div class="title-text"  id="titleText">CRIT FAIL</div>
+      <div class="severity-badge" id="sevBadge"></div>
     </div>
-    <div class="ov-body">
-      <div class="ov-effect">
-        <div class="ov-effect-label">⚠️ Efekt</div>
-        <div id="ov-effect"></div>
-      </div>
-      <div class="ov-rp" id="ov-rp-wrap">
-        <div class="ov-rp-label">🎭 Roleplay</div>
-        <div id="ov-roleplay"></div>
-      </div>
+    <div class="divider"></div>
+    <div class="effect-text" id="effectText"></div>
+    <div class="player-row">
+      <span class="player-label">Hráč:</span>
+      <span class="player-name" id="playerName"></span>
     </div>
-    <div class="ov-footer">
-      <div class="ov-timer-bar-wrap">
-        <div class="ov-timer-bar" id="ov-timer-bar"></div>
-      </div>
-      <span class="ov-footer-text">KritFailer</span>
+    <div class="timer-bar-wrap">
+      <div class="timer-bar" id="timerBar"></div>
     </div>
   </div>
 </div>
@@ -212,81 +239,115 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const fbApp = initializeApp({
+// ── Firebase config ───────────────────────────────────────────────────────────
+// Replace with your actual Firebase project config
+const firebaseConfig = {
   apiKey:      "AIzaSyBsomething",
   databaseURL: "https://ktit-fail-generator-default-rtdb.europe-west1.firebasedatabase.app"
-});
-const db = getDatabase(fbApp);
+};
 
-const DISPLAY_DURATION = 60_000;
+// ── Constants ─────────────────────────────────────────────────────────────────
+const DISPLAY_MS  = 60_000;   // how long overlay stays visible
+const FADE_MS     = 600;      // must match CSS transition duration
 
-const card       = document.getElementById("overlay-card");
-const elPlayer   = document.getElementById("ov-player");
-const elEffect   = document.getElementById("ov-effect");
-const elRoleplay = document.getElementById("ov-roleplay");
-const elRpWrap   = document.getElementById("ov-rp-wrap");
-const elTimerBar = document.getElementById("ov-timer-bar");
+// ── DOM refs ──────────────────────────────────────────────────────────────────
+const wrap       = document.getElementById("overlay-wrap");
+const panel      = document.getElementById("panel");
+const titleIcon  = document.getElementById("titleIcon");
+const titleText  = document.getElementById("titleText");
+const sevBadge   = document.getElementById("sevBadge");
+const effectText = document.getElementById("effectText");
+const playerName = document.getElementById("playerName");
+const timerBar   = document.getElementById("timerBar");
+const noRoom     = document.getElementById("no-room");
 
-let hideTimer      = null;
-let lastTimestamp  = null;
-let animationFrame = null;
+// ── Room from URL ─────────────────────────────────────────────────────────────
+const params = new URLSearchParams(window.location.search);
+const ROOM   = params.get("room");
 
-function getRoom() {
-  const params = new URLSearchParams(window.location.search);
-  return (params.get("room") || "").trim();
-}
+if (!ROOM) {
+  noRoom.style.display = "flex";
+} else {
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
 
-function showCard(data) {
-  elPlayer.textContent   = data.player   || "";
-  elEffect.textContent   = data.effect   || "";
+  let hideTimer    = null;
+  let lastTs       = null;
 
-  const rp = (data.roleplay || "").replace(/\n/g, "<br>");
-  if (rp) {
-    elRoleplay.innerHTML  = rp;
-    elRpWrap.style.display = "";
-  } else {
-    elRpWrap.style.display = "none";
-  }
+  // ── Severity → CSS class + icon ─────────────────────────────────────────────
+  const sevClass = sev => {
+    if (!sev) return "sev-other";
+    const s = sev.toLowerCase();
+    if (s === "lehký"   || s === "lehky")   return "sev-lehky";
+    if (s === "střední" || s === "stredni") return "sev-stredni";
+    if (s === "těžký"   || s === "tezky")   return "sev-tezky";
+    return "sev-other";
+  };
 
-  card.classList.remove("hiding");
-  card.classList.add("visible");
+  const sevIcon = sev => {
+    if (!sev) return "💀";
+    const s = sev.toLowerCase();
+    if (s === "lehký"   || s === "lehky")   return "😬";
+    if (s === "střední" || s === "stredni") return "💥";
+    if (s === "těžký"   || s === "tezky")   return "☠️";
+    return "💀";
+  };
 
-  clearTimeout(hideTimer);
-  cancelAnimationFrame(animationFrame);
+  // ── Show overlay ─────────────────────────────────────────────────────────────
+  const showOverlay = data => {
+    // Populate content
+    titleText.textContent  = data.title    || "CRIT FAIL";
+    effectText.textContent = data.effect   || "";
+    playerName.textContent = data.player   || "";
+    sevBadge.textContent   = data.severity || "";
+    titleIcon.textContent  = sevIcon(data.severity);
 
-  const startTime = performance.now();
-  elTimerBar.style.transition = "none";
-  elTimerBar.style.transform  = "scaleX(1)";
+    // Severity styling
+    panel.className = "panel " + sevClass(data.severity);
 
-  requestAnimationFrame(() => {
+    // Reset timer bar
+    timerBar.classList.remove("running");
+    timerBar.style.transition = "none";
+    timerBar.style.transform  = "scaleX(1)";
+
+    // Show
+    wrap.classList.remove("hidden-out");
+    wrap.classList.add("visible");
+
+    // Start shrink bar after a tick (allow repaint)
     requestAnimationFrame(() => {
-      elTimerBar.style.transition = `transform ${DISPLAY_DURATION}ms linear`;
-      elTimerBar.style.transform  = "scaleX(0)";
+      requestAnimationFrame(() => {
+        timerBar.style.transition = `transform ${DISPLAY_MS}ms linear`;
+        timerBar.classList.add("running");
+      });
     });
-  });
 
-  hideTimer = setTimeout(() => hideCard(), DISPLAY_DURATION);
-}
+    // Clear any existing hide timer
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(hideOverlay, DISPLAY_MS);
+  };
 
-function hideCard() {
-  clearTimeout(hideTimer);
-  card.classList.remove("visible");
-  card.classList.add("hiding");
-}
+  // ── Hide overlay ─────────────────────────────────────────────────────────────
+  const hideOverlay = () => {
+    wrap.classList.remove("visible");
+    wrap.classList.add("hidden-out");
+    timerBar.classList.remove("running");
+  };
 
-const room = getRoom();
-if (room) {
-  const overlayRef = ref(db, `rooms/${room}/lastOverlay`);
+  // ── Firebase listener ────────────────────────────────────────────────────────
+  const overlayRef = ref(db, `rooms/${ROOM}/overlay`);
+
   onValue(overlayRef, snap => {
     if (!snap.exists()) return;
+
     const data = snap.val();
     if (!data) return;
 
-    const ts = data.ts || 0;
-    if (ts === lastTimestamp) return;
-    lastTimestamp = ts;
+    // Ignore if same timestamp (re-connect / page reload)
+    if (data.ts && data.ts === lastTs) return;
+    lastTs = data.ts || null;
 
-    showCard(data);
+    showOverlay(data);
   });
 }
 </script>
