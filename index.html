@@ -871,7 +871,7 @@ function init() {
       }
       state = { ...s, last: null };
       if (!ALL_SEVERITIES.includes(state.severity)) state.severity = ALL_SEVERITIES[0];
-      set(dbr("rooms", state.room, "players", state.id), { name: state.name, isDM: state.isDM })
+      set(dbr("rooms", state.room, "players", state.id), { name: state.name, isDM: state.isDM, online: true })
         .then(() => {
           // If re-joining as DM, also refresh the dm record
           if (state.isDM) {
@@ -1192,7 +1192,7 @@ function reconnectPlayer() {
   name: state.name,
   isDM: state.isDM,
   online: true
-});.then(() => {
+}).then(() => {
     setupOnDisconnect();
     console.log("[Reconnect] OK");
   }).catch(err => {
@@ -1298,6 +1298,11 @@ window._deleteRoom = async () => {
   localStorage.removeItem(LS_KEY);
   location.reload();
 };
+window.addEventListener("visibilitychange", () => {
+  if (!document.hidden && state.room && state.id) {
+    reconnectPlayer();
+  }
+});
 </script>
 </body>
 </html>
