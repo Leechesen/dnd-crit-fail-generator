@@ -1284,11 +1284,21 @@ function startAutoDelete() {
 //  LOGOUT / DELETE
 // ════════════════════════════════════════════════════════════════════════════
 window._logout = async () => {
-  await remove(dbr("rooms", state.room, "players", state.id)).catch(console.error);
-  // If DM logs out, clear the dm field so room shows DM offline immediately
-  if (state.isDM) {
-    await remove(dbr("rooms", state.room, "dm")).catch(console.error);
+  try {
+    // ❗ KRITICKÉ – zruší onDisconnect
+    onDisconnect(dbr("rooms", state.room, "players", state.id)).cancel();
+
+    await remove(dbr("rooms", state.room, "players", state.id));
+
+    // If DM logs out, clear the dm field
+    if (state.isDM) {
+      await remove(dbr("rooms", state.room, "dm"));
+    }
+
+  } catch (e) {
+    console.error(e);
   }
+
   localStorage.removeItem(LS_KEY);
   location.reload();
 };
