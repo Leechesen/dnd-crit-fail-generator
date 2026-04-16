@@ -1106,7 +1106,11 @@ function listenPlayers() {
     const players = snap.val() || {};
     playersCache  = players;
 
-    if (!state.isDM && !players[state.id]) { handleKicked(); return; }
+    if (!state.isDM && !players[state.id]) {
+  // 🔥 místo kicku se zkus znovu připojit
+  reconnectPlayer();
+  return;
+}
 
     $("playersTop").textContent = Object.values(players).map(p => p.name).join("  |  ");
 
@@ -1179,7 +1183,20 @@ function handleKicked() {
   notif("❌ Byl/a jsi vyhozen/a z místnosti.", "#c0392b");
   setTimeout(() => location.reload(), 4000);
 }
+function reconnectPlayer() {
+  console.log("[Reconnect] Znovu připojuji hráče...");
 
+  set(dbr("rooms", state.room, "players", state.id), {
+    name: state.name,
+    isDM: state.isDM
+  }).then(() => {
+    setupOnDisconnect();
+    console.log("[Reconnect] OK");
+  }).catch(err => {
+    console.error("[Reconnect] FAIL", err);
+    notif("❌ Nepodařilo se obnovit připojení");
+  });
+}
 // ════════════════════════════════════════════════════════════════════════════
 //  SEND
 // ════════════════════════════════════════════════════════════════════════════
