@@ -956,7 +956,7 @@ window.createRoom = async () => {
   state = { room, name: name + " 👑", id, isDM: true, severity: ALL_SEVERITIES[0], last: null };
 
   const roomData = {
-    players:    { [id]: { name: state.name, isDM: true } },
+    players:    { [id]: { name: state.name, isDM: true, online: true } },
     dm:         id,   // ← track current DM id at room level
     createdAt:  Date.now(),
     lastActive: Date.now(),
@@ -1014,7 +1014,7 @@ window._joinAsDM = async (room) => {
     if (dmId && !players[dmId]) {
       await remove(dbr("rooms", room, "players", dmId)).catch(() => {});
     }
-    await set(dbr("rooms", room, "players", id), { name: state.name, isDM: true });
+    await set(dbr("rooms", room, "players", id), { name: state.name, isDM: true, online: true });
     await update(dbr("rooms", room), { dm: id, lastActive: Date.now() });
   } catch (e) { notif("❌ Nepodařilo se připojit jako DM: " + e.message); return; }
 
@@ -1044,7 +1044,7 @@ window._joinRoom = async (room) => {
   state = { room, name, id, isDM: false, severity: ALL_SEVERITIES[0], last: null };
 
   try {
-    await set(dbr("rooms", room, "players", id), { name, isDM: false });
+    await set(dbr("rooms", room, "players", id), { name, isDM: false, online: true });
     await update(dbr("rooms", room), { lastActive: Date.now() });
   } catch (e) { notif("❌ Nepodařilo se připojit: " + e.message); return; }
 
@@ -1058,8 +1058,10 @@ function saveState() {
   localStorage.setItem(LS_KEY, JSON.stringify({ ...state, last: null }));
 }
 function setupOnDisconnect() {
-  onDisconnect(dbr("rooms", state.room, "players", state.id)).remove();
-  // When DM disconnects also clear the dm field so room shows DM offline
+  onDisconnect(dbr("rooms", state.room, "players", state.id)).update({
+    online: false
+  });
+
   if (state.isDM) {
     onDisconnect(dbr("rooms", state.room, "dm")).remove();
   }
@@ -1187,9 +1189,10 @@ function reconnectPlayer() {
   console.log("[Reconnect] Znovu připojuji hráče...");
 
   set(dbr("rooms", state.room, "players", state.id), {
-    name: state.name,
-    isDM: state.isDM
-  }).then(() => {
+  name: state.name,
+  isDM: state.isDM,
+  online: true
+});.then(() => {
     setupOnDisconnect();
     console.log("[Reconnect] OK");
   }).catch(err => {
