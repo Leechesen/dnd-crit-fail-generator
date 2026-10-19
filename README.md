@@ -7,9 +7,9 @@ Generátor critfailů s místnostmi pro DM a hráče. Web zachovává původní 
 1. DM vytvoří místnost a zvolí její obtížnost.
 2. Hráč se připojí a klikne na typ útoku, obranu nebo dovednost, kde mu padl critfail.
 3. Jeden vylosovaný výsledek se uloží a zobrazí hráči i DM. Zároveň se odešle do streamového overlaye.
-4. DM může obtížnost kdykoliv změnit, sám generovat a ručně přiřazovat výsledky hráčům.
+4. DM může obtížnost kdykoliv změnit. Vlastní generování mu ukáže soukromý náhled; tlačítkem **Poslat výsledek** ho odešle vybranému hráči i do overlaye.
 
-Obtížnost platí pro celou místnost do další změny DM. Hráči ji nemohou přepisovat. Při souběžné změně nastavení se výsledek se starou verzí obtížnosti odmítne a hráč může kliknout znovu. Hráči vidí své výsledky, DM výsledky všech hráčů.
+Obtížnost platí pro celou místnost do další změny DM. Její název vidí jen DM; hráčský panel, historie hráče ani overlay jej nezobrazují. Při souběžné změně nastavení se výsledek se starou verzí obtížnosti odmítne a hráč může kliknout znovu. Hráči vidí své výsledky, DM výsledky všech hráčů. Nové hráčské výsledky se dál ukládají do historie i během soukromého náhledu DM, ale jeho náhled nepřepíšou.
 
 DM je vlastníkem místnosti podle anonymního účtu Firebase. Vrací se ve stejném prohlížeči, kde místnost vytvořil. Vymazání dat prohlížeče znamená ztrátu této anonymní identity. Odhlášení z místnosti samotný účet nemaže.
 
@@ -49,13 +49,15 @@ JSON a jeho metadata jsou výstup sestavení. Při nasazení vznikají vždy z E
 
 V každém listu mohou být také `roleplay_1`, `roleplay_2` a `weight`. Váha je kladné číslo, při nevyplnění se použije 1. Větší váha znamená častější výběr **uvnitř obtížnosti zvolené DM**. Názvy obtížností se převezmou přímo z Excelu, takže je možné přidat další.
 
+Každý výsledek zobrazí nejvýše jeden roleplay: `roleplay_1`, případně `roleplay_2`, pokud je první prázdný. Excel není třeba měnit. Stejné zobrazení platí i pro starší výsledky v historii.
+
 Úplně prázdné řádky se přeskočí. Opakovaná hlavička uvnitř listu se přeskočí s upozorněním. Ostatní chyby uvádějí list a číslo řádku. Neplatná váha nebo neúplný výsledek zastaví sestavení před přepsáním výstupů.
 
 Pokud pro dovednost a vybranou obtížnost nejsou výsledky, její tlačítko je neaktivní. Aktuální zdrojový Excel má 1619 výsledků; přepis obsahu jednotlivých critfailů je samostatná úprava.
 
 ## Overlay
 
-DM má v horní liště tlačítko **Overlay**, které zkopíruje adresu pro Browser Source v OBS. Nový výsledek hráče nebo DM se zobrazí na 60 sekund. Při opětovném načtení overlay nepřehrává dávno prošlé výsledky.
+DM má v horní liště tlačítko **Overlay**, které zkopíruje adresu pro Browser Source v OBS. Vlastní hod hráče nebo výsledek odeslaný DM se zobrazí na 60 sekund, bez názvu obtížnosti a s jednotným barevným motivem. Soukromý náhled DM se do overlaye neposílá. Při opětovném načtení overlay nepřehrává dávno prošlé výsledky.
 
 ## Lokální vývoj a ověření
 

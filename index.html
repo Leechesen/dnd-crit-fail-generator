@@ -471,7 +471,6 @@
   .res-effect { white-space: pre-wrap; overflow-wrap: anywhere; }
   .result-context { color: var(--muted); font-size: 0.8rem; margin-bottom: 10px; }
   .history-item { display: block; width: 100%; text-align: left; white-space: normal; margin-bottom: 5px; }
-  .player-difficulty { color: var(--accent2); font-weight: bold; margin-bottom: 8px; }
   .sev-btn { font-family: inherit; }
   .sev-btn:disabled { transform: none; }
 </style>
@@ -536,6 +535,7 @@
         </div>
         <div class="card">
           <h3>🎲 Generátor</h3>
+          <div class="hint">Výsledek nejprve uvidíš jen ty. Potom ho můžeš poslat vybranému hráči.</div>
           <div id="generator"></div>
         </div>
       </div>
@@ -575,8 +575,7 @@
         </div>
         <div class="card">
           <h3>🎲 Kde ti padl critfail?</h3>
-          <div class="player-difficulty">Obtížnost od DM: <span id="playerSeverity">Čekám na nastavení DM</span></div>
-          <div class="hint" id="playerRollHint">Nejprve musí DM nastavit obtížnost.</div>
+          <div class="hint" id="playerRollHint">Čekám, až DM připraví generování.</div>
           <div id="playerGenerator" style="margin-top:16px;"></div>
         </div>
       </div>

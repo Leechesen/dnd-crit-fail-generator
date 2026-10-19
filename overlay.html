@@ -216,12 +216,11 @@
 <div id="no-room" style="display:none;">No room selected</div>
 
 <div id="overlay-wrap" aria-live="polite">
-  <div class="panel" id="panel">
+  <div class="panel sev-other" id="panel">
     <div class="panel-glow" id="panelGlow"></div>
     <div class="title-row">
       <div class="title-icon" id="titleIcon">💀</div>
       <div class="title-text"  id="titleText">CRIT FAIL</div>
-      <div class="severity-badge" id="sevBadge"></div>
     </div>
     <div class="divider"></div>
     <div class="effect-text" id="effectText"></div>
@@ -244,10 +243,7 @@ const FADE_MS     = 600;      // must match CSS transition duration
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
 const wrap       = document.getElementById("overlay-wrap");
-const panel      = document.getElementById("panel");
-const titleIcon  = document.getElementById("titleIcon");
 const titleText  = document.getElementById("titleText");
-const sevBadge   = document.getElementById("sevBadge");
 const effectText = document.getElementById("effectText");
 const playerName = document.getElementById("playerName");
 const timerBar   = document.getElementById("timerBar");
@@ -266,36 +262,12 @@ if (!ROOM) {
   let hideTimer    = null;
   let lastEventId  = null;
 
-  // ── Severity → CSS class + icon ─────────────────────────────────────────────
-  const sevClass = sev => {
-    if (!sev) return "sev-other";
-    const s = sev.toLowerCase();
-    if (s === "lehký"   || s === "lehky")   return "sev-lehky";
-    if (s === "střední" || s === "stredni") return "sev-stredni";
-    if (s === "těžký"   || s === "tezky")   return "sev-tezky";
-    return "sev-other";
-  };
-
-  const sevIcon = sev => {
-    if (!sev) return "💀";
-    const s = sev.toLowerCase();
-    if (s === "lehký"   || s === "lehky")   return "😬";
-    if (s === "střední" || s === "stredni") return "💥";
-    if (s === "těžký"   || s === "tezky")   return "☠️";
-    return "💀";
-  };
-
   // ── Show overlay ─────────────────────────────────────────────────────────────
   const showOverlay = (data, remainingMs = DISPLAY_MS) => {
     // Populate content
     titleText.textContent  = data.title    || "CRIT FAIL";
     effectText.textContent = data.effect   || "";
     playerName.textContent = data.player   || "";
-    sevBadge.textContent   = data.severity || "";
-    titleIcon.textContent  = sevIcon(data.severity);
-
-    // Severity styling
-    panel.className = "panel " + sevClass(data.severity);
 
     // Reset timer bar
     timerBar.classList.remove("running");

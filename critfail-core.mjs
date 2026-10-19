@@ -33,13 +33,17 @@ export function chooseResult(data, selectionId, settings, random = Math.random) 
   if (!choice) throw new Error("Tento typ critfailu už není v datech.");
   const pool = choice.severityMap[settings.severity];
   const entry = weightedChoice(pool, random);
-  return { entryId: `${selectionId}|${settings.severity}|${pool.indexOf(entry)}`, label: choice.label, severity: settings.severity, settingsRevision: settings.revision, effect: String(entry.effect || ""), roleplay: (entry.roleplay || []).filter(value => typeof value === "string" && value.trim()).slice(0, 2) };
+  return { entryId: `${selectionId}|${settings.severity}|${pool.indexOf(entry)}`, label: choice.label, severity: settings.severity, settingsRevision: settings.revision, effect: String(entry.effect || ""), roleplay: singleRoleplay(entry.roleplay) };
+}
+
+export function singleRoleplay(values) {
+  return (Array.isArray(values) ? values : []).filter(value => typeof value === "string" && value.trim()).slice(0, 1);
 }
 
 export function makeEvent({ result, actorId, actorName, targetId = actorId, targetName = actorName, datasetVersion, kind = "roll", ts }) {
   if (!actorId || !targetId || !result?.effect || !result?.severity) throw new Error("Výsledek není kompletní.");
   if (kind !== "roll" && kind !== "assignment") throw new Error("Neplatný typ výsledku.");
-  return { ...result, roleplay: result.roleplay || [], actorId, actorName, targetId, targetName, datasetVersion, kind, clientTs: Date.now(), ts };
+  return { ...result, roleplay: singleRoleplay(result.roleplay), actorId, actorName, targetId, targetName, datasetVersion, kind, clientTs: Date.now(), ts };
 }
 
 export function recentEvents(tree, limit = 30) {

@@ -31,7 +31,20 @@ test("the stored shared result retains actor, target and original room settings"
   const result = chooseResult(data, "attack:Melee", { severity: "Sranda", revision: 3 }, () => 0);
   const event = makeEvent({ result, actorId: "player", actorName: "Ondra", datasetVersion: "a".repeat(64), ts: 123 });
   assert.equal(event.targetId, "player"); assert.equal(event.actorId, "player");
-  assert.deepEqual(event.roleplay, ["RP1", "RP2"]); assert.equal(event.settingsRevision, 3);
+  assert.deepEqual(event.roleplay, ["RP1"]); assert.equal(event.settingsRevision, 3);
+});
+test("one roleplay uses the first filled column and accepts a missing roleplay", () => {
+  const copy = structuredClone(data);
+  const entry = copy["Útok"].Melee.Sranda[0];
+  entry.roleplay = ["  ", "Náhradní roleplay"];
+  assert.deepEqual(chooseResult(copy, "attack:Melee", { severity: "Sranda", revision: 1 }, () => 0).roleplay, ["Náhradní roleplay"]);
+  entry.roleplay = ["", ""];
+  assert.deepEqual(chooseResult(copy, "attack:Melee", { severity: "Sranda", revision: 1 }, () => 0).roleplay, []);
+});
+test("resending an older result sends only one roleplay", () => {
+  const result = { effect: "Efekt", severity: "Sranda", roleplay: ["První", "Druhý"] };
+  const event = makeEvent({ result, actorId: "dm", actorName: "DM", targetId: "player", targetName: "Ondra", datasetVersion: "a".repeat(64), kind: "assignment", ts: 123 });
+  assert.deepEqual(event.roleplay, ["První"]);
 });
 test("DM history retains simultaneous results from different players", () => {
   const tree = { a: { x: { effect: "A", ts: 5 } }, b: { z: { effect: "B", ts: 5 }, y: { effect: "C", ts: 1 } } };

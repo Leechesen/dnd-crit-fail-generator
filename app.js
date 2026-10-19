@@ -1,5 +1,5 @@
 import { connectFirebase, ref, set, get, update, remove, onValue, push, onDisconnect, runTransaction, serverTimestamp, query, orderByChild, limitToLast } from "./firebase-client.mjs";
-import { selections, discoverSeverities, chooseResult, makeEvent, recentEvents, escapeHtml as esc, validateName } from "./critfail-core.mjs";
+import { selections, discoverSeverities, chooseResult, singleRoleplay, makeEvent, recentEvents, escapeHtml as esc, validateName } from "./critfail-core.mjs";
 
 const ROOMS = "roomsV2", LOBBY = "lobbyV2", STORAGE = "kf_state_v2";
 const $ = id => document.getElementById(id);
@@ -98,8 +98,7 @@ function buildGenerators() {
 function renderControls() {
   const ready = !!settings.severity && severities.includes(settings.severity);
   $("sevLabel").textContent = settings.severity || "Vyber obtížnost";
-  $("playerSeverity").textContent = settings.severity || "Čekám na nastavení DM";
-  $("playerRollHint").textContent = ready ? "Vyber, kde ti padl critfail. Výsledek ihned uvidíš ty i DM." : "Nejprve musí DM nastavit dostupnou obtížnost.";
+  $("playerRollHint").textContent = ready ? "Vyber, kde ti padl critfail. Výsledek ihned uvidíš ty i DM." : "Čekám, až DM připraví generování.";
   document.querySelectorAll(".sev-btn").forEach(button => {
     button.classList.toggle("active", button.dataset.sev === settings.severity);
     button.disabled = !state.isDM || state.busy;
@@ -109,8 +108,9 @@ function renderControls() {
     const choice = choices.find(item => item.id === button.dataset.choice);
     const available = !!choice?.severityMap?.[settings.severity]?.length;
     button.disabled = state.busy || !ready || !available || !state.room;
-    button.title = !ready ? "Čekám na nastavení obtížnosti od DM" : !available ? "Pro tuto obtížnost nejsou v Excelu výsledky" : choice.label;
+    button.title = !ready ? "Čekám na přípravu generování od DM" : !available ? "Pro tuto volbu nejsou dostupné výsledky" : choice.label;
   });
+  if (state.isDM) renderTargets();
 }
 async function selectSeverity(severity) {
   if (!state.isDM || !severities.includes(severity)) return;
@@ -141,18 +141,23 @@ async function roll(selectionId) {
     const snapshot = await get(roomRef("settings"));
     settings = snapshot.val() || {};
     const result = chooseResult(data, selectionId, settings);
-    await publish(result);
-    notif("Výsledek byl uložen a zobrazen DM.", "#2a9d5c");
+    if (state.isDM) {
+      showEvent({ ...result, targetName: state.name, kind: "draft" });
+      notif("Náhled je připravený. Vyber hráče pro odeslání.", "#2a9d5c");
+    } else {
+      await publish(result);
+      notif("Výsledek byl uložen a zobrazen DM.", "#2a9d5c");
+    }
   });
 }
 function resultMarkup(event) {
-  return `<div class="res-effect">⚠️ ${esc(event.effect)}</div>${(event.roleplay || []).filter(Boolean).map((rp, index) => `<div class="res-rp"><div class="rp-label">🎭 Roleplay ${index + 1}</div><div class="preserve-lines">${esc(rp)}</div></div>`).join("")}`;
+  return `<div class="res-effect">⚠️ ${esc(event.effect)}</div>${singleRoleplay(event.roleplay).map(rp => `<div class="res-rp"><div class="rp-label">🎭 Roleplay</div><div class="preserve-lines">${esc(rp)}</div></div>`).join("")}`;
 }
 function showEvent(event) {
   state.last = event;
-  const label = `${event.targetName} · ${event.label} / ${event.severity}`;
+  const label = `${event.targetName} · ${event.label}${state.isDM ? ` / ${event.severity}` : ""}`;
   if (state.isDM) {
-    $("resultBox").classList.remove("hidden"); $("resHeader").textContent = `🎲 ${label}`;
+    $("resultBox").classList.remove("hidden"); $("resHeader").textContent = `${event.kind === "draft" ? "👁️ Náhled pro DM:" : "🎲"} ${label}`;
     $("resBody").innerHTML = resultMarkup(event); renderTargets();
   } else {
     $("playerResult").innerHTML = `<div class="result-context">${esc(label)}</div>${resultMarkup(event)}`;
@@ -165,7 +170,8 @@ function receiveResults(tree) {
   renderHistory();
   const currentId = history[0] ? `${history[0].targetId}/${history[0].id}` : null;
   if (history[0] && currentId !== lastResultId) {
-    showEvent(history[0]);
+    // A player's new roll must not replace the DM's unsent preview.
+    if (!state.isDM || state.last?.kind !== "draft") showEvent(history[0]);
     if (!initialResults) notif(state.isDM ? `🎲 Nový výsledek: ${history[0].targetName}` : "🎲 Nový výsledek", "#2a9d5c");
     lastResultId = currentId;
   }
@@ -175,7 +181,7 @@ function renderHistory() {
   const container = $(state.isDM ? "dmHistory" : "playerHistory"); container.replaceChildren();
   history.slice(0, 15).forEach(event => {
     const button = document.createElement("button"); button.className = "btn-secondary history-item";
-    button.textContent = `${event.targetName} · ${event.label} · ${event.severity}`;
+    button.textContent = `${event.targetName} · ${event.label}${state.isDM ? ` · ${event.severity}` : ""}`;
     button.onclick = () => showEvent(event); container.appendChild(button);
   });
 }
@@ -187,18 +193,20 @@ function renderTargets() {
     const row = document.createElement("div"); row.className = "target-row";
     const label = document.createElement("div"); label.className = "target-name"; label.textContent = `🧑 ${player.name}`; row.appendChild(label);
     const buttons = document.createElement("div"); buttons.className = "target-btns";
-    for (const [type, title, css] of [["r1", "📜 Roleplay 1", "btn-success"], ["r2", "📜 Roleplay 2", "btn-info"], ["all", "📦 Oba", "btn-warning"]]) {
-      const button = document.createElement("button"); button.className = `${css} btn-sm`; button.textContent = title;
-      button.disabled = !state.last || state.busy;
-      button.onclick = () => sendToPlayer(id, type); buttons.appendChild(button);
-    }
+    const button = document.createElement("button"); button.className = "btn-success btn-sm"; button.textContent = "📨 Poslat výsledek";
+    button.disabled = !state.last || state.busy;
+    button.onclick = () => sendToPlayer(id); buttons.appendChild(button);
     row.appendChild(buttons); container.appendChild(row);
   }
 }
-async function sendToPlayer(targetId, type) {
+async function sendToPlayer(targetId) {
   if (!state.isDM || !state.last || !players[targetId]) return;
-  const result = { entryId: state.last.entryId, label: state.last.label, severity: state.last.severity, settingsRevision: state.last.settingsRevision, effect: state.last.effect, roleplay: type === "r1" ? [state.last.roleplay?.[0] || ""] : type === "r2" ? [state.last.roleplay?.[1] || ""] : state.last.roleplay || [] };
-  await busy(async () => { await publish(result, targetId, players[targetId].name, "assignment"); notif("Výsledek byl odeslán hráči.", "#2a9d5c"); });
+  const result = { entryId: state.last.entryId, label: state.last.label, severity: state.last.severity, settingsRevision: state.last.settingsRevision, effect: state.last.effect, roleplay: singleRoleplay(state.last.roleplay) };
+  await busy(async () => {
+    const event = await publish(result, targetId, players[targetId].name, "assignment");
+    showEvent(event);
+    notif("Výsledek byl odeslán hráči.", "#2a9d5c");
+  });
 }
 
 function saveSession() { localStorage.setItem(sessionKey(), JSON.stringify({ room: state.room, name: state.name, uid })); }

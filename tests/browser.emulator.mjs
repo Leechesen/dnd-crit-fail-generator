@@ -59,6 +59,18 @@ async function records() {
   await env.withSecurityRulesDisabled(async c => { value = (await c.database().ref("roomsV2").get()).val(); });
   return value;
 }
+async function waitReady(page) {
+  await page.waitForFunction(() => !document.querySelector("#playerGenerator [data-choice]")?.disabled);
+}
+async function assertHiddenDifficulty(page) {
+  assert.equal(await page.locator("#playerSeverity").count(), 0);
+  for (const selector of ["#playerResult .result-context", "#playerHistory"]) {
+    const text = await page.locator(selector).textContent() || "";
+    for (const severity of difficulties) assert.equal(text.includes(severity), false);
+  }
+  const labels = await page.locator("#playerGenerator [data-choice]").evaluateAll(buttons => buttons.map(button => button.title).join(" "));
+  for (const severity of difficulties) assert.equal(labels.includes(severity), false);
+}
 
 try {
   const dm = await pageFor("browser-dm"), player = await pageFor("browser-player"), second = await pageFor("browser-second");
@@ -73,19 +85,24 @@ try {
   assert.equal(await playerButton.isDisabled(), true);
   assert.equal(await player.locator("#severityBtns").isVisible(), false);
   await dm.locator("#severityBtns").getByRole("button", { name: chosenSeverity, exact: true }).click();
-  await waitText(player, "#playerSeverity", chosenSeverity);
+  await waitReady(player);
   await playerButton.click();
   await waitText(dm, "#resHeader", "Borin"); await player.locator("#playerResult .res-effect").waitFor();
   assert.equal(await dm.locator("#resBody .res-effect").textContent(), await player.locator("#playerResult .res-effect").textContent());
+  await assertHiddenDifficulty(player);
+  assert.equal(await player.locator("#playerResult .res-rp").count(), 1);
+  assert.equal(await player.locator("#playerResult .rp-label").textContent(), "🎭 Roleplay");
   const roomId = Object.keys(await records())[0];
   const overlay = await pageFor("browser-overlay"); await overlay.goto(`${origin}/overlay.html?room=${roomId}`);
   await waitText(overlay, "#playerName", "Borin");
   assert.equal((await dm.locator("#resBody .res-effect").textContent()).replace(/^⚠️ /, ""), await overlay.locator("#effectText").textContent());
-  console.log("PASS player generation, DM/player agreement, room difficulty, overlay");
+  assert.equal(await overlay.locator("#sevBadge").count(), 0);
+  assert.equal(await overlay.locator("#panel").getAttribute("class"), "panel sev-other");
+  console.log("PASS shared player result with one roleplay and hidden difficulty in player view and overlay");
 
   await second.goto(origin); await second.locator("#setup").waitFor({ state: "visible" });
   await second.locator("#nameInput").fill("Benet"); await second.getByRole("button", { name: "Připojit", exact: true }).click();
-  await second.locator("#playerPanel").waitFor({ state: "visible" }); await waitText(second, "#playerSeverity", chosenSeverity);
+  await second.locator("#playerPanel").waitFor({ state: "visible" }); await waitReady(second);
   await Promise.all([playerButton.click(), second.locator("#playerGenerator [data-choice]").filter({ hasText: choice.title }).first().click()]);
   await dm.waitForFunction(() => document.querySelectorAll("#dmHistory button").length >= 3);
   const all = await records();
@@ -96,12 +113,48 @@ try {
   if (difficulties.length > 1) {
     const next = difficulties.find(s => s !== chosenSeverity);
     await dm.locator("#severityBtns").getByRole("button", { name: next, exact: true }).click();
-    await waitText(player, "#playerSeverity", next); await playerButton.click();
+    await waitText(dm, "#sevLabel", next); await waitReady(player);
+    await playerButton.click();
     await waitText(dm, "#resHeader", `Borin · ${choice.label} / ${next}`);
-    console.log("PASS live DM difficulty change");
+    await assertHiddenDifficulty(player);
+    console.log("PASS live DM difficulty change remains hidden from players");
   }
+  const beforeDraft = (await records())[roomId];
+  const playerBeforeDraft = await player.locator("#playerResult").textContent();
+  const secondBeforeDraft = await second.locator("#playerResult").textContent();
+  const historyBeforeDraft = await dm.locator("#dmHistory button").count();
   await dm.locator("#generator [data-choice]").filter({ hasText: choice.title }).first().click();
-  await waitText(dm, "#resHeader", "Ondra – DM");
+  await waitText(dm, "#resHeader", "Náhled pro DM:");
+  const draftEffect = await dm.locator("#resBody .res-effect").textContent();
+  const draftRoleplay = await dm.locator("#resBody .res-rp .preserve-lines").textContent();
+  assert.equal(await dm.locator("#resBody .res-rp").count(), 1);
+  assert.deepEqual((await records())[roomId].results, beforeDraft.results);
+  assert.deepEqual((await records())[roomId].overlay, beforeDraft.overlay);
+  assert.equal(await player.locator("#playerResult").textContent(), playerBeforeDraft);
+  assert.equal(await second.locator("#playerResult").textContent(), secondBeforeDraft);
+  console.log("PASS DM preview stays private without publishing any result or overlay");
+
+  await playerButton.click();
+  await dm.waitForFunction(count => document.querySelectorAll("#dmHistory button").length > count, historyBeforeDraft);
+  assert.ok((await dm.locator("#resHeader").textContent()).includes("Náhled pro DM:"));
+  assert.equal(await dm.locator("#resBody .res-effect").textContent(), draftEffect);
+  console.log("PASS a concurrent player roll cannot overwrite the DM preview");
+
+  const beforeSend = (await records())[roomId];
+  await dm.locator("#targets .target-row").filter({ hasText: "Borin" }).getByRole("button", { name: "📨 Poslat výsledek", exact: true }).click();
+  await waitText(dm, "#resHeader", "Borin");
+  await player.waitForFunction(expected => document.querySelector("#playerResult .res-effect")?.textContent === expected, draftEffect);
+  await player.waitForFunction(expected => document.querySelector("#playerResult .res-rp .preserve-lines")?.textContent === expected, draftRoleplay);
+  const sentRoom = (await records())[roomId];
+  assert.equal(Object.keys(sentRoom.results["browser-player"]).length, Object.keys(beforeSend.results["browser-player"]).length + 1);
+  assert.deepEqual(sentRoom.results["browser-second"], beforeSend.results["browser-second"]);
+  assert.equal(sentRoom.overlay.targetId, "browser-player");
+  assert.equal(sentRoom.overlay.effect, draftEffect.replace(/^⚠️ /, ""));
+  assert.equal(sentRoom.overlay.roleplay.length, 1);
+  assert.equal(await second.locator("#playerResult").textContent(), secondBeforeDraft);
+  await assertHiddenDifficulty(player);
+  console.log("PASS DM sends the exact preview and one roleplay only to the selected player");
+
   await dm.reload();
   try { await dm.locator("#dmPanel").waitFor({ state: "visible", timeout: 10000 }); }
   catch (error) {
@@ -109,12 +162,7 @@ try {
     throw error;
   }
   assert.equal((await records())[roomId].dm, "browser-dm");
-  console.log("PASS DM generation and persistent room ownership after reload");
-
-  await dm.locator("#targets .target-row").filter({ hasText: "Borin" }).getByRole("button", { name: "📦 Oba", exact: true }).click();
-  await waitText(dm, "#resHeader", "Borin");
-  await player.waitForFunction(expected => document.querySelector("#playerResult .res-effect")?.textContent === expected, await dm.locator("#resBody .res-effect").textContent());
-  console.log("PASS DM can manually send the selected result to a player");
+  console.log("PASS persistent room ownership and sent result after reload");
 
   await dm.screenshot({ path: path.join(screenshots, "dm-desktop.png"), animations: "disabled" });
   await player.evaluate(() => window.scrollTo(0, 0));
