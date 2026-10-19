@@ -1,0 +1,15 @@
+{
+  "name": "kritfailer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "test:rules": "node --test tests/rules.emulator.mjs",
+    "test:browser": "node tests/browser.emulator.mjs"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "3.0.4",
+    "firebase": "10.7.1",
+    "playwright": "1.62.1"
+  }
+}

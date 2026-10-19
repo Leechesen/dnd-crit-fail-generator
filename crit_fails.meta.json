@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "version": "6504b2e6ee79df0d32cc450a5c4f461225104266bab9694d1a326adaadfd1917",
+  "sourceSha256": "65924fdfc735f3deb7943c65360d0d344b60c741e41cd3175de770ef9e9542e9",
+  "entries": 1619,
+  "counts": {
+    "Útok": 120,
+    "Obrana": 60,
+    "Skill": 1439
+  }
+}
