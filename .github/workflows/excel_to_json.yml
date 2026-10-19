@@ -1,10 +1,18 @@
-name: Excel to JSON
+name: Build and publish KritFailer
 
 on:
   push:
-    paths:
-      - "crit_fails.xlsx"
-      - "excel_to_json.py"
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -19,18 +27,47 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install converter dependency
         run: |
-          pip install -r requirements.txt
+          pip install openpyxl
+
+      - name: Test converter and shared logic
+        run: |
+          python -m unittest discover -s tests -p 'test_*.py'
+          node --test tests/*.test.mjs
 
       - name: Convert Excel to JSON
         run: |
           python excel_to_json.py
 
-      - name: Commit generated JSON
+      - name: Prepare website
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add crit_fails.json
-          git commit -m "Auto-update crit_fails.json from Excel" || echo "No changes"
-          git push
+          mkdir _site
+          cp index.html app.js critfail-core.mjs firebase-client.mjs firebase-config.js overlay.html crit.png crit_fails.json crit_fails.meta.json _site/
+          touch _site/.nojekyll
+
+      - name: Upload website
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish website
+        id: deployment
+        uses: actions/deploy-pages@v4
