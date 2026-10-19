@@ -1,87 +1,53 @@
-# KritFailer
+# 🎲 KritFailer
 
-Generátor critfailů s místnostmi pro DM a hráče. Web zachovává původní barevnost, karty, typografii a rozložení ovládání.
+**Generátor následků kritických neúspěchů pro Dungeons & Dragons a další stolní RPG.**
 
-## Jak se hraje
+KritFailer pomáhá proměnit critfail v konkrétní herní následek doplněný krátkým roleplay popisem. Hráči si výsledky losují sami, zatímco Dungeon Master určuje jejich obtížnost a řídí hru. Všichni používají společnou místnost a výsledky se mezi hráčem a DM sdílejí v reálném čase.
 
-1. DM vytvoří místnost a zvolí její obtížnost.
-2. Hráč se připojí a klikne na typ útoku, obranu nebo dovednost, kde mu padl critfail.
-3. Jeden vylosovaný výsledek se uloží a zobrazí hráči i DM. Zároveň se odešle do streamového overlaye.
-4. DM může obtížnost kdykoliv změnit. Vlastní generování mu ukáže soukromý náhled; tlačítkem **Poslat výsledek** ho odešle vybranému hráči i do overlaye.
+**[Spustit aplikaci →](https://leechesen.github.io/dnd-crit-fail-generator/)**
 
-Obtížnost platí pro celou místnost do další změny DM. Její název vidí jen DM; hráčský panel, historie hráče ani overlay jej nezobrazují. Při souběžné změně nastavení se výsledek se starou verzí obtížnosti odmítne a hráč může kliknout znovu. Hráči vidí své výsledky, DM výsledky všech hráčů. Nové hráčské výsledky se dál ukládají do historie i během soukromého náhledu DM, ale jeho náhled nepřepíšou.
+## Jak probíhá hra
 
-DM je vlastníkem místnosti podle anonymního účtu Firebase. Vrací se ve stejném prohlížeči, kde místnost vytvořil. Vymazání dat prohlížeče znamená ztrátu této anonymní identity. Odhlášení z místnosti samotný účet nemaže.
+1. **DM vytvoří místnost** a nastaví obtížnost následků. Místnost může chránit heslem.
+2. **Hráči se připojí pod svým jménem.** Nemusí se registrovat ani zadávat e-mail.
+3. Když někomu padne critfail, **vybere typ útoku, obranu nebo konkrétní dovednost**.
+4. Aplikace vylosuje výsledek podle aktuálního nastavení DM a **zobrazí ho hráči i DM**.
+5. Výsledek zůstane v historii, takže se k němu můžete během hry vrátit.
 
-## Jednorázové nastavení
+Obtížnost platí pro celou místnost, dokud ji DM nezmění. **Její název se hráčům nezobrazuje**, takže se následek dozvědí až po vygenerování výsledku.
 
-### Firebase
+## Co může DM a co hráč
 
-1. V projektu `ktit-fail-generator` otevři **Authentication → Sign-in method** a zapni **Anonymous**.
-2. V **Realtime Database → Rules** vlož obsah `database.rules.json` a publikuj pravidla.
-3. `firebase-config.js` obsahuje veřejnou konfiguraci nalezenou v původním repozitáři. Pokud byl klíč mezitím změněn, zkopíruj aktuální konfiguraci webové aplikace z **Project settings → Your apps**. Konfigurace Firebase patří do veřejného webu; přístup řídí databázová pravidla.
+| Funkce | Dungeon Master | Hráč |
+| --- | --- | --- |
+| Nastavení obtížnosti | Nastavuje a mění | Nastavení nevidí |
+| Generování výsledků | Vytváří soukromý náhled | Losuje výsledek pro sebe |
+| Odeslání výsledku hráči | Vybere příjemce a odešle | Přijímá vlastní výsledky |
+| Historie | Vidí výsledky všech hráčů | Vidí své výsledky |
+| Správa místnosti | Spravuje hráče a může místnost smazat | Připojí se nebo odejde |
 
-Anonymní přihlášení probíhá na pozadí, hráči nepotřebují vytvářet účet ani zadávat e-mail.
+DM může výsledek připravit i sám. Nejprve ho uvidí ve **vlastním náhledu** a teprve tlačítkem **Poslat výsledek** ho odešle vybranému hráči. Hody ostatních hráčů připravený náhled nepřepíšou.
 
-Nová verze používá větve `roomsV2` a `lobbyV2`. Po aktualizaci vytvoř novou místnost. Původní místnosti se automaticky nemigrují a nová pravidla k nim nepovolují přístup.
+## Útoky, obrana a dovednosti
 
-### GitHub Pages
+Generátor nabízí následky pro útoky na blízko i na dálku, obranu a dovednosti rozdělené podle vlastností postavy. Každý výsledek obsahuje herní efekt a může ho doplnit **jeden roleplay popis** pro odehrání situace u stolu.
 
-1. Nahraj upravené soubory do repozitáře.
-2. V **Settings → Pages → Build and deployment → Source** zvol **GitHub Actions**.
-3. V **Actions** spusť workflow **Build and publish KritFailer**, případně udělej commit do `main`.
+Pokud pro některou volbu nejsou při nastavené obtížnosti dostupné výsledky, její tlačítko je neaktivní.
 
-Workflow nejprve otestuje převod, sestaví JSON z aktuálního Excelu a publikuje hotový web. Při chybě se nová verze nenasadí a předchozí publikovaný web zůstane dostupný. Publikace probíhá přímo z jednoho workflow, takže nečeká na další workflow vyvolané automatickým commitem.
+## Vlastní výsledky z Excelu
 
-## Další aktualizace výsledků
+Obsah generátoru vychází ze souboru **`crit_fails.xlsx`**. V listech **Útok**, **Obrana** a **Skill** lze upravovat herní efekty, roleplay popisy, obtížnosti i váhy jednotlivých výsledků. Vyšší váha znamená větší šanci na vylosování v rámci zvolené obtížnosti.
 
-Stačí nahradit **`crit_fails.xlsx`** v kořeni repozitáře a potvrdit commit do `main`. Převod a publikace proběhnou automaticky. Otevřená aplikace kontroluje nová data každou minutu a při návratu na její kartu. Výsledky již uložené v historii si ponechají původní znění.
+Po nahrání upraveného Excelu do větve `main` proběhne automatický převod dat a publikování aplikace. Otevřená aplikace kontroluje nové výsledky každou minutu a při návratu na její kartu. Dříve uložené výsledky si ponechají původní znění.
 
-JSON a jeho metadata jsou výstup sestavení. Při nasazení vznikají vždy z Excelu, ne z ručně upraveného JSONu v repozitáři.
+Pro roleplay se používá sloupec `roleplay_1`. Pokud je prázdný, aplikace použije `roleplay_2`; oba najednou nezobrazuje.
 
-### Formát Excelu
+## Overlay pro streamování
 
-| List | Povinné sloupce |
-| --- | --- |
-| Útok | `attack_type`, `severity`, `effect` |
-| Obrana | `severity`, `effect` |
-| Skill | `skill`, `skill_category`, `severity`, `effect` |
+KritFailer obsahuje samostatný **overlay pro OBS**. DM zkopíruje jeho adresu tlačítkem **Overlay** a vloží ji do OBS jako zdroj prohlížeče.
 
-V každém listu mohou být také `roleplay_1`, `roleplay_2` a `weight`. Váha je kladné číslo, při nevyplnění se použije 1. Větší váha znamená častější výběr **uvnitř obtížnosti zvolené DM**. Názvy obtížností se převezmou přímo z Excelu, takže je možné přidat další.
+Vlastní hod hráče nebo výsledek odeslaný DM se na overlay zobrazí na **60 sekund** spolu se jménem hráče. Obtížnost zůstává skrytá a soukromé náhledy DM se na stream neposílají.
 
-Každý výsledek zobrazí nejvýše jeden roleplay: `roleplay_1`, případně `roleplay_2`, pokud je první prázdný. Excel není třeba měnit. Stejné zobrazení platí i pro starší výsledky v historii.
+## Použití u stolu
 
-Úplně prázdné řádky se přeskočí. Opakovaná hlavička uvnitř listu se přeskočí s upozorněním. Ostatní chyby uvádějí list a číslo řádku. Neplatná váha nebo neúplný výsledek zastaví sestavení před přepsáním výstupů.
-
-Pokud pro dovednost a vybranou obtížnost nejsou výsledky, její tlačítko je neaktivní. Aktuální zdrojový Excel má 1619 výsledků; přepis obsahu jednotlivých critfailů je samostatná úprava.
-
-## Overlay
-
-DM má v horní liště tlačítko **Overlay**, které zkopíruje adresu pro Browser Source v OBS. Vlastní hod hráče nebo výsledek odeslaný DM se zobrazí na 60 sekund, bez názvu obtížnosti a s jednotným barevným motivem. Soukromý náhled DM se do overlaye neposílá. Při opětovném načtení overlay nepřehrává dávno prošlé výsledky.
-
-## Lokální vývoj a ověření
-
-Statický web je `index.html`, `app.js`, `critfail-core.mjs`, `firebase-client.mjs`, `firebase-config.js` a `overlay.html`. `app.py` je starší samostatná Streamlit varianta, nikoliv server tohoto webu.
-
-```sh
-pip install openpyxl
-python excel_to_json.py
-python -m http.server 8000
-```
-
-Základní kontroly:
-
-```sh
-python -m unittest discover -s tests -p 'test_*.py'
-npm test
-```
-
-Testy skutečných pravidel Firebase a obou prohlížečových pohledů potřebují Node.js 22+, Javu 17+ a lokální emulátor:
-
-```sh
-npm ci
-npx playwright install chromium
-npx firebase-tools@13.35.1 emulators:exec --project demo-kritfailer --only database "npm run test:rules && npm run test:browser"
-```
-
-Emulátor používá demonstrační projekt. Testy nemění živou databázi. Losování běží v prohlížeči, oprávnění k nastavení, zápisu výsledků a vlastnictví místnosti ověřují databázová pravidla.
+Aplikace běží v prohlížeči na počítači i mobilu. Každý hráč může používat vlastní zařízení a DM má přehled o celé místnosti. Pro společnou hru a okamžité sdílení výsledků je potřeba připojení k internetu.
