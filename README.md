@@ -34,14 +34,6 @@ Generátor nabízí následky pro útoky na blízko i na dálku, obranu a dovedn
 
 Pokud pro některou volbu nejsou při nastavené obtížnosti dostupné výsledky, její tlačítko je neaktivní.
 
-## Vlastní výsledky z Excelu
-
-Obsah generátoru vychází ze souboru **`crit_fails.xlsx`**. V listech **Útok**, **Obrana** a **Skill** lze upravovat herní efekty, roleplay popisy, obtížnosti i váhy jednotlivých výsledků. Vyšší váha znamená větší šanci na vylosování v rámci zvolené obtížnosti.
-
-Po nahrání upraveného Excelu do větve `main` proběhne automatický převod dat a publikování aplikace. Otevřená aplikace kontroluje nové výsledky každou minutu a při návratu na její kartu. Dříve uložené výsledky si ponechají původní znění.
-
-Pro roleplay se používá sloupec `roleplay_1`. Pokud je prázdný, aplikace použije `roleplay_2`; oba najednou nezobrazuje.
-
 ## Overlay pro streamování
 
 KritFailer obsahuje samostatný **overlay pro OBS**. DM zkopíruje jeho adresu tlačítkem **Overlay** a vloží ji do OBS jako zdroj prohlížeče.
@@ -52,7 +44,7 @@ DM rozbalí kartu **Vzhled overlaye** a vybere jeden ze sedmi motivů: **Grimoá
 
 Obtížnost zůstává skrytá a soukromé náhledy DM se na stream neposílají. Náhled vzhledu používá ukázkový výsledek a nic nepublikuje.
 
-Při aktualizaci je nutné publikovat také přiložený soubor `database.rules.json` v **Firebase Console → Realtime Database → Rules**. Pravidla povolují změnu vzhledu pouze vlastníkovi místnosti. Pro OBS nastav rozměry zdroje prohlížeče na **3840 × 2160**; na televizi zobraz stránku přes celou obrazovku.
+Pro OBS nastav rozměry zdroje prohlížeče na **3840 × 2160**; na televizi zobraz stránku přes celou obrazovku.
 
 ## Použití u stolu
 
