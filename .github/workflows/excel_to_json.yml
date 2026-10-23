@@ -48,7 +48,7 @@ jobs:
       - name: Prepare website
         run: |
           mkdir _site
-          cp index.html app.js critfail-core.mjs firebase-client.mjs firebase-config.js overlay.html crit.png crit_fails.json crit_fails.meta.json _site/
+          cp index.html app.js critfail-core.mjs overlay-themes.mjs firebase-client.mjs firebase-config.js overlay.html crit.png crit_fails.json crit_fails.meta.json _site/
           touch _site/.nojekyll
 
       - name: Upload website
