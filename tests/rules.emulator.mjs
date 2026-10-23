@@ -29,6 +29,18 @@ test("only DM can change the room difficulty", async () => {
   await assertFails(database("p1").ref("roomsV2/room/settings").set(difficulty("Sranda", 2)));
   await assertSucceeds(database("dm").ref("roomsV2/room/settings").set(difficulty("Sranda", 2)));
 });
+test("only DM can choose a supported overlay theme, readable by the TV", async () => {
+  const config = "roomsV2/room/overlayConfig";
+  await assertFails(database("p1").ref(config).set({ theme: "ice" }));
+  await assertFails(database("visitor").ref(config).set({ theme: "ice" }));
+  await assertFails(database("dm").ref(config).set({ theme: "unknown" }));
+  await assertFails(database("dm").ref(config).set({ theme: "ice", severity: "Vážný" }));
+  for (const theme of ["grimoire", "inferno", "astral", "parchment", "nordic", "comic", "ice"]) {
+    await assertSucceeds(database("dm").ref(config).set({ theme }));
+    assert.deepEqual((await assertSucceeds(database("visitor").ref(config).get())).val(), { theme });
+  }
+  assert.equal((await database("dm").ref("roomsV2/room/settings/revision").get()).val(), 1);
+});
 test("player result is shared with its player, DM and overlay", async () => {
   await assertSucceeds(publish("p1", "one"));
   const own = await assertSucceeds(database("p1").ref("roomsV2/room/results/p1/one").get());

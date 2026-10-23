@@ -473,6 +473,17 @@
   .history-item { display: block; width: 100%; text-align: left; white-space: normal; margin-bottom: 5px; }
   .sev-btn { font-family: inherit; }
   .sev-btn:disabled { transform: none; }
+  .overlay-settings summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; cursor: pointer; color: var(--accent); font-weight: 700; }
+  .overlay-settings summary::before { content: '▸'; }
+  .overlay-settings[open] summary::before { content: '▾'; }
+  #overlayThemeLabel { margin-left: auto; color: var(--text); font-size: .8rem; font-weight: 400; }
+  .overlay-theme-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 8px; margin: 14px 0; }
+  .overlay-theme-option { display: flex; align-items: center; gap: 9px; min-width: 0; padding: 9px; background: var(--bg); color: var(--text); border: 2px solid var(--border); text-align: left; white-space: normal; }
+  .overlay-theme-option.selected { border-color: var(--accent2); background: var(--bg3); }
+  .overlay-theme-option:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  .overlay-theme-swatch { flex: 0 0 25px; width: 25px; height: 25px; border: 3px solid; border-radius: 5px; }
+  .overlay-preview { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid var(--border); border-radius: 7px; margin-top: 10px; background: #181315; pointer-events: none; }
+  .overlay-settings .hint { line-height: 1.5; }
 </style>
 <link rel="icon" type="image/png" href="crit.png">
 </head>
@@ -533,6 +544,13 @@
           <div class="sev-row" id="severityBtns"></div>
           <div id="currentSev">Pro všechny hráče: <span id="sevLabel">Vyber obtížnost</span></div>
         </div>
+        <details class="card overlay-settings" id="overlaySettings">
+          <summary>📺 Vzhled overlaye <span id="overlayThemeLabel">Grimoár</span></summary>
+          <div class="overlay-theme-options" id="overlayThemeOptions" role="group" aria-label="Vyber vzhled overlaye"></div>
+          <div class="hint">Vybraný vzhled platí pro celou místnost. Otevřený overlay na televizi se přepne automaticky.</div>
+          <iframe class="overlay-preview" id="overlayPreview" title="Ukázka vybraného vzhledu overlaye" tabindex="-1"></iframe>
+          <div class="hint">Ukázkový výsledek · přes celou obrazovku · 20 sekund</div>
+        </details>
         <div class="card">
           <h3>🎲 Generátor</h3>
           <div class="hint">Výsledek nejprve uvidíš jen ty. Potom ho můžeš poslat vybranému hráči.</div>
@@ -593,6 +611,6 @@
   </div>
 </div>
 
-<script type="module" src="app.js"></script>
+<script type="module" src="app.js?v=overlay-themes-1"></script>
 </body>
 </html>

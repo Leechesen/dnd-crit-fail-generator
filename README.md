@@ -46,7 +46,13 @@ Pro roleplay se používá sloupec `roleplay_1`. Pokud je prázdný, aplikace po
 
 KritFailer obsahuje samostatný **overlay pro OBS**. DM zkopíruje jeho adresu tlačítkem **Overlay** a vloží ji do OBS jako zdroj prohlížeče.
 
-Vlastní hod hráče nebo výsledek odeslaný DM se na overlay zobrazí na **60 sekund** spolu se jménem hráče. Obtížnost zůstává skrytá a soukromé náhledy DM se na stream neposílají.
+Vlastní hod hráče nebo výsledek odeslaný DM se na overlay zobrazí na **20 sekund** spolu se jménem hráče. Overlay vyplní celou obrazovku a používá ostrý text i při rozlišení **3840 × 2160**. Okamžité poškození má vlastní oddělenou část; následující postih je vedle něj. Název critfailu, poškození, postih, popisek hráče i jeho jméno mají shodnou velikost písma, která se společně přizpůsobí délce výsledku.
+
+DM rozbalí kartu **Vzhled overlaye** a vybere jeden ze sedmi motivů: **Grimoár, Pekelná výheň, Astrální magie, Starý pergamen, Severské runy, Komiksový kritfail** nebo **Ledové království**. Každý motiv má náhled. Výběr se ukládá pro celou místnost a přepíná i již otevřený overlay; jeho adresa zůstává stejná. Výchozí motiv je Grimoár. Světlé motivy mají tmavé písmo s vysokým kontrastem.
+
+Obtížnost zůstává skrytá a soukromé náhledy DM se na stream neposílají. Náhled vzhledu používá ukázkový výsledek a nic nepublikuje.
+
+Při aktualizaci je nutné publikovat také přiložený soubor `database.rules.json` v **Firebase Console → Realtime Database → Rules**. Pravidla povolují změnu vzhledu pouze vlastníkovi místnosti. Pro OBS nastav rozměry zdroje prohlížeče na **3840 × 2160**; na televizi zobraz stránku přes celou obrazovku.
 
 ## Použití u stolu
 

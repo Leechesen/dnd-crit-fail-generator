@@ -9,6 +9,7 @@ import os from "node:os";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { discoverSeverities, selections } from "../critfail-core.mjs";
+import { OVERLAY_THEMES, splitOverlayEffect } from "../overlay-themes.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const screenshots = process.env.KRITFAILER_SCREENSHOTS || path.join(os.tmpdir(), "kritfailer-ui-review");
@@ -95,10 +96,31 @@ try {
   const roomId = Object.keys(await records())[0];
   const overlay = await pageFor("browser-overlay"); await overlay.goto(`${origin}/overlay.html?room=${roomId}`);
   await waitText(overlay, "#playerName", "Borin");
-  assert.equal((await dm.locator("#resBody .res-effect").textContent()).replace(/^⚠️ /, ""), await overlay.locator("#effectText").textContent());
+  const firstEffect = (await dm.locator("#resBody .res-effect").textContent()).replace(/^⚠️ /, "");
+  const firstParts = splitOverlayEffect(firstEffect);
+  assert.equal(await overlay.locator("#damageText").textContent(), firstParts.damage);
+  assert.equal(await overlay.locator("#effectText").textContent(), firstParts.consequence);
   assert.equal(await overlay.locator("#sevBadge").count(), 0);
-  assert.equal(await overlay.locator("#panel").getAttribute("class"), "panel sev-other");
+  assert.equal(await overlay.locator("#panel").getAttribute("data-theme"), "grimoire");
   console.log("PASS shared player result with one roleplay and hidden difficulty in player view and overlay");
+
+  assert.equal(await player.locator("#overlaySettings").isVisible(), false);
+  await dm.locator("#overlaySettings summary").click();
+  const beforeTheme = structuredClone((await records())[roomId]);
+  for (const theme of OVERLAY_THEMES) {
+    await dm.locator(`[data-overlay-theme="${theme.id}"]`).click();
+    await overlay.waitForFunction(id => document.querySelector("#panel").dataset.theme === id, theme.id);
+    await dm.waitForFunction(id => document.querySelector(`[data-overlay-theme="${id}"]`)?.getAttribute("aria-pressed") === "true", theme.id);
+    assert.ok((await dm.locator("#overlayPreview").getAttribute("src")).includes(`theme=${theme.id}`));
+  }
+  const afterTheme = (await records())[roomId];
+  assert.deepEqual(afterTheme.results, beforeTheme.results);
+  assert.deepEqual(afterTheme.overlay, beforeTheme.overlay);
+  assert.deepEqual(afterTheme.settings, beforeTheme.settings);
+  assert.equal(afterTheme.overlayConfig.theme, "ice");
+  await overlay.reload();
+  await overlay.waitForFunction(() => document.querySelector("#panel").dataset.theme === "ice");
+  console.log("PASS all seven themes switch the open TV, persist after reload and leave results and difficulty unchanged");
 
   await second.goto(origin); await second.locator("#setup").waitFor({ state: "visible" });
   await second.locator("#nameInput").fill("Benet"); await second.getByRole("button", { name: "Připojit", exact: true }).click();
@@ -156,6 +178,7 @@ try {
   console.log("PASS DM sends the exact preview and one roleplay only to the selected player");
 
   await dm.reload();
+  await dm.waitForFunction(() => document.querySelector("#overlayThemeLabel").textContent === "Ledové království");
   try { await dm.locator("#dmPanel").waitFor({ state: "visible", timeout: 10000 }); }
   catch (error) {
     console.log("RESTORE_STATE", await dm.evaluate(() => ({ saved: localStorage.getItem("kf_state_v2:browser-dm"), loading: document.querySelector("#loading").textContent, setup: document.querySelector("#setup").className })));

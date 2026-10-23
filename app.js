@@ -1,5 +1,6 @@
 import { connectFirebase, ref, set, get, update, remove, onValue, push, onDisconnect, runTransaction, serverTimestamp, query, orderByChild, limitToLast } from "./firebase-client.mjs";
 import { selections, discoverSeverities, chooseResult, singleRoleplay, makeEvent, recentEvents, escapeHtml as esc, validateName } from "./critfail-core.mjs";
+import { OVERLAY_THEMES, DEFAULT_OVERLAY_THEME, isOverlayTheme, normalizeOverlayTheme } from "./overlay-themes.mjs";
 
 const ROOMS = "roomsV2", LOBBY = "lobbyV2", STORAGE = "kf_state_v2";
 const $ = id => document.getElementById(id);
@@ -7,6 +8,7 @@ const palette = ["#2a9d5c", "#e9a020", "#c0392b", "#8e44ad", "#2980b9", "#16a085
 let db, uid, data = {}, metadata = {}, severities = [], datasetLoading = false;
 let state = { room: "", name: "", isDM: false, last: null, busy: false, leaving: false };
 let settings = { severity: "", revision: 0 }, players = {}, presence = {}, history = [];
+let overlayTheme = DEFAULT_OVERLAY_THEME;
 let listeners = [], lobbyListener, connectionRef, connectionCleanup, lobbyCleanup, notifTimer;
 let latestResultsTree = {}, lastResultId = null, initialResults = true;
 const pendingEvents = new Set();
@@ -111,6 +113,42 @@ function renderControls() {
     button.title = !ready ? "Čekám na přípravu generování od DM" : !available ? "Pro tuto volbu nejsou dostupné výsledky" : choice.label;
   });
   if (state.isDM) renderTargets();
+  document.querySelectorAll("[data-overlay-theme]").forEach(button => { button.disabled = !state.isDM || state.busy; });
+}
+function renderOverlayTheme() {
+  const selected = OVERLAY_THEMES.find(theme => theme.id === overlayTheme);
+  $("overlayThemeLabel").textContent = selected.name;
+  document.querySelectorAll("[data-overlay-theme]").forEach(button => {
+    const active = button.dataset.overlayTheme === overlayTheme;
+    button.classList.toggle("selected", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  if (state.isDM && $("overlaySettings").open) {
+    const url = new URL("overlay.html", location.href);
+    url.searchParams.set("preview", "1"); url.searchParams.set("theme", overlayTheme);
+    if ($("overlayPreview").getAttribute("src") !== url.href) $("overlayPreview").src = url.href;
+  }
+}
+function buildOverlayThemes() {
+  const container = $("overlayThemeOptions"); container.replaceChildren();
+  for (const theme of OVERLAY_THEMES) {
+    const button = document.createElement("button"); button.type = "button";
+    button.className = "overlay-theme-option"; button.dataset.overlayTheme = theme.id;
+    const swatch = document.createElement("span"); swatch.className = "overlay-theme-swatch"; swatch.setAttribute("aria-hidden", "true");
+    swatch.style.background = theme.surface; swatch.style.borderColor = theme.accent;
+    const label = document.createElement("span"); label.textContent = theme.name;
+    button.append(swatch, label); button.onclick = () => selectOverlayTheme(theme.id);
+    container.appendChild(button);
+  }
+  $("overlaySettings").ontoggle = renderOverlayTheme;
+  renderOverlayTheme();
+}
+async function selectOverlayTheme(theme) {
+  if (!state.isDM || !isOverlayTheme(theme) || theme === overlayTheme) return;
+  await busy(async () => {
+    await set(roomRef("overlayConfig"), { theme });
+    notif("Vzhled overlaye byl uložen pro celou místnost.", "#2a9d5c");
+  });
 }
 async function selectSeverity(severity) {
   if (!state.isDM || !severities.includes(severity)) return;
@@ -221,6 +259,7 @@ async function leave(message = "") {
   if (state.isDM && state.room) await update(dbr(LOBBY, state.room), { dmOnline: false }).catch(() => {});
   localStorage.removeItem(sessionKey()); state = { room: "", name: state.name, isDM: false, last: null, busy: false, leaving: false };
   settings = { severity: "", revision: 0 }; players = {}; presence = {}; history = [];
+  overlayTheme = DEFAULT_OVERLAY_THEME; $("overlayPreview").removeAttribute("src");
   showSetup(); if (message) notif(message);
 }
 function showSetup() {
@@ -274,6 +313,7 @@ async function enterRoom(room, name, roomName, owner) {
   clearListeners(); await releasePresence();
   state = { room, name, roomName, ownerId: owner, isDM: owner === uid, last: null, busy: false, leaving: false };
   settings = { severity: "", revision: 0 }; players = {}; presence = {}; history = []; saveSession();
+  overlayTheme = DEFAULT_OVERLAY_THEME; $("overlaySettings").open = false; $("overlayPreview").removeAttribute("src");
   latestResultsTree = {}; lastResultId = null; initialResults = true; pendingEvents.clear();
   $("setup").classList.add("hidden"); $("loading").classList.add("hidden"); $("app").classList.remove("hidden");
   $("roomTitle").textContent = `${state.isDM ? "👑" : "🧑"} Místnost: ${roomName}`;
@@ -282,6 +322,7 @@ async function enterRoom(room, name, roomName, owner) {
   $("topBtns").replaceChildren();
   const logout = document.createElement("button"); logout.className = "btn-secondary btn-sm"; logout.textContent = "🚪 Odejít"; logout.onclick = () => leave(); $("topBtns").appendChild(logout);
   if (state.isDM) {
+    buildOverlayThemes();
     const overlay = document.createElement("button"); overlay.className = "btn-secondary btn-sm"; overlay.textContent = "📺 Overlay";
     overlay.onclick = async () => { const url = new URL(`overlay.html?room=${encodeURIComponent(state.room)}`, location.href).href; try { await navigator.clipboard.writeText(url); notif("Odkaz na overlay byl zkopírován.", "#2a9d5c"); } catch { window.prompt("Odkaz na overlay:", url); } }; $("topBtns").appendChild(overlay);
     const deletion = document.createElement("button"); deletion.className = "btn-danger btn-sm"; deletion.textContent = "🗑️ Smazat místnost"; deletion.onclick = deleteRoom; $("topBtns").appendChild(deletion);
@@ -290,6 +331,7 @@ async function enterRoom(room, name, roomName, owner) {
   const listen = (reference, callback) => listeners.push(onValue(reference, callback, error => { if (!state.leaving) fail(error); }));
   listen(roomRef("players", uid), snapshot => { if (!snapshot.exists() && !state.leaving) leave("Byl/a jsi vyřazen/a z místnosti, nebo byla místnost smazána."); });
   listen(roomRef("settings"), snapshot => { settings = snapshot.val() || {}; renderControls(); });
+  if (state.isDM) listen(roomRef("overlayConfig"), snapshot => { overlayTheme = normalizeOverlayTheme(snapshot.val()?.theme); renderOverlayTheme(); });
   listen(roomRef("players"), snapshot => { players = snapshot.val() || {}; renderPlayers(); renderTargets(); });
   listen(roomRef("presence"), snapshot => { presence = snapshot.val() || {}; renderPlayers(); });
   const resultsRef = state.isDM ? roomRef("results") : query(roomRef("results", uid), orderByChild("ts"), limitToLast(30));

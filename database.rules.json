@@ -167,6 +167,17 @@
             }
           }
         },
+        "overlayConfig": {
+          ".read": "auth != null",
+          ".write": "auth != null && root.child('roomsV2').child($room).child('dm').val() === auth.uid",
+          ".validate": "newData.hasChildren(['theme'])",
+          "theme": {
+            ".validate": "newData.isString() && (newData.val() === 'grimoire' || newData.val() === 'inferno' || newData.val() === 'astral' || newData.val() === 'parchment' || newData.val() === 'nordic' || newData.val() === 'comic' || newData.val() === 'ice')"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
         "overlay": {
           ".read": "auth != null",
           ".write": "(auth != null && (auth != null && root.child('roomsV2').child($room).child('dm').val() === auth.uid || (root.child('roomsV2').child($room).child('players').child(auth.uid).exists() && !root.child('roomsV2').child($room).child('banned').child(auth.uid).exists()))) && newData.child('actorId').val() === auth.uid",
